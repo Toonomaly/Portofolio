@@ -1,61 +1,931 @@
 <!DOCTYPE html>
+
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Asri Portfolio</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
-  <script src="script.js" defer></script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Asri Portfolio</title>
+<style>
+/* =================== ROOT VARIABLES =================== */
+:root {
+  --bg: #0f0f0f;
+  --text: #ffffff;
+  --primary: #00ffff;
+  --highlight: rgba(255, 255, 255, 0.1);
+  --blur: rgba(15, 15, 15, 0.6);
+}
+
+/* =================== DARK MODE (Optional) =================== */
+.dark-mode {
+  --bg: #ffffff;
+  --text: #111111;
+  --primary: #00bcd4;
+  --highlight: rgba(0, 0, 0, 0.1);
+  --blur: rgba(255, 255, 255, 0.6);
+}
+
+/* =================== RESET & BASE =================== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  scroll-behavior: smooth;
+}
+
+body {
+  position: relative;
+  isolation: isolate;
+  overflow-x: hidden;
+  text-align: center;
+}
+body {
+  cursor: none;
+}
+
+#target-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+}
+
+.target-cursor-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.target-corner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border: 3px solid #fff;
+}
+
+.corner-tl { transform: translate(-150%, -150%); border-right: none; border-bottom: none; }
+.corner-tr { transform: translate(50%, -150%); border-left: none; border-bottom: none; }
+.corner-br { transform: translate(50%, 50%); border-left: none; border-top: none; }
+.corner-bl { transform: translate(-150%, 50%); border-right: none; border-top: none; }
+
+
+/* =================== CANVAS BACKGROUND =================== */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* =================== NAVBAR =================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: var(--blur);
+  backdrop-filter: blur(8px);
+  z-index: 9999; /* pastikan di atas elemen lain */
+  padding: 1rem 2rem;
+  transition: background 0.3s ease;
+  pointer-events: auto; /* pastikan bisa diklik */
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar a {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.navbar a:hover {
+  color: var(--primary);
+  transform: scale(1.05);
+}
+
+/* =================== SECTION LAYOUT =================== */
+section {
+  min-height: 100vh;
+  padding: 50px 20px 30px;
+  position: relative;
+  z-index: 1;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* =================== TYPING EFFECT =================== */
+h1#typed-text::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* =================== ANIMATIONS =================== */
+.fade-section,
+.fade-in-section,
+.fade-box {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.fade-section.visible,
+.fade-in-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-box {
+  transform: scale(0.9);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-box.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* =================== VIDEO SCROLL SECTION =================== */
+.video-scroll-wrapper {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 1rem 0;
+}
+
+.video-scroll {
+  display: flex;
+  gap: 20px;
+  padding: 0 10vw;
+  width: max-content;
+}
+
+.project-video {
+  width: 320px;
+  height: 180px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 10px;
+  scroll-snap-align: center;
+  box-shadow: 0 0 15px var(--highlight);
+}
+
+.project-video.visible {
+  opacity: 1;
+}
+
+/* =================== SKILLS SECTION =================== */
+#skills {
+  padding: 4rem 1rem;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+  border-top: 1px solid var(--highlight);
+}
+
+#skills h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #fff;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.skill-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--highlight);
+  border-radius: 12px;
+  padding: 1.5rem;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.skill-card:hover {
+  transform: translateY(-5px);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.skill-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+/* =================== SOCIAL SECTION =================== */
+.social-section {
+  padding: 3rem 1rem;
+  text-align: center;
+  z-index: 1;
+  position: relative;
+}
+
+.social-section h2 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  color: var(--text);
+}
+
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.social-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 30px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: bold;
+  background: var(--highlight);
+  border: 1px solid white;
+  transition: all 0.3s ease;
+}
+
+.social-btn:hover {
+  transform: scale(1.05);
+  background: white;
+  color: #111;
+}
+
+.social-btn.discord { background-color: #5865F2; border: none; }
+.social-btn.instagram { background-color: #E1306C; border: none; }
+.social-btn.github { background-color: #333; border: none; }
+.social-btn.email { background-color: #17a2b8; border: none; }
+
+/* Optional: Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* =================== PARALLAX BACKGROUND =================== */
+.parallax-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+  perspective: 1000px;
+}
+
+.parallax-layer {
+  position: absolute;
+  width: 110%;
+  height: 110%;
+  top: -5%;
+  left: -5%;
+  will-change: transform;
+  background-blend-mode: screen;
+  opacity: 0.15;
+}
+
+.layer-back {
+  background: radial-gradient(circle at 30% 30%, #00ffff33, transparent 60%);
+  z-index: 1;
+  transform: translateZ(-80px) scale(1.1);
+}
+
+.layer-mid {
+  background: radial-gradient(circle at 70% 50%, #00ffff22, transparent 60%);
+  z-index: 2;
+  transform: translateZ(-40px) scale(1.05);
+}
+
+.layer-front {
+  background: radial-gradient(circle at 50% 50%, #00ffff11, transparent 60%);
+  z-index: 3;
+  transform: translateZ(-20px) scale(1.02);
+}
+
+/* =================== SCROLLBAR =================== */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+/* =================== RESPONSIVE =================== */
+@media (max-width: 768px) {
+  .navbar {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-x: auto;
+  }
+
+  .navbar ul {
+    flex-direction: row;
+    gap: 1rem;
+    padding: 10px 20px;
+    white-space: nowrap;
+  }
+
+  .navbar li {
+    flex-shrink: 0;
+  }
+
+  .navbar a {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+  }
+
+  .navbar a:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-video {
+    width: 90vw;
+    height: auto;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .navbar ul {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 0.5rem 1rem;
+    gap: 1rem;
+    scrollbar-width: none;
+  }
+
+  .navbar ul::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navbar li {
+    flex-shrink: 0;
+  }
+
+  .navbar a {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+}
+
+
+section p,
+section ul,
+section ol {
+  text-align: left;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+#skills p,
+#skills ul,
+#skills ol,
+#hire p,
+#hire ul,
+#hire ol {
+  text-align: center;
+}
+
+
+
+#about,
+#tools,
+#workflow,
+#testimonials {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  margin: 2rem auto;
+  padding: 2.5rem 1rem;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+  max-width: 960px;
+  min-height: auto;
+}
+
+</style>
+<style>
+    html {
+      scroll-behavior: smooth;
+    }
+    .scroll-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #111;
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      display: none;
+      z-index: 1000;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+    .scroll-top.show {
+      display: block;
+    }
+  </style>
 </head>
 <body class="text-center">
-  <canvas id="particle-canvas"></canvas>
+<!-- Background Particle Canvas -->
+<canvas id="particle-canvas"></canvas>
+<div class="parallax-container">
+<div class="parallax-layer layer-back"></div>
+<div class="parallax-layer layer-mid"></div>
+<div class="parallax-layer layer-front"></div>
+</div>
+<!-- Custom Cursor -->
+<div id="target-cursor">
+  <div class="target-cursor-dot"></div>
+  <div class="target-corner corner-tl"></div>
+  <div class="target-corner corner-tr"></div>
+  <div class="target-corner corner-br"></div>
+  <div class="target-corner corner-bl"></div>
+</div>
+<!-- Scroll to Top Button -->
+<div class="scroll-top" id="scrollTopBtn">↑</div>
+<!-- Navbar -->
+<nav class="navbar">
+<ul>
+<li><a href="#home">Home</a></li>
+<li><a href="#about">About</a></li>
+<li><a href="#projects">Projects</a></li>
+<li><a href="#skills">Skills</a></li>
+<li><a href="#tools">Tools</a></li>
+<li><a href="#workflow">Workflow</a></li>
+<li><a href="#testimonials">Testimonials</a></li>
+<li><a href="#hire">Hire Me</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+</nav>
+<!-- Hero Section -->
+<section class="section center" id="home">
+<h1 id="typed-text"></h1>
+<div class="social-wrapper"></div>
+</section>
+<!-- About Section -->
+<section class="section fade-section" id="about">
+<h2>About Me</h2>
+<p>Hi! I’m Asri — a passionate 3D artist and content creator who loves bringing ideas to life through animation and design. I create engaging content for YouTube and actively share my creative journey on social media.
+    <br/><br/>
+    Beyond 3D art, I enjoy exploring tech and creativity through coding, video editing, and building online communities. I also manage a Discord server where I collaborate, connect, and share tips with other creatives. I’m always excited to learn, experiment, and create something meaningful.
+    <br/><br/>
+    🔤 <strong>Languages:</strong> Indonesian (native), English (intermediate), Japanese (beginner)
+    </p>
+</section>
+<!-- Projects Section -->
+<section class="section fade-section" id="projects">
+<h2>My Projects</h2>
+<div class="video-scroll-wrapper">
+<div class="video-scroll">
+<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/bNiehoppDRo"></iframe>
+<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/hwXU7rx2NUg"></iframe>
+<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/wJF5NXygL4k"></iframe>
+<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+</div>
+</div>
+</section>
+<!-- Skills Section -->
+<section class="section fade-section" id="skills">
+<h2>My Skills</h2>
+<div class="skills-grid">
+<div class="skill-card">
+<h3>3D Modeling &amp; Animation</h3>
+<p>Create stylized and original characters or scenes using tools like Blender.</p>
+</div>
+<div class="skill-card">
+<h3>YouTube Content Creation</h3>
+<p>Produce entertaining and educational videos with storytelling and visuals.</p>
+</div>
+<div class="skill-card">
+<h3>Social Media Management</h3>
+<p>Grow and maintain an engaging presence across Instagram, Discord, and more.</p>
+</div>
+<div class="skill-card">
+<h3>HTML, CSS, JavaScript</h3>
+<p>Build interactive, responsive websites and creative UI experiments.</p>
+</div>
+<div class="skill-card">
+<h3>Video Editing</h3>
+<p>Edit high-quality videos using tools like Premiere Pro, Hitfilm, and others.</p>
+</div>
+<div class="skill-card">
+<h3>Discord Server Management</h3>
+<p>Set up bots, roles, channels, and systems to manage a thriving community.</p>
+</div>
+</div>
+</section>
+<section class="section fade-section" id="tools">
+<h2>Tools I Use</h2>
+<p>I work with a diverse set of tools that help me bring my ideas to life and streamline my workflow:</p>
+<ul>
+<li><strong>Blender:</strong> My go-to for 3D modeling, rigging, and animation. I use it to create original characters, environments, and dynamic scenes.</li>
+<li><strong>Adobe Premiere Pro &amp; HitFilm:</strong> For professional-level video editing, adding effects, transitions, and refining visual storytelling.</li>
+<li><strong>Figma:</strong> When designing UI/UX layouts for web projects or mockups, I rely on Figma for its speed and collaborative features.</li>
+<li><strong>VS Code:</strong> My favorite code editor for building responsive websites using HTML, CSS, JavaScript, and experimenting with interactive features.</li>
+<li><strong>Discord + Bots (Tatsu, MEE6, Carl-bot):</strong> I use these to build and automate my Discord server systems, events, and community engagement.</li>
+<li><strong>Canva &amp; Photoshop:</strong> For designing thumbnails, social media posts, and visual content with professional polish.</li>
+</ul>
+</section>
+<section class="section fade-section" id="workflow">
+<h2>How I Work</h2>
+<p>I approach each project with a clear and organized process that ensures creativity, clarity, and consistency:</p>
+<ol>
+<li><strong>1. Ideation &amp; Planning:</strong> Every good project starts with a strong idea. I brainstorm concepts, outline goals, and gather references to shape a solid vision.</li>
+<li><strong>2. Design &amp; Asset Creation:</strong> I begin building the assets, whether it’s a 3D character, visual storyboard, or layout design. This step includes modeling, rigging, and animating if necessary.</li>
+<li><strong>3. Production:</strong> Here’s where everything comes to life — recording footage, editing scenes, syncing audio, and refining timing to make the project engaging.</li>
+<li><strong>4. Polish &amp; Feedback:</strong> I review the work thoroughly, apply final touches, and get feedback when needed. This ensures quality and improvement with every project.</li>
+<li><strong>5. Publish &amp; Share:</strong> Once done, I publish on YouTube or social media, and engage with the audience. I also reflect on what I learned for future projects.</li>
+</ol>
+</section>
+<section class="section fade-section" id="testimonials">
+<h2>Testimonials</h2>
+<div class="testimonial">
+<blockquote>
+      "Asri’s animations are full of personality and creativity. Watching their YouTube content always feels fresh and fun. They're a rising talent in 3D content creation!"
+    </blockquote>
+<p>- Rani, Indie Game Developer</p>
+</div>
+<div class="testimonial">
+<blockquote>
+      "I joined Asri’s Discord server for animation tips and ended up learning way more than I expected. The tutorials and help they give are super detailed and easy to follow."
+    </blockquote>
+<p>- Jovan, Junior Animator</p>
+</div>
+<div class="testimonial">
+<blockquote>
+      "Working with Asri on a collaboration project was smooth and professional. Their understanding of both creative vision and technical detail is impressive."
+    </blockquote>
+<p>- Theo, Content Creator</p>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="section fade-section" id="hire">
+<h2>Let’s Create Something Awesome Together!</h2>
+<p>Interested in collaborating or hiring me? Don’t hesitate to reach out!</p>
+<a class="cta-btn" href="#links">Contact Me</a>
+</section>
+<!-- Contact Section -->
+<section class="section fade-section social-section" id="contact">
+<h2>Find Me</h2>
+<div class="social-links">
+<a class="social-btn discord" href="https://discord.gg/sdfjdpzABv" target="_blank">Discord</a>
+<a class="social-btn instagram" href="https://www.instagram.com/toonomaly_official/" target="_blank">Instagram</a>
+<a class="social-btn github" href="https://github.com/Toonomaly" target="_blank">GitHub</a>
+<a class="social-btn email" href="mailto:kangfitnahorang@email.com">Email</a>
+</div>
+</section>
+<!-- JavaScript -->
+<script>
 
-  <div class="parallax-container">
-    <div class="parallax-layer layer-back"></div>
-    <div class="parallax-layer layer-mid"></div>
-    <div class="parallax-layer layer-front"></div>
-  </div>
+// PARTICLE BACKGROUND
 
-  <div id="target-cursor">
-    <div class="target-cursor-dot"></div>
-    <div class="target-corner corner-tl"></div>
-    <div class="target-corner corner-tr"></div>
-    <div class="target-corner corner-br"></div>
-    <div class="target-corner corner-bl"></div>
-  </div>
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
 
-  <div class="scroll-top" id="scrollTopBtn">↑</div>
+const CLICK_PARTICLE_LIFETIME = 3000; // ms
+let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+let particles = [];
+let resizeTimeout;
 
-  <nav>
-    <a href="#home" class="cursor-target">Home</a>
-    <a href="#about" class="cursor-target">About</a>
-    <a href="#skills" class="cursor-target">Skills</a>
-    <a href="#contact" class="cursor-target">Contact</a>
-  </nav>
+// Resize canvas
+function resizeCanvas() {
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = window.innerWidth * ratio;
+  canvas.height = window.innerHeight * ratio;
+  canvas.style.width = `${window.innerWidth}px`;
+  canvas.style.height = `${window.innerHeight}px`;
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+}
 
-  <section id="home">
-    <h1 class="cursor-target">Halo, Saya Asri 👋</h1>
-    <p>Selamat datang di portofolio saya.</p>
-  </section>
+resizeCanvas();
 
-  <section id="about">
-    <h2>Tentang Saya</h2>
-    <p class="cursor-target">Desainer & Ilustrator Digital</p>
-  </section>
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    resizeCanvas();
+    initParticles();
+  }, 200);
+});
 
-  <section id="skills">
-    <h2>Keahlian</h2>
-    <div class="skill-card cursor-target">Illustration</div>
-    <div class="skill-card cursor-target">Graphic Design</div>
-    <div class="skill-card cursor-target">Branding</div>
-  </section>
+window.addEventListener('mousemove', e => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
 
-  <section id="contact">
-    <h2>Kontak</h2>
-    <button class="cursor-target">Hubungi Saya</button>
-    <div class="social-btn cursor-target">Instagram</div>
-    <div class="social-btn cursor-target">Behance</div>
-  </section>
+window.addEventListener('click', () => {
+  for (let i = 0; i < 5; i++) {
+    const p = new Particle(true);
+    p.x = mouse.x;
+    p.y = mouse.y;
+    particles.push(p);
+  }
+});
+
+// Particle class
+class Particle {
+  constructor(isTemporary = false) {
+    this.reset();
+    if (isTemporary) {
+      this.lifeTime = CLICK_PARTICLE_LIFETIME;
+      this.createdAt = Date.now();
+    }
+  }
+
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.z = Math.random() * 1 + 0.2;
+    this.size = (Math.random() * 2 + 1) / this.z;
+    this.baseSpeedX = (Math.random() - 0.5) * 1 / this.z;
+    this.baseSpeedY = (Math.random() - 0.5) * 1 / this.z;
+    this.speedX = this.baseSpeedX;
+    this.speedY = this.baseSpeedY;
+    this.depth = this.z;
+  }
+
+  update() {
+    const dx = mouse.x - this.x;
+    const dy = mouse.y - this.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const nearMouse = dist < 80;
+
+    if (nearMouse) {
+      this.speedX = 0;
+      this.speedY = 0;
+    } else {
+      this.speedX = this.baseSpeedX;
+      this.speedY = this.baseSpeedY;
+    }
+
+    const offsetX = (mouse.x - window.innerWidth / 2) / (30 * this.depth);
+    const offsetY = (mouse.y - window.innerHeight / 2) / (30 * this.depth);
+    this.x += this.speedX + offsetX;
+    this.y += this.speedY + offsetY;
+
+    if (this.x < 0) this.x = canvas.width;
+    if (this.x > canvas.width) this.x = 0;
+    if (this.y < 0) this.y = canvas.height;
+    if (this.y > canvas.height) this.y = 0;
+  }
+
+  draw() {
+    const dx = mouse.x - this.x;
+    const dy = mouse.y - this.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    const hue = 200 + (100 - Math.min(dist, 100)) * 1.5;
+    const alpha = Math.max(0.1, 1 - dist / 150);
+
+    ctx.beginPath();
+    ctx.fillStyle = `hsla(${hue}, 100%, 70%, ${alpha})`;
+    ctx.shadowBlur = (1 - this.z) * 10;
+    ctx.shadowColor = 'white';
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+}
+
+function initParticles() {
+  const lowSpec = window.deviceMemory && window.deviceMemory <= 4;
+  const total = lowSpec ? 80 : 150;
+  particles = Array.from({ length: total }, () => new Particle());
+}
+
+function connectParticles() {
+  for (let a = 0; a < particles.length; a++) {
+    for (let b = a + 1; b < particles.length; b++) {
+      const dx = particles[a].x - particles[b].x;
+      const dy = particles[a].y - particles[b].y;
+      const dist = dx * dx + dy * dy;
+
+      if (dist < 10000) {
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+        ctx.lineWidth = 1;
+        ctx.moveTo(particles[a].x, particles[a].y);
+        ctx.lineTo(particles[b].x, particles[b].y);
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const now = Date.now();
+
+  particles = particles.filter(p => !p.lifeTime || now - p.createdAt < p.lifeTime);
+
+  particles.forEach(p => {
+    p.update();
+    p.draw();
+  });
+
+  connectParticles();
+  requestAnimationFrame(animateParticles);
+}
+
+initParticles();
+animateParticles();
+
+document.addEventListener("mousemove", (e) => {
+  const layers = document.querySelectorAll(".parallax-layer");
+  const x = (e.clientX / window.innerWidth - 0.5) * 2;
+  const y = (e.clientY / window.innerHeight - 0.5) * 2;
+
+  layers.forEach((layer, index) => {
+    const depth = (index + 1) * 20;
+    layer.style.transform = `translate3d(${x * depth}px, ${y * depth}px, 0)`;
+  });
+});
+
+
+// TYPING EFFECT
+
+const text = "Hallo, I'm Toonomaly.";
+const typedText = document.getElementById('typed-text');
+let index = 0;
+
+function typeWriterLoop() {
+  if (index < text.length) {
+    typedText.textContent += text.charAt(index++);
+    setTimeout(typeWriterLoop, 100);
+  } else {
+    setTimeout(() => {
+      typedText.textContent = '';
+      index = 0;
+      typeWriterLoop();
+    }, 1500);
+  }
+}
+
+typeWriterLoop();
+
+// FADE-IN SECTIONS
+
+const fadeSections = document.querySelectorAll('.fade-section');
+const fadeInObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.2 });
+
+fadeSections.forEach(sec => fadeInObserver.observe(sec));
+
+// FADE-IN PROJECT VIDEOS ON SCROLL
+  
+const projectScroll = document.querySelector('.project-section');
+const projectVideos = document.querySelectorAll('.project-video');
+
+function fadeProjectVideos() {
+  const center = window.innerWidth / 2;
+  projectVideos.forEach(video => {
+    const rect = video.getBoundingClientRect();
+    const dist = Math.abs(center - (rect.left + rect.width / 2));
+    const max = window.innerWidth / 2;
+    const opacity = 1 - Math.min(dist / max, 1);
+    video.style.opacity = opacity.toFixed(2);
+  });
+}
+
+if (projectScroll) {
+  projectScroll.addEventListener('scroll', fadeProjectVideos);
+  window.addEventListener('resize', fadeProjectVideos);
+  window.addEventListener('load', fadeProjectVideos);
+}
+
+</script>
+<script>
+    const scrollTopBtn = document.getElementById("scrollTopBtn");
+    window.addEventListener("scroll", () => {
+      scrollTopBtn.classList.toggle("show", window.scrollY > 400);
+    });
+    scrollTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script>
+  const cursor = document.getElementById("target-cursor");
+  const corners = cursor.querySelectorAll(".target-corner");
+  const cornerSize = 12;
+
+  document.addEventListener("mousemove", (e) => {
+    gsap.to(cursor, {
+      x: e.clientX,
+      y: e.clientY,
+      duration: 0.2,
+      ease: "power3.out"
+    });
+  });
+
+  const targets = document.querySelectorAll("a, button, .cursor-target");
+  targets.forEach((target) => {
+    target.addEventListener("mouseenter", () => {
+      const rect = target.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const offsets = [
+        { x: rect.left - centerX - 3, y: rect.top - centerY - 3 },
+        { x: rect.right - centerX - cornerSize + 3, y: rect.top - centerY - 3 },
+        { x: rect.right - centerX - cornerSize + 3, y: rect.bottom - centerY - cornerSize + 3 },
+        { x: rect.left - centerX - 3, y: rect.bottom - centerY - cornerSize + 3 },
+      ];
+      corners.forEach((corner, i) => {
+        gsap.to(corner, {
+          x: offsets[i].x,
+          y: offsets[i].y,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+    });
+
+    target.addEventListener("mouseleave", () => {
+      const resetOffsets = [
+        { x: -cornerSize * 1.5, y: -cornerSize * 1.5 },
+        { x: cornerSize * 0.5, y: -cornerSize * 1.5 },
+        { x: cornerSize * 0.5, y: cornerSize * 0.5 },
+        { x: -cornerSize * 1.5, y: cornerSize * 0.5 },
+      ];
+      corners.forEach((corner, i) => {
+        gsap.to(corner, {
+          x: resetOffsets[i].x,
+          y: resetOffsets[i].y,
+          duration: 0.3,
+          ease: "power3.out"
+        });
+      });
+    });
+  });
+</script>
 </body>
 </html>
