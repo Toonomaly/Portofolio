@@ -121,6 +121,39 @@ body {
   box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
 }
 
+
+.skill-chart {
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+.skill-row {
+  margin-bottom: 1.5rem;
+}
+
+.skill-row span {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.chart-bar {
+  width: 100%;
+  background: #2b2b2b;
+  height: 14px;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.chart-bar .fill {
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #00ffff, #0099ff);
+  border-radius: 7px;
+  transition: width 1s ease;
+}
+
 /* =================== CANVAS BACKGROUND =================== */
 canvas {
   position: fixed;
@@ -586,36 +619,32 @@ section ol {
 </section>
   
 <!-- Skills Section -->
-<section class="section fade-section" id="skills">
-<h2>My Skills</h2>
-<div class="skills-grid">
-<div class="skill-card">
-<h3>3D Modeling &amp; Animation</h3>
-<p>Create stylized and original characters or scenes using tools like Blender.</p>
-</div>
-<div class="skill-card">
-<h3>YouTube Content Creation</h3>
-<p>Produce entertaining and educational videos with storytelling and visuals.</p>
-</div>
-<div class="skill-card">
-<h3>Social Media Management</h3>
-<p>Grow and maintain an engaging presence across Instagram, Discord, and more.</p>
-</div>
-<div class="skill-card">
-<h3>HTML, CSS, JavaScript</h3>
-<p>Build interactive, responsive websites and creative UI experiments.</p>
-</div>
-<div class="skill-card">
-<h3>Video Editing</h3>
-<p>Edit high-quality videos using tools like Premiere Pro, Hitfilm, and others.</p>
-</div>
-<div class="skill-card">
-<h3>Discord Server Management</h3>
-<p>Set up bots, roles, channels, and systems to manage a thriving community.</p>
-</div>
-</div>
-  
+<section id="skills">
+  <h2 class="section-title">My Skills</h2>
+
+  <div class="skill-chart">
+    <div class="skill-row" data-width="90%">
+      <span>3D Animation</span>
+      <div class="chart-bar"><div class="fill"></div></div>
+    </div>
+
+    <div class="skill-row" data-width="85%">
+      <span>Content Creation</span>
+      <div class="chart-bar"><div class="fill"></div></div>
+    </div>
+
+    <div class="skill-row" data-width="70%">
+      <span>Web Design</span>
+      <div class="chart-bar"><div class="fill"></div></div>
+    </div>
+
+    <div class="skill-row" data-width="80%">
+      <span>Community</span>
+      <div class="chart-bar"><div class="fill"></div></div>
+    </div>
+  </div>
 </section>
+
 <section class="section fade-section" id="tools">
 <h2>Tools I Use</h2>
 <p>I work with a diverse set of tools that help me bring my ideas to life and streamline my workflow:</p>
@@ -868,15 +897,19 @@ typeWriterLoop();
 // FADE-IN SECTIONS
 
 const fadeSections = document.querySelectorAll('.fade-section');
+
 const fadeInObserver = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add('visible');
+    } else {
+      entry.target.classList.remove('visible');
     }
   });
 }, { threshold: 0.2 });
 
 fadeSections.forEach(sec => fadeInObserver.observe(sec));
+
 
 // FADE-IN PROJECT VIDEOS ON SCROLL
   
@@ -994,6 +1027,26 @@ scrollLoop();
 // Pause saat hover
 slider.addEventListener('mouseenter', () => autoScroll = false);
 slider.addEventListener('mouseleave', () => autoScroll = true);
+</script>
+<script>
+  const skillRows = document.querySelectorAll('.skill-row');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const fill = entry.target.querySelector('.fill');
+      const percent = entry.target.getAttribute('data-width');
+
+      if (entry.isIntersecting) {
+        // Saat masuk layar → isi bar
+        fill.style.width = percent;
+      } else {
+        // Saat keluar layar → kosongin bar
+        fill.style.width = '0';
+      }
+    });
+  }, { threshold: 0.5 });
+
+  skillRows.forEach(row => observer.observe(row));
 </script>
 
 </body>
