@@ -167,44 +167,36 @@ h1#typed-text::after {
 }
 
 /* =================== VIDEO SCROLL SECTION =================== */
-.video-scroll-wrapper {
-  overflow: hidden;
-  cursor: grab;
-}
-.video-scroll-wrapper:active {
-  cursor: grabbing;
-}
-.video-scroll {
-  display: flex;
-  gap: 1rem;
-  overflow-x: scroll;
-  scroll-behavior: auto;
-  scroll-snap-type: x mandatory;
-  padding-bottom: 1rem;
-}
-.video-scroll::-webkit-scrollbar {
-  display: none;
-}
-.video-container {
-  position: relative;
-  width: 320px;
-  height: 180px;
-  flex: 0 0 auto;
-  scroll-snap-align: center;
-}
-.project-video {
-  width: 100%;
-  height: 100%;
-  border: none;
-  border-radius: 10px;
-}
-.drag-overlay {
-  position: absolute;
-  inset: 0;
-  background: transparent;
-  z-index: 10;
-  display: none;
-}
+ .auto-scroll .video-scroll {
+      display: flex;
+      gap: 1rem;
+      overflow-x: hidden;
+      scroll-snap-type: x mandatory;
+      animation: scroll-left 30s linear infinite;
+    }
+    .auto-scroll:hover .video-scroll {
+      animation-play-state: paused;
+    }
+    @keyframes scroll-left {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    .video-container {
+      flex: 0 0 auto;
+      width: 320px;
+      height: 180px;
+      scroll-snap-align: center;
+    }
+    .project-video {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      border: none;
+    }
 
 /* =================== SKILLS SECTION =================== */
 #skills {
@@ -531,11 +523,9 @@ section ol {
 <!-- Projects Section -->
 <section class="section fade-section" id="projects">
 <h2>My Projects</h2>
-<div class="video-scroll-wrapper">
-  <div class="video-scroll" id="video-slider">
-    <!-- Video di-generate lewat JS -->
+  <div class="video-scroll-wrapper auto-scroll">
+    <div class="video-scroll" id="video-slider"></div>
   </div>
-</div>
 </section>
   
 <!-- Skills Section -->
@@ -922,69 +912,18 @@ const videos = [
   "https://www.youtube.com/embed/wJF5NXygL4k",
   "https://www.youtube.com/embed/tgbNymZ7vqY"
 ];
+
 const slider = document.getElementById("video-slider");
 
-// Duplikasi video 3x
-const repeat = 3;
-for (let r = 0; r < repeat; r++) {
+// Duplikat video 2x agar animasi scroll bisa looping
+for (let r = 0; r < 2; r++) {
   videos.forEach(src => {
     const container = document.createElement("div");
     container.className = "video-container";
-
-    const iframe = document.createElement("iframe");
-    iframe.className = "project-video";
-    iframe.src = src;
-    iframe.setAttribute("allowfullscreen", "");
-
-    const overlay = document.createElement("div");
-    overlay.className = "drag-overlay";
-
-    container.appendChild(iframe);
-    container.appendChild(overlay);
+    container.innerHTML = `<iframe class="project-video" src="${src}" allowfullscreen></iframe>`;
     slider.appendChild(container);
   });
 }
-
-// Infinite scroll reset
-slider.addEventListener("scroll", () => {
-  if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 10) {
-    slider.scrollLeft = slider.scrollWidth / 3;
-  }
-});
-
-window.addEventListener("load", () => {
-  slider.scrollLeft = slider.scrollWidth / 3;
-});
-
-// Drag functionality
-let isDown = false;
-let startX;
-let scrollLeft;
-
-slider.addEventListener("mousedown", (e) => {
-  isDown = true;
-  startX = e.pageX - slider.offsetLeft;
-  scrollLeft = slider.scrollLeft;
-  document.querySelectorAll('.drag-overlay').forEach(o => o.style.display = 'block');
-});
-
-slider.addEventListener("mouseleave", () => {
-  isDown = false;
-  document.querySelectorAll('.drag-overlay').forEach(o => o.style.display = 'none');
-});
-
-slider.addEventListener("mouseup", () => {
-  isDown = false;
-  document.querySelectorAll('.drag-overlay').forEach(o => o.style.display = 'none');
-});
-
-slider.addEventListener("mousemove", (e) => {
-  if (!isDown) return;
-  e.preventDefault();
-  const x = e.pageX - slider.offsetLeft;
-  const walk = (x - startX) * 2;
-  slider.scrollLeft = scrollLeft - walk;
-});
 </script>
 </body>
 </html>
