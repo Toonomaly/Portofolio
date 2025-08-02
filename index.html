@@ -38,51 +38,35 @@ html, body {
   color: var(--text);
   scroll-behavior: smooth;
 }
+
 body {
   cursor: none;
 }
 
-#target-cursor {
+* {
+  cursor: none 
+}
+
+#circle-cursor {
   position: fixed;
   top: 0;
   left: 0;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: difference;
-}
-
-.target-cursor-dot {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 4px;
-  height: 4px;
-  background: #fff;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.target-corner {
-  position: absolute;
-  left: 50%;
-  top: 50%;
   width: 12px;
   height: 12px;
-  border: 3px solid #fff;
+  background: var(--primary);
+  border-radius: 50%;
+  pointer-events: none; 
+  transform: translate(-50%, -50%);
+  z-index: 10000; 
+  mix-blend-mode: difference;
+  transition: transform 0.15s ease, width 0.25s ease, height 0.25s ease;
 }
 
-.corner-tl { transform: translate(-150%, -150%); border-right: none; border-bottom: none; }
-.corner-tr { transform: translate(50%, -150%); border-left: none; border-bottom: none; }
-.corner-br { transform: translate(50%, 50%); border-left: none; border-top: none; }
-.corner-bl { transform: translate(-150%, 50%); border-right: none; border-top: none; }
-body {
-  position: relative;
-  isolation: isolate;
-  overflow-x: hidden;
-  text-align: center;
+#circle-cursor.hovering {
+  width: 40px;
+  height: 40px;
+  transition: width 0.25s ease, height 0.25s ease;
 }
-
 
 
 /* =================== CANVAS BACKGROUND =================== */
@@ -184,30 +168,42 @@ h1#typed-text::after {
 
 /* =================== VIDEO SCROLL SECTION =================== */
 .video-scroll-wrapper {
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding: 1rem 0;
+  overflow: hidden;
+  cursor: grab;
 }
-
+.video-scroll-wrapper:active {
+  cursor: grabbing;
+}
 .video-scroll {
   display: flex;
-  gap: 20px;
-  padding: 0 10vw;
-  width: max-content;
+  gap: 1rem;
+  overflow-x: scroll;
+  scroll-behavior: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 1rem;
 }
-
-.project-video {
+.video-scroll::-webkit-scrollbar {
+  display: none;
+}
+.video-container {
+  position: relative;
   width: 320px;
   height: 180px;
-  flex-shrink: 0;
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+}
+.project-video {
+  width: 100%;
+  height: 100%;
   border: none;
   border-radius: 10px;
-  scroll-snap-align: center;
-  box-shadow: 0 0 15px var(--highlight);
 }
-
-.project-video.visible {
-  opacity: 1;
+.drag-overlay {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  z-index: 10;
+  display: none;
 }
 
 /* =================== SKILLS SECTION =================== */
@@ -497,14 +493,8 @@ section ol {
 <!-- Scroll to Top Button -->
 <div class="scroll-top" id="scrollTopBtn">↑</div>
   
-<!-- Custom Cursor -->
-<div id="target-cursor">
-  <div class="target-cursor-dot"></div>
-  <div class="target-corner corner-tl"></div>
-  <div class="target-corner corner-tr"></div>
-  <div class="target-corner corner-br"></div>
-  <div class="target-corner corner-bl"></div>
-</div>
+<!-- Bulat Custom Cursor -->
+<div id="circle-cursor"></div>
   
 <!-- Navbar -->
 <nav class="navbar">
@@ -542,18 +532,9 @@ section ol {
 <section class="section fade-section" id="projects">
 <h2>My Projects</h2>
 <div class="video-scroll-wrapper">
-<div class="video-scroll">
-<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/bNiehoppDRo"></iframe>
-<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/hwXU7rx2NUg"></iframe>
-<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/wJF5NXygL4k"></iframe>
-<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
-<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
-<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
-<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
-<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
-<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
-<iframe allowfullscreen="" class="project-video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
-</div>
+  <div class="video-scroll" id="video-slider">
+    <!-- Video di-generate lewat JS -->
+  </div>
 </div>
 </section>
   
@@ -886,60 +867,124 @@ if (projectScroll) {
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
   </script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script>
-  const cursor = document.getElementById("target-cursor");
-  const corners = cursor.querySelectorAll(".target-corner");
-  const cornerSize = 12;
+const circleCursor = document.getElementById("circle-cursor");
 
-  document.addEventListener("mousemove", (e) => {
-    gsap.to(cursor, {
-      x: e.clientX,
-      y: e.clientY,
-      duration: 0.2,
-      ease: "power3.out"
-    });
+// Set transform centering
+gsap.set(circleCursor, {
+  xPercent: -50,
+  yPercent: -50
+});
+
+// Gerak kursor
+document.addEventListener("mousemove", (e) => {
+  gsap.to(circleCursor, {
+    x: e.clientX,
+    y: e.clientY,
+    duration: 0.15,
+    ease: "power3.out"
   });
+});
 
-  const targets = document.querySelectorAll("a, button, .cursor-target");
-  targets.forEach((target) => {
-    target.addEventListener("mouseenter", () => {
-      const rect = target.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const offsets = [
-        { x: rect.left - centerX - 3, y: rect.top - centerY - 3 },
-        { x: rect.right - centerX - cornerSize + 3, y: rect.top - centerY - 3 },
-        { x: rect.right - centerX - cornerSize + 3, y: rect.bottom - centerY - cornerSize + 3 },
-        { x: rect.left - centerX - 3, y: rect.bottom - centerY - cornerSize + 3 },
-      ];
-      corners.forEach((corner, i) => {
-        gsap.to(corner, {
-          x: offsets[i].x,
-          y: offsets[i].y,
-          duration: 0.3,
-          ease: "power2.out"
-        });
-      });
-    });
-
-    target.addEventListener("mouseleave", () => {
-      const resetOffsets = [
-        { x: -cornerSize * 1.5, y: -cornerSize * 1.5 },
-        { x: cornerSize * 0.5, y: -cornerSize * 1.5 },
-        { x: cornerSize * 0.5, y: cornerSize * 0.5 },
-        { x: -cornerSize * 1.5, y: cornerSize * 0.5 },
-      ];
-      corners.forEach((corner, i) => {
-        gsap.to(corner, {
-          x: resetOffsets[i].x,
-          y: resetOffsets[i].y,
-          duration: 0.3,
-          ease: "power3.out"
-        });
-      });
-    });
+// Hover efek membesar
+document.querySelectorAll("a, button, .cursor-target").forEach(el => {
+  el.addEventListener("mouseenter", () => {
+    circleCursor.classList.add("hovering");
   });
+  el.addEventListener("mouseleave", () => {
+    circleCursor.classList.remove("hovering");
+  });
+});
+</script>
+
+<script>
+const circleCursor = document.getElementById("circle-cursor");
+
+// Gerakkan kursor
+document.addEventListener("mousemove", e => {
+  circleCursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+});
+
+// Efek hover membesar
+const hoverTargets = document.querySelectorAll("a, button, .cursor-target");
+hoverTargets.forEach(el => {
+  el.addEventListener("mouseenter", () => circleCursor.classList.add("hovering"));
+  el.addEventListener("mouseleave", () => circleCursor.classList.remove("hovering"));
+});
+</script>
+
+<script>
+const videos = [
+  "https://www.youtube.com/embed/bNiehoppDRo",
+  "https://www.youtube.com/embed/hwXU7rx2NUg",
+  "https://www.youtube.com/embed/wJF5NXygL4k",
+  "https://www.youtube.com/embed/tgbNymZ7vqY"
+];
+const slider = document.getElementById("video-slider");
+
+// Duplikasi video 3x
+const repeat = 3;
+for (let r = 0; r < repeat; r++) {
+  videos.forEach(src => {
+    const container = document.createElement("div");
+    container.className = "video-container";
+
+    const iframe = document.createElement("iframe");
+    iframe.className = "project-video";
+    iframe.src = src;
+    iframe.setAttribute("allowfullscreen", "");
+
+    const overlay = document.createElement("div");
+    overlay.className = "drag-overlay";
+
+    container.appendChild(iframe);
+    container.appendChild(overlay);
+    slider.appendChild(container);
+  });
+}
+
+// Infinite scroll reset
+slider.addEventListener("scroll", () => {
+  if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 10) {
+    slider.scrollLeft = slider.scrollWidth / 3;
+  }
+});
+
+window.addEventListener("load", () => {
+  slider.scrollLeft = slider.scrollWidth / 3;
+});
+
+// Drag functionality
+let isDown = false;
+let startX;
+let scrollLeft;
+
+slider.addEventListener("mousedown", (e) => {
+  isDown = true;
+  startX = e.pageX - slider.offsetLeft;
+  scrollLeft = slider.scrollLeft;
+  document.querySelectorAll('.drag-overlay').forEach(o => o.style.display = 'block');
+});
+
+slider.addEventListener("mouseleave", () => {
+  isDown = false;
+  document.querySelectorAll('.drag-overlay').forEach(o => o.style.display = 'none');
+});
+
+slider.addEventListener("mouseup", () => {
+  isDown = false;
+  document.querySelectorAll('.drag-overlay').forEach(o => o.style.display = 'none');
+});
+
+slider.addEventListener("mousemove", (e) => {
+  if (!isDown) return;
+  e.preventDefault();
+  const x = e.pageX - slider.offsetLeft;
+  const walk = (x - startX) * 2;
+  slider.scrollLeft = scrollLeft - walk;
+});
 </script>
 </body>
 </html>
