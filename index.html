@@ -68,7 +68,6 @@ body {
   transition: width 0.25s ease, height 0.25s ease;
 }
 
-
 /* =================== CANVAS BACKGROUND =================== */
 canvas {
   position: fixed;
@@ -167,24 +166,11 @@ h1#typed-text::after {
 }
 
 /* =================== VIDEO SCROLL SECTION =================== */
- .auto-scroll .video-scroll {
-      display: flex;
-      gap: 1rem;
-      overflow-x: hidden;
-      scroll-snap-type: x mandatory;
-      animation: scroll-left 30s linear infinite;
-    }
-    .auto-scroll:hover .video-scroll {
-      animation-play-state: paused;
-    }
-    @keyframes scroll-left {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(-50%);
-      }
-    }
+ .video-scroll {
+  display: flex;
+  gap: 1rem;
+  overflow-x: hidden;
+}
     .video-container {
       flex: 0 0 auto;
       width: 320px;
@@ -197,6 +183,16 @@ h1#typed-text::after {
       border-radius: 10px;
       border: none;
     }
+
+.project-video {
+  overflow: hidden;
+  border: none;
+}
+
+iframe::-webkit-scrollbar {
+  display: none;
+}
+
 
 /* =================== SKILLS SECTION =================== */
 #skills {
@@ -904,7 +900,6 @@ hoverTargets.forEach(el => {
   el.addEventListener("mouseleave", () => circleCursor.classList.remove("hovering"));
 });
 </script>
-
 <script>
 const videos = [
   "https://www.youtube.com/embed/bNiehoppDRo",
@@ -915,8 +910,8 @@ const videos = [
 
 const slider = document.getElementById("video-slider");
 
-// Duplikat video 2x agar animasi scroll bisa looping
-for (let r = 0; r < 2; r++) {
+// Tambahkan banyak duplikat agar panjang cukup untuk looping
+for (let r = 0; r < 5; r++) {
   videos.forEach(src => {
     const container = document.createElement("div");
     container.className = "video-container";
@@ -924,6 +919,25 @@ for (let r = 0; r < 2; r++) {
     slider.appendChild(container);
   });
 }
+
+// Auto scroll manual
+let autoScroll = true;
+function scrollLoop() {
+  if (autoScroll) {
+    slider.scrollLeft += 1;
+    // reset saat sudah sampai ujung
+    if (slider.scrollLeft >= slider.scrollWidth - slider.clientWidth) {
+      slider.scrollLeft = 0;
+    }
+  }
+  requestAnimationFrame(scrollLoop);
+}
+scrollLoop();
+
+// Pause saat hover
+slider.addEventListener('mouseenter', () => autoScroll = false);
+slider.addEventListener('mouseleave', () => autoScroll = true);
 </script>
+
 </body>
 </html>
