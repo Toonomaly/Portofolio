@@ -14,16 +14,7 @@
   --highlight: rgba(255, 255, 255, 0.1);
   --blur: rgba(15, 15, 15, 0.6);
 }
-
-/* =================== DARK MODE (Optional) =================== */
-.dark-mode {
-  --bg: #ffffff;
-  --text: #111111;
-  --primary: #00bcd4;
-  --highlight: rgba(0, 0, 0, 0.1);
-  --blur: rgba(255, 255, 255, 0.6);
-}
-
+ 
 /* =================== RESET & BASE =================== */
 *, *::before, *::after {
   margin: 0;
@@ -86,6 +77,48 @@ body {
 .social-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 0 12px var(--primary);
+}
+
+.about-card.two-column {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem;
+  background: #1a1a1a;
+  border-radius: 16px;
+  box-shadow: 0 0 0 rgba(0, 255, 255, 0);
+  transition: 0.3s ease-in-out;
+  transform: translateY(0);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.about-card.two-column:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 255, 255, 0.15);
+  background: #222;
+}
+
+.about-text {
+  flex: 1 1 55%;
+  color: var(--muted, #bbb);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.about-image {
+  flex: 1 1 35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.about-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
 }
 
 /* =================== CANVAS BACKGROUND =================== */
@@ -527,15 +560,23 @@ section ol {
   
 <!-- About Section -->
 <section class="section fade-section" id="about">
-<h2>About Me</h2>
-<p>Hi! I’m Asri — a passionate 3D artist and content creator who loves bringing ideas to life through animation and design. I create engaging content for YouTube and actively share my creative journey on social media.
-    <br/><br/>
-    Beyond 3D art, I enjoy exploring tech and creativity through coding, video editing, and building online communities. I also manage a Discord server where I collaborate, connect, and share tips with other creatives. I’m always excited to learn, experiment, and create something meaningful.
-    <br/><br/>
-    🔤 <strong>Languages:</strong> Indonesian (native), English (intermediate), Japanese (beginner)
-    </p>
+  <h2 class="section-title">About Me</h2>
+  <div class="about-card two-column">
+    <div class="about-text">
+      <p>
+        Hi! I’m Asri — a passionate 3D artist and content creator who loves bringing ideas to life through animation and design. I create engaging content for YouTube and actively share my creative journey on social media.
+        <br/><br/>
+        Beyond 3D art, I enjoy exploring tech and creativity through coding, video editing, and building online communities. I also manage a Discord server where I collaborate, connect, and share tips with other creatives. I’m always excited to learn, experiment, and create something meaningful.
+        <br/><br/>
+        🔤 <strong>Languages:</strong> Indonesian (native), English (intermediate), Japanese (beginner)
+      </p>
+    </div>
+    <div class="about-image">
+      <img src="https://via.placeholder.com/250x250?text=Your+Image" alt="Asri avatar">
+    </div>
+  </div>
 </section>
-  
+
 <!-- Projects Section -->
 <section class="section fade-section" id="projects">
 <h2>My Projects</h2>
@@ -698,8 +739,8 @@ class Particle {
     this.y = Math.random() * canvas.height;
     this.z = Math.random() * 1 + 0.2;
     this.size = (Math.random() * 2 + 1) / this.z;
-    this.baseSpeedX = (Math.random() - 0.5) * 1 / this.z;
-    this.baseSpeedY = (Math.random() - 0.5) * 1 / this.z;
+    this.baseSpeedX = (Math.random() - 0.5) * 0.3 / this.z;
+    this.baseSpeedY = (Math.random() - 0.5) * 0.3 / this.z;
     this.speedX = this.baseSpeedX;
     this.speedY = this.baseSpeedY;
     this.depth = this.z;
@@ -719,8 +760,8 @@ class Particle {
       this.speedY = this.baseSpeedY;
     }
 
-    const offsetX = (mouse.x - window.innerWidth / 2) / (30 * this.depth);
-    const offsetY = (mouse.y - window.innerHeight / 2) / (30 * this.depth);
+    const offsetX = (mouse.x - window.innerWidth / 2) / (100 * this.depth);
+    const offsetY = (mouse.y - window.innerHeight / 2) / (100 * this.depth);
     this.x += this.speedX + offsetX;
     this.y += this.speedY + offsetY;
 
