@@ -104,10 +104,10 @@ canvas {
   width: 100%;
   background-color: var(--blur);
   backdrop-filter: blur(8px);
-  z-index: 9999; /* pastikan di atas elemen lain */
+  z-index: 9999;
   padding: 1rem 2rem;
   transition: background 0.3s ease;
-  pointer-events: auto; /* pastikan bisa diklik */
+  pointer-events: auto;
 }
 
 .navbar ul {
@@ -485,6 +485,7 @@ section ol {
   </style>
 </head>
 <body class="text-center">
+  
 <!-- Background Particle Canvas -->
 <canvas id="particle-canvas"></canvas>
 <div class="parallax-container">
@@ -495,6 +496,7 @@ section ol {
 
 <!-- Scroll to Top Button -->
 <div class="scroll-top" id="scrollTopBtn">↑</div>
+  
 <!-- Custom Cursor -->
 <div id="target-cursor">
   <div class="target-cursor-dot"></div>
@@ -503,6 +505,7 @@ section ol {
   <div class="target-corner corner-br"></div>
   <div class="target-corner corner-bl"></div>
 </div>
+  
 <!-- Navbar -->
 <nav class="navbar">
 <ul>
@@ -517,11 +520,13 @@ section ol {
 <li><a href="#contact">Contact</a></li>
 </ul>
 </nav>
+  
 <!-- Hero Section -->
 <section class="section center" id="home">
 <h1 id="typed-text"></h1>
 <div class="social-wrapper"></div>
 </section>
+  
 <!-- About Section -->
 <section class="section fade-section" id="about">
 <h2>About Me</h2>
@@ -532,6 +537,7 @@ section ol {
     🔤 <strong>Languages:</strong> Indonesian (native), English (intermediate), Japanese (beginner)
     </p>
 </section>
+  
 <!-- Projects Section -->
 <section class="section fade-section" id="projects">
 <h2>My Projects</h2>
@@ -550,6 +556,7 @@ section ol {
 </div>
 </div>
 </section>
+  
 <!-- Skills Section -->
 <section class="section fade-section" id="skills">
 <h2>My Skills</h2>
@@ -579,6 +586,7 @@ section ol {
 <p>Set up bots, roles, channels, and systems to manage a thriving community.</p>
 </div>
 </div>
+  
 </section>
 <section class="section fade-section" id="tools">
 <h2>Tools I Use</h2>
@@ -592,6 +600,7 @@ section ol {
 <li><strong>Canva &amp; Photoshop:</strong> For designing thumbnails, social media posts, and visual content with professional polish.</li>
 </ul>
 </section>
+  
 <section class="section fade-section" id="workflow">
 <h2>How I Work</h2>
 <p>I approach each project with a clear and organized process that ensures creativity, clarity, and consistency:</p>
@@ -603,6 +612,7 @@ section ol {
 <li><strong>5. Publish &amp; Share:</strong> Once done, I publish on YouTube or social media, and engage with the audience. I also reflect on what I learned for future projects.</li>
 </ol>
 </section>
+  
 <section class="section fade-section" id="testimonials">
 <h2>Testimonials</h2>
 <div class="testimonial">
@@ -624,12 +634,14 @@ section ol {
 <p>- Theo, Content Creator</p>
 </div>
 </section>
+  
 <!-- CTA Section -->
 <section class="section fade-section" id="hire">
 <h2>Let’s Create Something Awesome Together!</h2>
 <p>Interested in collaborating or hiring me? Don’t hesitate to reach out!</p>
 <a class="cta-btn" href="#links">Contact Me</a>
 </section>
+  
 <!-- Contact Section -->
 <section class="section fade-section social-section" id="contact">
 <h2>Find Me</h2>
@@ -640,6 +652,7 @@ section ol {
 <a class="social-btn email" href="mailto:kangfitnahorang@email.com">Email</a>
 </div>
 </section>
+  
 <!-- JavaScript -->
 <script>
 
@@ -809,7 +822,7 @@ document.addEventListener("mousemove", (e) => {
 
 // TYPING EFFECT
 
-const text = "Hallo, I'm Toonomaly.";
+const text = "Hallo, I'm Toonomaly";
 const typedText = document.getElementById('typed-text');
 let index = 0;
 
