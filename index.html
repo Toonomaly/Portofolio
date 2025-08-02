@@ -31,6 +31,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html, body {
   height: 100%;
   font-family: Arial, sans-serif;
@@ -68,6 +72,22 @@ body {
   transition: width 0.25s ease, height 0.25s ease;
 }
 
+.social-btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  background: var(--primary);
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 0 transparent;
+}
+
+.social-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px var(--primary);
+}
+
 /* =================== CANVAS BACKGROUND =================== */
 canvas {
   position: fixed;
@@ -96,24 +116,25 @@ canvas {
 .navbar ul {
   list-style: none;
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
   gap: 1.5rem;
+  justify-content: center;
+  padding: 1rem;
   margin: 0;
-  padding: 0;
 }
 
 .navbar a {
   color: var(--text);
   text-decoration: none;
   font-weight: bold;
-  transition: color 0.3s, transform 0.3s;
+  display: inline-block; /* penting untuk transform */
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .navbar a:hover {
   color: var(--primary);
-  transform: scale(1.05);
+  transform: scale(1.5); /* dibesarkan sedikit biar lebih kerasa */
 }
+
 
 /* =================== SECTION LAYOUT =================== */
 section {
@@ -199,6 +220,14 @@ iframe::-webkit-scrollbar {
   display: none;
 }
 
+.project-video {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-video:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.2);
+}
 
 /* =================== SKILLS SECTION =================== */
 #skills {
@@ -334,20 +363,6 @@ html {
   transform: translateZ(-20px) scale(1.02);
 }
 
-/* =================== SCROLLBAR =================== */
-::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 10px;
-}
 
 /* =================== RESPONSIVE =================== */
 @media (max-width: 768px) {
@@ -904,14 +919,14 @@ hoverTargets.forEach(el => {
 <script>
 const videos = [
   "https://www.youtube.com/embed/bNiehoppDRo",
-  "https://www.youtube.com/embed/hwXU7rx2NUg",
-  "https://www.youtube.com/embed/wJF5NXygL4k",
-  "https://www.youtube.com/embed/tgbNymZ7vqY"
+  "https://www.youtube.com/embed/bNiehoppDRo",
+  "https://www.youtube.com/embed/bNiehoppDRo",
+   "https://www.youtube.com/embed/bNiehoppDRo",
+   "https://www.youtube.com/embed/bNiehoppDRo",
 ];
 
 const slider = document.getElementById("video-slider");
 
-// Tambahkan banyak duplikat agar panjang cukup untuk looping
 for (let r = 0; r < 5; r++) {
   videos.forEach(src => {
     const container = document.createElement("div");
