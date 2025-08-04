@@ -223,6 +223,12 @@ footer {
   color: var(--muted);
 }
 
+#contact h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
 /* =================== TYPING EFFECT =================== */
 h1#typed-text::after {
   content: '|';
@@ -233,30 +239,75 @@ h1#typed-text::after {
   50% { opacity: 0; }
 }
 
-/* =================== ANIMATIONS =================== */
-.fade-section,
-.fade-in-section,
-.fade-box {
+/* =================== ANIMATIONS KUSTOM =================== */
+
+/* FLOAT IN EFFECT */
+.fade-section.float-in {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+.fade-section.float-in.visible {
+  animation: floatIn 1s ease-out forwards;
+}
+@keyframes floatIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.fade-section.visible,
-.fade-in-section.visible {
-  opacity: 1;
-  transform: translateY(0);
+/* ROTATE IN EFFECT */
+.fade-section.rotate-in {
+  opacity: 0;
+  transform: rotate(-5deg) scale(0.95);
+}
+.fade-section.rotate-in.visible {
+  animation: rotateIn 1s ease-out forwards;
+}
+@keyframes rotateIn {
+  0% {
+    opacity: 0;
+    transform: rotate(-5deg) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
 }
 
-.fade-box {
-  transform: scale(0.9);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+/* FLIP UP EFFECT */
+.fade-section.flip-up {
+  opacity: 0;
+  transform: rotateX(90deg);
+  transform-origin: bottom;
+  perspective: 800px;
+}
+.fade-section.flip-up.visible {
+  animation: flipUp 0.9s ease-out forwards;
+}
+@keyframes flipUp {
+  0% {
+    opacity: 0;
+    transform: rotateX(90deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateX(0);
+  }
 }
 
-.fade-box.visible {
-  opacity: 1;
-  transform: scale(1);
-}
+/* Tambahan: delay opsional */
+.delay-1s { animation-delay: 0.3s; }
+.delay-2s { animation-delay: 0.6s; }
+.delay-3s { animation-delay: 0.9s; }
+.delay-4s { animation-delay: 1.2s; }
+.delay-5s { animation-delay: 1.5s; }
+.delay-6s { animation-delay: 1.8s; }
+.delay-7s { animation-delay: 2.1s; }
 
 /* =================== VIDEO SCROLL SECTION =================== */
  .video-scroll {
@@ -587,12 +638,12 @@ section ol {
   
 <!-- Hero Section -->
 <section class="section center" id="home">
-<h1 id="typed-text"></h1>
-<div class="social-wrapper"></div>
+  <h1 id="typed-text"></h1>
+  <div class="social-wrapper"></div>
 </section>
   
 <!-- About Section -->
-<section class="section fade-section" id="about">
+<section class="section fade-section rotate-in delay-1s" id="about">
   <h2 class="section-title">About Me</h2>
   <div class="about-card two-column">
     <div class="about-text">
@@ -611,7 +662,7 @@ section ol {
 </section>
 
 <!-- Projects Section -->
-<section class="section fade-section" id="projects">
+<section class="section fade-section flip-up delay-2s" id="projects">
 <h2>My Projects</h2>
   <div class="video-scroll-wrapper auto-scroll">
     <div class="video-scroll" id="video-slider"></div>
@@ -619,7 +670,7 @@ section ol {
 </section>
   
 <!-- Skills Section -->
-<section id="skills">
+<section class="section fade-section float-in delay-3s" id="skills">
   <h2 class="section-title">My Skills</h2>
 
   <div class="skill-chart">
@@ -645,7 +696,7 @@ section ol {
   </div>
 </section>
 
-<section class="section fade-section" id="tools">
+<section class="section fade-section rotate-in delay-4s" id="tools">
 <h2>Tools I Use</h2>
 <p>I work with a diverse set of tools that help me bring my ideas to life and streamline my workflow:</p>
 <ul>
@@ -658,7 +709,7 @@ section ol {
 </ul>
 </section>
   
-<section class="section fade-section" id="workflow">
+<section class="section fade-section flip-up delay-5s" id="workflow">
 <h2>How I Work</h2>
 <p>I approach each project with a clear and organized process that ensures creativity, clarity, and consistency:</p>
 <ol>
@@ -670,7 +721,7 @@ section ol {
 </ol>
 </section>
   
-<section class="section fade-section" id="testimonials">
+<section class="section fade-section float-in delay-6s" id="testimonials">
 <h2>Testimonials</h2>
 <div class="testimonial">
 <blockquote>
@@ -693,14 +744,14 @@ section ol {
 </section>
   
 <!-- Contact Section -->
-<section class="section fade-section social-section" id="contact">
-<h2>Find Me</h2>
-<div class="social-links">
-<a class="social-btn discord" href="https://discord.gg/sdfjdpzABv" target="_blank">Discord</a>
-<a class="social-btn instagram" href="https://www.instagram.com/toonomaly_official/" target="_blank">Instagram</a>
-<a class="social-btn github" href="https://github.com/Toonomaly" target="_blank">GitHub</a>
-<a class="social-btn email" href="mailto:kangfitnahorang@email.com">Email</a>
-</div>
+<section class="section fade-section rotate-in delay-7s" id="contact">
+  <h2>Find Me</h2>
+  <div class="social-links">
+    <a class="social-btn discord" href="https://discord.gg/sdfjdpzABv" target="_blank">Discord</a>
+    <a class="social-btn instagram" href="https://www.instagram.com/toonomaly_official/" target="_blank">Instagram</a>
+    <a class="social-btn github" href="https://github.com/Toonomaly" target="_blank">GitHub</a>
+    <a class="social-btn email" href="mailto:kangfitnahorang@email.com">Email</a>
+  </div>
 </section>
   
   <footer>
