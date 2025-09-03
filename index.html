@@ -229,6 +229,96 @@ footer {
   font-size: 2rem;
 }
 
+/* =================== PROJECT =================== */
+.gallery {
+  column-count: 3;
+  column-gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.gallery-item {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #111;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
+.gallery-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 255, 255, 0.2);
+}
+
+.gallery-info {
+  padding: 0.8rem 1rem;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  text-align: center;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #111;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 800px;
+  width: 90%;
+  color: white;
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content img,
+.modal-content video,
+.modal-content iframe {
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  object-fit: contain;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--primary);
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.9);}
+  to {opacity: 1; transform: scale(1);}
+}
+
+
 /* =================== TYPING EFFECT =================== */
 h1#typed-text::after {
   content: '|';
@@ -309,42 +399,6 @@ h1#typed-text::after {
 .delay-6s { animation-delay: 1.8s; }
 .delay-7s { animation-delay: 2.1s; }
 
-/* =================== VIDEO SCROLL SECTION =================== */
- .video-scroll {
-  display: flex;
-  gap: 1rem;
-  overflow-x: hidden;
-}
-    .video-container {
-      flex: 0 0 auto;
-      width: 320px;
-      height: 180px;
-      scroll-snap-align: center;
-    }
-    .project-video {
-      width: 100%;
-      height: 100%;
-      border-radius: 10px;
-      border: none;
-    }
-
-.project-video {
-  overflow: hidden;
-  border: none;
-}
-
-iframe::-webkit-scrollbar {
-  display: none;
-}
-
-.project-video {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.project-video:hover {
-  transform: scale(1.03);
-  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.2);
-}
 
 /* =================== SKILLS SECTION =================== */
 #skills {
@@ -353,6 +407,8 @@ iframe::-webkit-scrollbar {
   background-color: rgba(255, 255, 255, 0.02);
   color: var(--text);
   border-top: 1px solid var(--highlight);
+  position: relative;
+  z-index: 1;
 }
 
 #skills h2 {
@@ -361,34 +417,15 @@ iframe::-webkit-scrollbar {
   color: #fff;
 }
 
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  max-width: 1000px;
-  margin: 0 auto;
+#skills canvas {
+  display: block;
+  position: relative;
+  width: 100% 
+  max-width: 900px;  
+  height: 450px 
+  margin: 2rem auto;
 }
 
-.skill-card {
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--highlight);
-  border-radius: 12px;
-  padding: 1.5rem;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease, background 0.3s ease;
-}
-
-.skill-card:hover {
-  transform: translateY(-5px);
-  background-color: rgba(255, 255, 255, 0.08);
-}
-
-.skill-card h3 {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-  color: var(--primary);
-}
 
 /* =================== SOCIAL SECTION =================== */
 .social-section {
@@ -482,6 +519,55 @@ html {
 
 
 /* =================== RESPONSIVE =================== */
+
+/* Responsive Gallery Masonry */
+@media (max-width: 1024px) {
+  .gallery {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .gallery {
+    column-count: 1;
+  }
+}
+
+
+/* Default Skills Chart (Desktop) */
+#skills canvas {
+  display: block;
+  width: 100% !important;
+  max-width: 1000px;
+  height: 500px !important; /* tinggi fix biar jelas */
+  margin: 2rem auto;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .gallery {
+    column-count: 2;
+  }
+
+  #skills canvas {
+    max-width: 700px;
+    height: 400px !important;
+  }
+}
+
+/* HP */
+@media (max-width: 600px) {
+  .gallery {
+    column-count: 1;
+  }
+
+  #skills canvas {
+    max-width: 100%;
+    height: 300px !important;
+  }
+}
+
+/* Navbar mobile */
 @media (max-width: 768px) {
   .navbar {
     background: rgba(0, 0, 0, 0.5);
@@ -512,10 +598,6 @@ html {
     background: rgba(255, 255, 255, 0.2);
   }
 
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
-
   .project-video {
     width: 90vw;
     height: auto;
@@ -523,13 +605,22 @@ html {
 }
 
 
+
 @media (max-width: 768px) {
+  .navbar {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-x: auto;
+  }
+
   .navbar ul {
     flex-direction: row;
     flex-wrap: nowrap;
     overflow-x: auto;
     padding: 0.5rem 1rem;
     gap: 1rem;
+    white-space: nowrap;
     scrollbar-width: none;
   }
 
@@ -542,12 +633,26 @@ html {
   }
 
   .navbar a {
+    display: inline-block;
     padding: 8px 12px;
     font-size: 0.85rem;
+    border-radius: 6px;
     white-space: nowrap;
   }
-}
 
+  .navbar a:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-video {
+    width: 90vw;
+    height: auto;
+  }
+}
 
 section p,
 section ul,
@@ -581,7 +686,6 @@ section ol {
   max-width: 960px;
   min-height: auto;
 }
-
 </style>
 <style>
     html {
@@ -661,40 +765,76 @@ section ol {
   </div>
 </section>
 
-<!-- Projects Section -->
-<section class="section fade-section flip-up delay-2s" id="projects">
-<h2>My Projects</h2>
-  <div class="video-scroll-wrapper auto-scroll">
-    <div class="video-scroll" id="video-slider"></div>
+<!-- Projects Section (Gallery) -->
+<section class="section fade-section zoom-in" id="projects">
+<div class="gallery">
+  <div class="gallery-item">
+    <img src="https://picsum.photos/seed/asri1/400/650" alt="Project 1" loading="lazy"
+         onerror="this.src='https://picsum.photos/400/650?blur=2'">
+    <div class="gallery-info"><h3>Project 1</h3><p>Deskripsi project pertama.</p></div>
   </div>
+
+  <div class="gallery-item">
+    <img src="https://picsum.photos/seed/asri2/400/300" alt="Project 2" loading="lazy"
+         onerror="this.src='https://picsum.photos/400/300?blur=2'">
+    <div class="gallery-info"><h3>Project 2</h3><p>Deskripsi project kedua.</p></div>
+  </div>
+
+  <div class="gallery-item">
+    <img src="https://picsum.photos/seed/asri3/400/520" alt="Project 3" loading="lazy"
+         onerror="this.src='https://picsum.photos/400/520?blur=2'">
+    <div class="gallery-info"><h3>Project 3</h3><p>Deskripsi project ketiga.</p></div>
+  </div>
+
+  <div class="gallery-item">
+    <img src="https://picsum.photos/seed/asri4/400/740" alt="Project 4" loading="lazy"
+         onerror="this.src='https://picsum.photos/400/740?blur=2'">
+    <div class="gallery-info"><h3>Project 4</h3><p>Deskripsi project keempat.</p></div>
+  </div>
+
+  <div class="gallery-item">
+    <img src="https://picsum.photos/seed/asri5/400/410" alt="Project 5" loading="lazy"
+         onerror="this.src='https://picsum.photos/400/410?blur=2'">
+    <div class="gallery-info"><h3>Project 5</h3><p>Deskripsi project kelima.</p></div>
+  </div>
+
+  <div class="gallery-item">
+    <img src="https://picsum.photos/seed/asri6/400/560" alt="Project 6" loading="lazy"
+         onerror="this.src='https://picsum.photos/400/560?blur=2'">
+    <div class="gallery-info"><h3>Project 6</h3><p>Deskripsi project keenam.</p></div>
+  </div>
+
+  <div class="gallery-item">
+    <img src="https://picsum.photos/seed/asri7/400/330" alt="Project 7" loading="lazy"
+         onerror="this.src='https://picsum.photos/400/330?blur=2'">
+    <div class="gallery-info"><h3>Project 7</h3><p>Deskripsi project ketujuh.</p></div>
+  </div>
+
+  <div class="gallery-item">
+    <img src="https://picsum.photos/seed/asri8/400/680" alt="Project 8" loading="lazy"
+         onerror="this.src='https://picsum.photos/400/680?blur=2'">
+    <div class="gallery-info"><h3>Project 8</h3><p>Deskripsi project kedelapan.</p></div>
+  </div>
+</div>
+
 </section>
-  
-<!-- Skills Section -->
-<section class="section fade-section float-in delay-3s" id="skills">
+
+
+<!-- Modal -->
+<div id="project-modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+
+<!-- Section Skills -->
+<section id="skills" class="section fade-section zoom-in">
   <h2 class="section-title">My Skills</h2>
-
-  <div class="skill-chart">
-    <div class="skill-row" data-width="90%">
-      <span>3D Animation</span>
-      <div class="chart-bar"><div class="fill"></div></div>
-    </div>
-
-    <div class="skill-row" data-width="85%">
-      <span>Content Creation</span>
-      <div class="chart-bar"><div class="fill"></div></div>
-    </div>
-
-    <div class="skill-row" data-width="70%">
-      <span>Web Design</span>
-      <div class="chart-bar"><div class="fill"></div></div>
-    </div>
-
-    <div class="skill-row" data-width="80%">
-      <span>Community</span>
-      <div class="chart-bar"><div class="fill"></div></div>
-    </div>
-  </div>
+  <canvas id="skillsChart"></canvas>
 </section>
+
 
 <section class="section fade-section rotate-in delay-4s" id="tools">
 <h2>Tools I Use</h2>
@@ -1041,44 +1181,7 @@ hoverTargets.forEach(el => {
   el.addEventListener("mouseleave", () => circleCursor.classList.remove("hovering"));
 });
 </script>
-<script>
-const videos = [
-  "https://www.youtube.com/embed/bNiehoppDRo",
-  "https://www.youtube.com/embed/bNiehoppDRo",
-  "https://www.youtube.com/embed/bNiehoppDRo",
-   "https://www.youtube.com/embed/bNiehoppDRo",
-   "https://www.youtube.com/embed/bNiehoppDRo",
-];
 
-const slider = document.getElementById("video-slider");
-
-for (let r = 0; r < 5; r++) {
-  videos.forEach(src => {
-    const container = document.createElement("div");
-    container.className = "video-container";
-    container.innerHTML = `<iframe class="project-video" src="${src}" allowfullscreen></iframe>`;
-    slider.appendChild(container);
-  });
-}
-
-// Auto scroll manual
-let autoScroll = true;
-function scrollLoop() {
-  if (autoScroll) {
-    slider.scrollLeft += 1;
-    // reset saat sudah sampai ujung
-    if (slider.scrollLeft >= slider.scrollWidth - slider.clientWidth) {
-      slider.scrollLeft = 0;
-    }
-  }
-  requestAnimationFrame(scrollLoop);
-}
-scrollLoop();
-
-// Pause saat hover
-slider.addEventListener('mouseenter', () => autoScroll = false);
-slider.addEventListener('mouseleave', () => autoScroll = true);
-</script>
 <script>
   const skillRows = document.querySelectorAll('.skill-row');
 
@@ -1099,6 +1202,90 @@ slider.addEventListener('mouseleave', () => autoScroll = true);
 
   skillRows.forEach(row => observer.observe(row));
 </script>
+<script>
+  // Ambil elemen modal
+  const modal = document.getElementById("project-modal");
+  const modalBody = document.getElementById("modal-body");
+
+  // Fungsi untuk buka modal
+  function openModal(content) {
+    modal.style.display = "flex";
+    modalBody.innerHTML = content;
+  }
+
+  // Fungsi untuk tutup modal
+  function closeModal() {
+    modal.style.display = "none";
+    modalBody.innerHTML = "";
+  }
+
+  // Tutup modal kalau klik area luar
+  window.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+
+  // Hubungkan tiap gallery item ke modal
+  document.querySelectorAll(".gallery-item").forEach(item => {
+    item.addEventListener("click", () => {
+      const content = `
+        <img src="${item.querySelector('img').src}" alt="">
+        <h3>${item.querySelector('.gallery-info h3').textContent}</h3>
+        <p>${item.querySelector('.gallery-info p').textContent}</p>
+      `;
+      openModal(content);
+    });
+  });
+</script>
+
+<!-- Panggil Chart.js dulu -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const ctx = document.getElementById('skillsChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['3D Animation', 'Content Creation', 'Web Design', 'Community'],
+      datasets: [{
+        label: 'Skill Level (%)',
+        data: [90, 85, 70, 80],
+        backgroundColor: 'rgba(0, 255, 255, 0.6)',
+        borderColor: '#00ffff',
+        borderWidth: 1,
+        borderRadius: 8
+      }]
+    },
+   options: {
+  responsive: true, // chart otomatis menyesuaikan ukuran layar
+  maintainAspectRatio: false, // kalau false, chart ikut height di CSS (biar bisa fleksibel tinggi)
+  indexAxis: 'y', // bikin chart horizontal (bar dari kiri ke kanan)
+  
+  scales: {
+    x: {
+      beginAtZero: true, // sumbu X mulai dari 0 (biar rapi, nggak mulai dari angka random)
+      grid: { color: 'rgba(255,255,255,0.1)' }, // warna garis grid (abu-abu transparan)
+      ticks: { color: '#fff' } // warna angka di sumbu X
+    },
+    y: {
+      grid: { display: false }, // grid di sumbu Y dimatikan (lebih clean)
+      ticks: { color: '#fff' } // warna label teks di sumbu Y
+    }
+  },
+
+  plugins: {
+    legend: { display: false } // legend ("Skill Level (%)") disembunyikan, biar chart lebih clean
+  }
+}
+
+  });
+});
+</script>
+
+
 
 </body>
 </html>
