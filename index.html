@@ -399,6 +399,53 @@ h1#typed-text::after {
 .delay-6s { animation-delay: 1.8s; }
 .delay-7s { animation-delay: 2.1s; }
 
+/* =================== ABOUT SECTION =================== */
+/* About Section Centered */
+.about-centered {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.about-photo {
+  margin-bottom: 1rem;
+}
+
+.about-photo img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%; /* bikin bulat */
+  border: 4px solid var(--primary);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.about-name {
+  font-size: 1.8rem;
+  margin: 1rem 0 0.5rem;
+  color: var(--primary);
+}
+
+.about-desc {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #ccc;
+  margin-bottom: 1rem;
+}
+
+.about-facts {
+  list-style: none;
+  padding: 0;
+  margin-top: 1.5rem;
+}
+
+.about-facts li {
+  margin: 0.3rem 0;
+  font-size: 1rem;
+  color: #fff;
+}
+
 
 /* =================== SKILLS SECTION =================== */
 #skills {
@@ -426,6 +473,156 @@ h1#typed-text::after {
   margin: 2rem auto;
 }
 
+/* =================== TOOLS SECTION =================== */
+/* Tools Grid */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.tool-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--highlight);
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.tool-card img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  margin-bottom: 0.8rem;
+}
+
+.tool-card span {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+.tool-card p {
+  font-size: 0.9rem;
+  color: #bbb;
+}
+
+.tool-card:hover {
+  transform: translateY(-6px);
+  background: rgba(0, 255, 255, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 255, 255, 0.2);
+}
+/* =================== WORKFLOW SECTION =================== */
+/* Workflow Timeline */
+.timeline {
+  position: relative;
+  margin: 2rem auto;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.timeline-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: rgba(255,255,255,0.03);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--highlight);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.timeline-step:hover {
+  transform: translateY(-4px);
+  background: rgba(255,255,255,0.06);
+}
+
+.step-icon {
+  font-size: 2rem;
+  background: var(--primary);
+  color: #000;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 12px rgba(0,255,255,0.3);
+}
+
+.step-content h3 {
+  margin: 0 0 0.5rem;
+  color: var(--primary);
+}
+
+.step-content p {
+  margin: 0;
+  color: #ccc;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+/* =================== TESTIMONIAL SECTION =================== */
+/* Testimonials */
+.testimonial-carousel {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 1rem;
+  scrollbar-width: none;
+}
+.testimonial-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.testimonial-card {
+  flex: 0 0 300px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 16px;
+  padding: 1.5rem;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  scroll-snap-align: start;
+  transition: transform 0.3s ease;
+}
+.testimonial-card:hover {
+  transform: translateY(-6px);
+}
+
+.testimonial-card .quote {
+  font-style: italic;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.author img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+.author h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--primary);
+}
+.author span {
+  font-size: 0.85rem;
+  color: #bbb;
+}
 
 /* =================== SOCIAL SECTION =================== */
 .social-section {
@@ -748,21 +945,27 @@ section ol {
   
 <!-- About Section -->
 <section class="section fade-section rotate-in delay-1s" id="about">
-  <h2 class="section-title">About Me</h2>
-  <div class="about-card two-column">
-    <div class="about-text">
-      <p>
-        Hi! I’m Asri — a passionate 3D artist and content creator who loves bringing ideas to life through animation and design. I create engaging content for YouTube and actively share my creative journey on social media.
-        <br/><br/>
-        Beyond 3D art, I enjoy exploring tech and creativity through coding, video editing, and building online communities. I also manage a Discord server where I collaborate, connect, and share tips with other creatives. I’m always excited to learn, experiment, and create something meaningful.
-        <br/><br/>
-        🔤 <strong>Languages:</strong> Indonesian (native), English (intermediate), Japanese (beginner)
-      </p>
-    </div>
-    <div class="about-image">
-      <img src="https://via.placeholder.com/250x250?text=Your+Image" alt="Asri avatar">
-    </div>
+<div class="about-centered">
+  <div class="about-photo">
+    <img src="https://private-user-images.githubusercontent.com/212836732/485295553-0cef446c-ec92-4c44-b866-657618d3d1d4.jpg?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTY5Mjc3NDEsIm5iZiI6MTc1NjkyNzQ0MSwicGF0aCI6Ii8yMTI4MzY3MzIvNDg1Mjk1NTUzLTBjZWY0NDZjLWVjOTItNGM0NC1iODY2LTY1NzYxOGQzZDFkNC5qcGc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwOTAzJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDkwM1QxOTI0MDFaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT04M2M0OGU3NGRkNDMzYmJiYzAxMjkyZTQ1MDZiNjI0Nzc0MTUyODc3NzdkOGUzMzNiNWI3ODQwZTc5YmEyMzY4JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.hySW7Kjb8G28-VK8JL6FOMn2tQ8JdsU3K5mf12zqIOU" alt="Asri">
   </div>
+  <h3 class="about-name">Hi, I'm Asri 👋</h3>
+  <p class="about-desc">
+    Saya Asri, seorang lelaki anak ke-2 dari 2 bersaudara.  
+    Sejak kecil saya suka mengeksplor hal-hal kreatif, mulai dari menggambar hingga akhirnya menemukan passion di <strong>3D animation</strong> dan <strong>desain web</strong>.
+  </p>
+  <p class="about-desc">
+    Hobi saya antara lain <strong>membuat animasi</strong>, <strong>belajar bahasa Jepang</strong>, dan <strong>mengembangkan konten kreatif</strong>.  
+    Saya bercita-cita untuk bisa tinggal dan bekerja di Jepang, baik di bidang <strong>arsitektur</strong> maupun <strong>animasi</strong>.
+  </p>
+
+  <ul class="about-facts">
+    <li>🎨 Passion: Animasi & Desain</li>
+    <li>🌏 Goal: Tinggal & bekerja di Jepang</li>
+    <li>🐢 OC: Karakter kura-kura imut bernama Kumi</li>
+  </ul>
+</div>
+
 </section>
 
 <!-- Projects Section (Gallery) -->
@@ -836,52 +1039,152 @@ section ol {
 </section>
 
 
-<section class="section fade-section rotate-in delay-4s" id="tools">
-<h2>Tools I Use</h2>
-<p>I work with a diverse set of tools that help me bring my ideas to life and streamline my workflow:</p>
-<ul>
-<li><strong>Blender:</strong> My go-to for 3D modeling, rigging, and animation. I use it to create original characters, environments, and dynamic scenes.</li>
-<li><strong>Adobe Premiere Pro &amp; HitFilm:</strong> For professional-level video editing, adding effects, transitions, and refining visual storytelling.</li>
-<li><strong>Figma:</strong> When designing UI/UX layouts for web projects or mockups, I rely on Figma for its speed and collaborative features.</li>
-<li><strong>VS Code:</strong> My favorite code editor for building responsive websites using HTML, CSS, JavaScript, and experimenting with interactive features.</li>
-<li><strong>Discord + Bots (Tatsu, MEE6, Carl-bot):</strong> I use these to build and automate my Discord server systems, events, and community engagement.</li>
-<li><strong>Canva &amp; Photoshop:</strong> For designing thumbnails, social media posts, and visual content with professional polish.</li>
-</ul>
+<!-- Tools Section -->
+<section id="tools" class="section fade-section zoom-in">
+  <h2 class="section-title">Tools I Use</h2>
+  <div class="tools-grid">
+    <div class="tool-card">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/blender/blender-original.svg" alt="Blender">
+      <span>Blender</span>
+      <p>3D modeling, animation, and rendering.</p>
+    </div>
+    <div class="tool-card">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/photoshop/photoshop-plain.svg" alt="Photoshop">
+      <span>Photoshop</span>
+      <p>Graphic design and image editing.</p>
+    </div>
+    <div class="tool-card">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="VS Code">
+      <span>VS Code</span>
+      <p>Code editor for web and apps.</p>
+    </div>
+    <div class="tool-card">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub">
+      <span>GitHub</span>
+      <p>Version control and collaboration.</p>
+    </div>
+  </div>
 </section>
+
   
-<section class="section fade-section flip-up delay-5s" id="workflow">
-<h2>How I Work</h2>
-<p>I approach each project with a clear and organized process that ensures creativity, clarity, and consistency:</p>
-<ol>
-<li><strong>1. Ideation &amp; Planning:</strong> Every good project starts with a strong idea. I brainstorm concepts, outline goals, and gather references to shape a solid vision.</li>
-<li><strong>2. Design &amp; Asset Creation:</strong> I begin building the assets, whether it’s a 3D character, visual storyboard, or layout design. This step includes modeling, rigging, and animating if necessary.</li>
-<li><strong>3. Production:</strong> Here’s where everything comes to life — recording footage, editing scenes, syncing audio, and refining timing to make the project engaging.</li>
-<li><strong>4. Polish &amp; Feedback:</strong> I review the work thoroughly, apply final touches, and get feedback when needed. This ensures quality and improvement with every project.</li>
-<li><strong>5. Publish &amp; Share:</strong> Once done, I publish on YouTube or social media, and engage with the audience. I also reflect on what I learned for future projects.</li>
-</ol>
+<!-- Workflow Section -->
+<section class="section fade-section zoom-in" id="workflow">
+  <h2 class="section-title">How I Work</h2>
+  <div class="timeline">
+    <div class="timeline-step">
+      <div class="step-icon">💡</div>
+      <div class="step-content">
+        <h3>1. Ideation & Planning</h3>
+        <p>Brainstorm concepts, outline goals, and gather references to shape a solid vision.</p>
+      </div>
+    </div>
+    <div class="timeline-step">
+      <div class="step-icon">🎨</div>
+      <div class="step-content">
+        <h3>2. Design & Asset Creation</h3>
+        <p>Building assets like 3D models, layouts, or storyboards, including rigging and animating.</p>
+      </div>
+    </div>
+    <div class="timeline-step">
+      <div class="step-icon">🎬</div>
+      <div class="step-content">
+        <h3>3. Production</h3>
+        <p>Recording, editing, syncing audio, and refining timing to make the project engaging.</p>
+      </div>
+    </div>
+    <div class="timeline-step">
+      <div class="step-icon">✨</div>
+      <div class="step-content">
+        <h3>4. Polish & Feedback</h3>
+        <p>Review, apply final touches, and refine based on feedback to ensure quality.</p>
+      </div>
+    </div>
+    <div class="timeline-step">
+      <div class="step-icon">🚀</div>
+      <div class="step-content">
+        <h3>5. Publish & Share</h3>
+        <p>Publish on YouTube or social media and engage with the audience for future growth.</p>
+      </div>
+    </div>
+  </div>
 </section>
+
   
-<section class="section fade-section float-in delay-6s" id="testimonials">
-<h2>Testimonials</h2>
-<div class="testimonial">
-<blockquote>
-      "Asri’s animations are full of personality and creativity. Watching their YouTube content always feels fresh and fun. They're a rising talent in 3D content creation!"
-    </blockquote>
-<p>- Rani, Indie Game Developer</p>
-</div>
-<div class="testimonial">
-<blockquote>
-      "I joined Asri’s Discord server for animation tips and ended up learning way more than I expected. The tutorials and help they give are super detailed and easy to follow."
-    </blockquote>
-<p>- Jovan, Junior Animator</p>
-</div>
-<div class="testimonial">
-<blockquote>
-      "Working with Asri on a collaboration project was smooth and professional. Their understanding of both creative vision and technical detail is impressive."
-    </blockquote>
-<p>- Theo, Content Creator</p>
-</div>
+<!-- Testimonials Section -->
+<section id="testimonials" class="section fade-section zoom-in">
+  <h2 class="section-title">What People Say</h2>
+  <div class="testimonial-carousel">
+    
+    <div class="testimonial-card">
+      <p class="quote">"Asri has amazing creativity and attention to detail. Every project turns out beyond expectations!"</p>
+      <div class="author">
+        <img src="https://i.pravatar.cc/80?img=1" alt="Person 1">
+        <div>
+          <h4>John Doe</h4>
+          <span>Creative Director</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="testimonial-card">
+      <p class="quote">"Professional, fast, and super easy to work with. Highly recommend collaborating with Asri."</p>
+      <div class="author">
+        <img src="https://i.pravatar.cc/80?img=2" alt="Person 2">
+        <div>
+          <h4>Jane Smith</h4>
+          <span>Startup Founder</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="testimonial-card">
+      <p class="quote">"Truly unique skills, especially in animation and design. Asri brings ideas to life beautifully."</p>
+      <div class="author">
+        <img src="https://i.pravatar.cc/80?img=3" alt="Person 3">
+        <div>
+          <h4>Michael Lee</h4>
+          <span>Project Manager</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tambahan baru -->
+    <div class="testimonial-card">
+      <p class="quote">"The collaboration went smoothly and the final results were beyond what we expected."</p>
+      <div class="author">
+        <img src="https://i.pravatar.cc/80?img=4" alt="Person 4">
+        <div>
+          <h4>Sarah Johnson</h4>
+          <span>Marketing Lead</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <p class="quote">"Asri’s creativity makes every project look professional and unique. Highly recommended!"</p>
+      <div class="author">
+        <img src="https://i.pravatar.cc/80?img=5" alt="Person 5">
+        <div>
+          <h4>David Kim</h4>
+          <span>Freelance Designer</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <p class="quote">"Reliable, fast, and delivers more than promised. One of the best collaborations I’ve had."</p>
+      <div class="author">
+        <img src="https://i.pravatar.cc/80?img=6" alt="Person 6">
+        <div>
+          <h4>Emily Davis</h4>
+          <span>Entrepreneur</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </section>
+
   
 <!-- Contact Section -->
 <section class="section fade-section rotate-in delay-7s" id="contact">
@@ -1241,51 +1544,102 @@ hoverTargets.forEach(el => {
 
 <!-- Panggil Chart.js dulu -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const ctx = document.getElementById('skillsChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['3D Animation', 'Content Creation', 'Web Design', 'Community'],
-      datasets: [{
-        label: 'Skill Level (%)',
-        data: [90, 85, 70, 80],
-        backgroundColor: 'rgba(0, 255, 255, 0.6)',
-        borderColor: '#00ffff',
-        borderWidth: 1,
-        borderRadius: 8
-      }]
-    },
-   options: {
-  responsive: true, // chart otomatis menyesuaikan ukuran layar
-  maintainAspectRatio: false, // kalau false, chart ikut height di CSS (biar bisa fleksibel tinggi)
-  indexAxis: 'y', // bikin chart horizontal (bar dari kiri ke kanan)
-  
-  scales: {
-    x: {
-      beginAtZero: true, // sumbu X mulai dari 0 (biar rapi, nggak mulai dari angka random)
-      grid: { color: 'rgba(255,255,255,0.1)' }, // warna garis grid (abu-abu transparan)
-      ticks: { color: '#fff' } // warna angka di sumbu X
-    },
-    y: {
-      grid: { display: false }, // grid di sumbu Y dimatikan (lebih clean)
-      ticks: { color: '#fff' } // warna label teks di sumbu Y
+  let skillsChart;
+
+  const createChart = () => {
+    // kalau chart sudah ada, hancurkan dulu biar bisa ulang animasi
+    if (skillsChart) {
+      skillsChart.destroy();
     }
-  },
 
-  plugins: {
-    legend: { display: false } // legend ("Skill Level (%)") disembunyikan, biar chart lebih clean
-  }
-}
+    skillsChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['3D Animation', 'Content Creation', 'Web Design', 'Community'],
+        datasets: [{
+          label: 'Skill Level (%)',
+          data: [90, 85, 70, 80],
+          backgroundColor: 'rgba(0, 255, 255, 0.7)',
+          borderColor: '#00ffff',
+          borderWidth: 1,
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        animation: {
+          duration: 1500,
+          easing: 'easeOutCubic',
+          delay: (context) => {
+            let index = context.dataIndex;
+            let datasetIndex = context.datasetIndex;
+            return (index + datasetIndex) * 400; // stagger animasi tiap bar
+          }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            max: 100,
+            grid: { color: 'rgba(255,255,255,0.1)' },
+            ticks: { color: '#fff' }
+          },
+          y: {
+            grid: { display: false },
+            ticks: { color: '#fff' }
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#111',
+            borderColor: '#00ffff',
+            borderWidth: 1,
+            titleColor: '#00ffff',
+            bodyColor: '#fff'
+          }
+        }
+      }
+    });
+  };
 
-  });
+  // Observer: setiap kali masuk layar → bikin ulang chart
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        createChart();
+      }
+    });
+  }, { threshold: 0.5 });
+
+  observer.observe(document.getElementById('skills'));
 });
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const carousel = document.querySelector('.testimonial-carousel');
+  const cards = document.querySelectorAll('.testimonial-card');
+  const cardWidth = cards[0].offsetWidth;
+  const gap = 24; // sesuai gap CSS (1.5rem ≈ 24px)
+  const totalScroll = cardWidth + gap;
 
+  function autoScroll() {
+    if (carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth - totalScroll) {
+      carousel.scrollTo({ left: 0, behavior: "smooth" });
+    } else {
+      carousel.scrollBy({ left: totalScroll, behavior: "smooth" });
+    }
+  }
+
+  // geser tiap 1 detik
+  setInterval(autoScroll, 3000);
+});
+</script>
 
 </body>
 </html>
