@@ -473,6 +473,8 @@ h1#typed-text::after {
   margin: 2rem auto;
 }
 
+
+
 /* =================== TOOLS SECTION =================== */
 /* Tools Grid */
 .tools-grid {
@@ -518,6 +520,7 @@ h1#typed-text::after {
   box-shadow: 0 6px 18px rgba(0, 255, 255, 0.2);
 }
 /* =================== WORKFLOW SECTION =================== */
+
 /* Workflow Timeline */
 .timeline {
   position: relative;
@@ -714,23 +717,29 @@ html {
   transform: translateZ(-20px) scale(1.02);
 }
 
+/* =================== LAZY LOAD =================== */
+
+.lazy-section {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.lazy-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 /* =================== RESPONSIVE =================== */
 
-/* Responsive Gallery Masonry */
-@media (max-width: 1024px) {
-  .gallery {
-    column-count: 2;
-  }
+/* Default Gallery (Desktop) */
+.gallery {
+  column-count: 3;
+  column-gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
 }
-
-@media (max-width: 600px) {
-  .gallery {
-    column-count: 1;
-  }
-}
-
-
 /* Default Skills Chart (Desktop) */
 #skills canvas {
   display: block;
@@ -754,16 +763,19 @@ html {
 
 /* HP */
 @media (max-width: 600px) {
-  .gallery {
-    column-count: 1;
+  #skills canvas {
+    height: 400px !important; /* Atur tinggi chart */
+    /* atau */
+    aspect-ratio: 1 / 1; /* Atur aspect ratio chart */
+    height: auto; /* Biarkan tinggi menyesuaikan */
   }
 
   #skills canvas {
-    max-width: 100%;
-    height: 300px !important;
+  width: 100% !important;
+  height: 400px !important;
+  aspect-ratio: unset;
   }
 }
-
 /* Navbar mobile */
 @media (max-width: 768px) {
   .navbar {
@@ -778,6 +790,12 @@ html {
     gap: 1rem;
     padding: 10px 20px;
     white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .navbar ul::-webkit-scrollbar {
+    display: none;
   }
 
   .navbar li {
@@ -801,15 +819,6 @@ html {
   }
 }
 
-
-
-@media (max-width: 768px) {
-  .navbar {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    overflow-x: auto;
-  }
 
   .navbar ul {
     flex-direction: row;
@@ -938,13 +947,13 @@ section ol {
 </nav>
   
 <!-- Hero Section -->
-<section class="section center" id="home">
+<section class="section center lazy-section" id="home">
   <h1 id="typed-text"></h1>
   <div class="social-wrapper"></div>
 </section>
   
 <!-- About Section -->
-<section class="section fade-section rotate-in delay-1s" id="about">
+<section class="section fade-section rotate-in delay-1s lazy-section" id="about">
 <div class="about-centered">
   <div class="about-photo">
     <img src="https://github.com/Toonomaly/Portofolio/blob/main/Toonomaly.jpg?raw=true" alt="Asri">
@@ -969,7 +978,7 @@ section ol {
 </section>
 
 <!-- Projects Section (Gallery) -->
-<section class="section fade-section zoom-in" id="projects">
+<section class="section fade-section zoom-in lazy-section" id="projects">
 <div class="gallery">
   <div class="gallery-item">
     <img src="https://picsum.photos/seed/asri1/400/650" alt="Project 1" loading="lazy"
@@ -1033,14 +1042,14 @@ section ol {
 
 
 <!-- Section Skills -->
-<section id="skills" class="section fade-section zoom-in">
+<section id="skills" class="section fade-section zoom-in lazy-section">
   <h2 class="section-title">My Skills</h2>
   <canvas id="skillsChart"></canvas>
 </section>
 
 
 <!-- Tools Section -->
-<section id="tools" class="section fade-section zoom-in">
+<section id="tools" class="section fade-section zoom-in lazy-section">
   <h2 class="section-title">Tools I Use</h2>
   <div class="tools-grid">
     <div class="tool-card">
@@ -1068,7 +1077,7 @@ section ol {
 
   
 <!-- Workflow Section -->
-<section class="section fade-section zoom-in" id="workflow">
+<section class="section fade-section zoom-in lazy-section" id="workflow">
   <h2 class="section-title">How I Work</h2>
   <div class="timeline">
     <div class="timeline-step">
@@ -1111,7 +1120,7 @@ section ol {
 
   
 <!-- Testimonials Section -->
-<section id="testimonials" class="section fade-section zoom-in">
+<section id="testimonials" class="section fade-section zoom-in lazy-section">
   <h2 class="section-title">What People Say</h2>
   <div class="testimonial-carousel">
     
@@ -1187,7 +1196,7 @@ section ol {
 
   
 <!-- Contact Section -->
-<section class="section fade-section rotate-in delay-7s" id="contact">
+<section class="section fade-section rotate-in delay-7s lazy-section" id="contact">
   <h2>Find Me</h2>
   <div class="social-links">
     <a class="social-btn discord" href="https://discord.gg/sdfjdpzABv" target="_blank">Discord</a>
@@ -1528,7 +1537,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let skillsChart;
 
   const createChart = () => {
-    // kalau chart sudah ada, hancurkan dulu biar bisa ulang animasi
     if (skillsChart) {
       skillsChart.destroy();
     }
@@ -1548,7 +1556,8 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: true, // ✅ aktifin lagi
+        aspectRatio: window.innerWidth < 600 ? 1.2 : 2.5, // ✅ bikin adaptif
         indexAxis: 'y',
         animation: {
           duration: 1500,
@@ -1556,7 +1565,7 @@ document.addEventListener("DOMContentLoaded", () => {
           delay: (context) => {
             let index = context.dataIndex;
             let datasetIndex = context.datasetIndex;
-            return (index + datasetIndex) * 400; // stagger animasi tiap bar
+            return (index + datasetIndex) * 400;
           }
         },
         scales: {
@@ -1595,6 +1604,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }, { threshold: 0.5 });
 
   observer.observe(document.getElementById('skills'));
+
+  // ✅ auto update kalau resize (biar rasio chart ikut device)
+  window.addEventListener("resize", () => {
+    if (skillsChart) {
+      createChart();
+    }
+  });
 });
 </script>
 
@@ -1618,6 +1634,55 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(autoScroll, 3000);
 });
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // 🔹 Convert semua img/video yang punya src → jadi data-src (biar lazy otomatis)
+  document.querySelectorAll("img, video").forEach(el => {
+    if (!el.dataset.src && el.src) {
+      el.dataset.src = el.src;
+      el.removeAttribute("src");
+    }
+  });
+
+  const lazySections = document.querySelectorAll(".lazy-section");
+  const lazyImages   = document.querySelectorAll("img[data-src]");
+  const lazyVideos   = document.querySelectorAll("video[data-src]");
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+
+        // === Section Animation ===
+        if (el.classList.contains("lazy-section")) {
+          el.classList.add("visible");
+        }
+
+        // === Lazy Image ===
+        if (el.tagName === "IMG" && el.dataset.src) {
+          el.src = el.dataset.src;
+          el.removeAttribute("data-src");
+        }
+
+        // === Lazy Video ===
+        if (el.tagName === "VIDEO" && el.dataset.src) {
+          el.src = el.dataset.src;
+          el.removeAttribute("data-src");
+        }
+
+        observer.unobserve(el); // stop observe biar ga dipanggil ulang
+      }
+    });
+  }, { threshold: 0.2 });
+
+  // Observe semua elemen
+  lazySections.forEach(section => observer.observe(section));
+  lazyImages.forEach(img => observer.observe(img));
+  lazyVideos.forEach(video => observer.observe(video));
+});
+</script>
+
 
 </body>
 </html>
