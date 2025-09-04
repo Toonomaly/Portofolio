@@ -192,13 +192,13 @@ canvas {
   color: var(--text);
   text-decoration: none;
   font-weight: bold;
-  display: inline-block; /* penting untuk transform */
+  display: inline-block; 
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .navbar a:hover {
   color: var(--primary);
-  transform: scale(1.5); /* dibesarkan sedikit biar lebih kerasa */
+  transform: scale(1.5);
 }
 
 
@@ -947,7 +947,7 @@ section ol {
 <section class="section fade-section rotate-in delay-1s" id="about">
 <div class="about-centered">
   <div class="about-photo">
-    <img src="https://private-user-images.githubusercontent.com/212836732/485295553-0cef446c-ec92-4c44-b866-657618d3d1d4.jpg?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTY5Mjc3NDEsIm5iZiI6MTc1NjkyNzQ0MSwicGF0aCI6Ii8yMTI4MzY3MzIvNDg1Mjk1NTUzLTBjZWY0NDZjLWVjOTItNGM0NC1iODY2LTY1NzYxOGQzZDFkNC5qcGc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwOTAzJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDkwM1QxOTI0MDFaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT04M2M0OGU3NGRkNDMzYmJiYzAxMjkyZTQ1MDZiNjI0Nzc0MTUyODc3NzdkOGUzMzNiNWI3ODQwZTc5YmEyMzY4JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.hySW7Kjb8G28-VK8JL6FOMn2tQ8JdsU3K5mf12zqIOU" alt="Asri">
+    <img src="https://github.com/Toonomaly/Portofolio/blob/main/Toonomaly.jpg?raw=true" alt="Asri">
   </div>
   <h3 class="about-name">Hi, I'm Asri 👋</h3>
   <p class="about-desc">
@@ -1208,7 +1208,7 @@ section ol {
 const canvas = document.getElementById('particle-canvas');
 const ctx = canvas.getContext('2d');
 
-const CLICK_PARTICLE_LIFETIME = 3000; // ms
+const CLICK_PARTICLE_LIFETIME = 2000; // ms
 let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 let particles = [];
 let resizeTimeout;
@@ -1405,28 +1405,6 @@ const fadeInObserver = new IntersectionObserver(entries => {
 fadeSections.forEach(sec => fadeInObserver.observe(sec));
 
 
-// FADE-IN PROJECT VIDEOS ON SCROLL
-  
-const projectScroll = document.querySelector('.project-section');
-const projectVideos = document.querySelectorAll('.project-video');
-
-function fadeProjectVideos() {
-  const center = window.innerWidth / 2;
-  projectVideos.forEach(video => {
-    const rect = video.getBoundingClientRect();
-    const dist = Math.abs(center - (rect.left + rect.width / 2));
-    const max = window.innerWidth / 2;
-    const opacity = 1 - Math.min(dist / max, 1);
-    video.style.opacity = opacity.toFixed(2);
-  });
-}
-
-if (projectScroll) {
-  projectScroll.addEventListener('scroll', fadeProjectVideos);
-  window.addEventListener('resize', fadeProjectVideos);
-  window.addEventListener('load', fadeProjectVideos);
-}
-
 </script>
 <script>
     const scrollTopBtn = document.getElementById("scrollTopBtn");
@@ -1542,7 +1520,7 @@ hoverTargets.forEach(el => {
   });
 </script>
 
-<!-- Panggil Chart.js dulu -->
+<!-- Skills Chart -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
@@ -1607,7 +1585,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  // Observer: setiap kali masuk layar → bikin ulang chart
+  // Observer: Chart Repeat
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -1636,7 +1614,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // geser tiap 1 detik
+  // geser settings
   setInterval(autoScroll, 3000);
 });
 </script>
