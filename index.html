@@ -33,15 +33,16 @@ html, body {
   color: var(--text);
 }
 
-body {
-  cursor: none;
-}
-
-* {
-  cursor: none;
-}
-
 /* =================== CUSTOM CURSOR =================== */
+body {
+  cursor: none; /* Sembunyikan kursor default */
+}
+
+/* Pastikan semua elemen interaktif memiliki kursor none */
+a, button, .filter-btn, .project-link, .submit-btn, .play-button, .close-modal, .view-project-btn {
+  cursor: none !important;
+}
+
 #circle-cursor {
   position: fixed;
   top: 0;
@@ -52,7 +53,7 @@ body {
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
-  z-index: 10000;
+  z-index: 100000 !important; /* Increased z-index */
   mix-blend-mode: difference;
   transition: transform 0.15s ease, width 0.25s ease, height 0.25s ease;
 }
@@ -60,6 +61,41 @@ body {
 #circle-cursor.hovering {
   width: 40px;
   height: 40px;
+}
+
+#circle-cursor.pointer {
+  width: 24px;
+  height: 24px;
+  background: rgba(0, 255, 255, 0.7);
+  border: 2px solid var(--primary);
+}
+
+/* =================== FIX Z-INDEX HIERARCHY =================== */
+#particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0 !important;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Important: allows clicks to pass through */
+}
+
+section {
+  position: relative;
+  z-index: 2 !important;
+}
+
+.navbar {
+  position: fixed;
+  z-index: 9999 !important;
+}
+
+.hero-content, .about-container, .projects-container, 
+.skills-container, .tools-container, .workflow-container,
+.testimonials-container, .contact-container {
+  position: relative;
+  z-index: 3 !important;
 }
 
 /* =================== NAVBAR =================== */
@@ -71,7 +107,6 @@ body {
   width: 100%;
   background-color: var(--blur);
   backdrop-filter: blur(8px);
-  z-index: 9999;
   padding: 1rem 2rem;
   transition: background 0.3s ease;
 }
@@ -91,6 +126,8 @@ body {
   font-weight: bold;
   display: inline-block;
   transition: color 0.3s ease, transform 0.3s ease;
+  position: relative;
+  z-index: 100; /* Ensure links are clickable */
 }
 
 .navbar a:hover {
@@ -102,8 +139,6 @@ body {
 section {
   min-height: 100vh;
   padding: 80px 20px 30px;
-  position: relative;
-  z-index: 1;
 }
 
 .center {
@@ -197,7 +232,6 @@ section {
   padding: 4rem 1rem;
   background-color: rgba(255, 255, 255, 0.02);
   position: relative;
-  z-index: 1;
 }
 
 .about-container {
@@ -345,12 +379,11 @@ section {
   font-size: 1rem;
 }
 
-/* =================== ENHANCED PROJECTS SECTION =================== */
+/* =================== PROJECTS SECTION =================== */
 #projects {
   padding: 4rem 1rem;
   background-color: rgba(255, 255, 255, 0.02);
   position: relative;
-  z-index: 1;
 }
 
 .projects-container {
@@ -375,6 +408,8 @@ section {
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: 600;
+  position: relative;
+  z-index: 10; /* Ensure buttons are clickable */
 }
 
 .filter-btn:hover,
@@ -511,7 +546,7 @@ section {
   transform: scale(1.1);
 }
 
-/* Interactive Cards */
+/* =================== PROJECT CARD HOVER EFFECTS =================== */
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -526,77 +561,67 @@ section {
   overflow: hidden;
   transition: all 0.3s ease;
   position: relative;
-  perspective: 1000px;
   height: 400px;
+  cursor: pointer;
 }
 
-.project-card.interactive-card {
-  height: 400px;
-}
-
-.card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  transition: transform 0.8s;
-  transform-style: preserve-3d;
-}
-
-.interactive-card:hover .card-inner {
-  transform: rotateY(180deg);
-}
-
-.card-front,
-.card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-.card-back {
-  background: rgba(15, 15, 15, 0.95);
-  transform: rotateY(180deg);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  border: 1px solid var(--primary);
-}
-
-.project-features {
-  list-style: none;
-  text-align: left;
-  margin: 1rem 0;
-}
-
-.project-features li {
-  color: var(--text);
-  margin-bottom: 0.5rem;
-  position: relative;
-  padding-left: 1rem;
-}
-
-.project-features li::before {
-  content: '✓';
-  color: var(--primary);
-  position: absolute;
-  left: 0;
-}
-
-.project-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  transition: transform 0.3s ease;
+.project-card:hover {
+  transform: scale(1.02);
+  border-color: var(--primary);
+  box-shadow: 0 8px 25px rgba(0, 255, 255, 0.15);
 }
 
 .project-card:hover .project-image {
   transform: scale(1.05);
+}
+
+/* Project image container */
+.project-image-container {
+  position: relative;
+  overflow: hidden;
+  height: 200px;
+}
+
+.project-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.project-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.project-card:hover .project-overlay {
+  opacity: 1;
+}
+
+.view-project-btn {
+  background: var(--primary);
+  color: #000;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-project-btn:hover {
+  background: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
 }
 
 .project-content {
@@ -650,6 +675,8 @@ section {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  position: relative;
+  z-index: 10; /* Ensure links are clickable */
 }
 
 .project-link:hover {
@@ -679,6 +706,144 @@ section {
   display: none;
 }
 
+/* =================== PROJECT MODAL =================== */
+.project-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 20000; /* Lower than cursor */
+  backdrop-filter: blur(10px);
+}
+
+.modal-content {
+  position: relative;
+  background: var(--bg);
+  margin: 2% auto;
+  padding: 2rem;
+  width: 90%;
+  max-width: 1000px;
+  max-height: 90vh;
+  border-radius: 20px;
+  border: 1px solid var(--primary);
+  box-shadow: 0 20px 60px rgba(0, 255, 255, 0.3);
+  overflow-y: auto;
+  z-index: 20001;
+}
+
+.close-modal {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 2rem;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 20002;
+}
+
+.close-modal:hover {
+  background: rgba(0, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.modal-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 2rem;
+  align-items: start;
+}
+
+.modal-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.modal-info {
+  padding: 1rem 0;
+}
+
+.modal-title {
+  color: var(--primary);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.modal-description {
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.modal-stats {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-stat {
+  text-align: center;
+}
+
+.modal-stat-number {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.modal-stat-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.modal-features {
+  margin: 2rem 0;
+}
+
+.modal-features h4 {
+  color: var(--primary);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.modal-features-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 0.5rem;
+}
+
+.modal-features-list li {
+  color: var(--text);
+  padding: 0.5rem;
+  border-left: 3px solid var(--primary);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.modal-footer {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
 /* =================== SKILLS SECTION =================== */
 #skills {
   padding: 4rem 1rem;
@@ -686,7 +851,6 @@ section {
   background-color: rgba(255, 255, 255, 0.02);
   border-top: 1px solid var(--highlight);
   position: relative;
-  z-index: 1;
 }
 
 .skills-container {
@@ -801,7 +965,6 @@ section {
   padding: 4rem 1rem;
   background-color: rgba(255, 255, 255, 0.02);
   position: relative;
-  z-index: 1;
 }
 
 .tools-container {
@@ -868,7 +1031,6 @@ section {
   padding: 4rem 1rem;
   background-color: rgba(255, 255, 255, 0.02);
   position: relative;
-  z-index: 1;
 }
 
 .workflow-container {
@@ -949,7 +1111,6 @@ section {
   padding: 4rem 1rem;
   background-color: rgba(255, 255, 255, 0.02);
   position: relative;
-  z-index: 1;
 }
 
 .testimonials-container {
@@ -1027,7 +1188,6 @@ section {
   padding: 4rem 1rem;
   background-color: rgba(255, 255, 255, 0.02);
   position: relative;
-  z-index: 1;
 }
 
 .contact-container {
@@ -1135,6 +1295,8 @@ section {
   cursor: pointer;
   transition: all 0.3s ease;
   width: 100%;
+  position: relative;
+  z-index: 10; /* Ensure button is clickable */
 }
 
 .submit-btn:hover {
@@ -1143,14 +1305,40 @@ section {
   box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
 }
 
-/* =================== BACKGROUND ELEMENTS =================== */
-#particle-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
+/* =================== FOOTER =================== */
+footer {
+  background: rgba(15, 15, 15, 0.95);
+  border-top: 1px solid var(--highlight);
+  padding: 2rem 1rem;
+  text-align: center;
+  position: relative;
+  z-index: 3;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.copyright {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-signature {
+  color: var(--primary);
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.footer-note {
+  color: var(--muted);
+  font-size: 0.8rem;
+  opacity: 0.7;
 }
 
 /* =================== RESPONSIVE =================== */
@@ -1190,6 +1378,11 @@ section {
   
   .project-stats {
     justify-content: center;
+  }
+
+  .modal-header {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }
 
@@ -1281,6 +1474,32 @@ section {
   .stat-number {
     font-size: 1.5rem;
   }
+
+  .modal-content {
+    margin: 5% auto;
+    padding: 1.5rem;
+    width: 95%;
+  }
+  
+  .modal-title {
+    font-size: 1.5rem;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  footer {
+    padding: 1.5rem 1rem;
+  }
+  
+  .copyright {
+    font-size: 0.8rem;
+  }
+  
+  .footer-signature {
+    font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1345,16 +1564,8 @@ section {
     text-align: center;
   }
 
-  .interactive-card {
+  .project-card {
     height: 350px;
-  }
-  
-  .card-back {
-    padding: 1rem;
-  }
-  
-  .project-features li {
-    font-size: 0.9rem;
   }
 }
 
@@ -1380,6 +1591,15 @@ section {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* =================== FIX CURSOR IN MODAL =================== */
+.project-modal * {
+  cursor: none !important;
+}
+
+.modal-content *:hover {
+  cursor: none !important;
 }
 </style>
 </head>
@@ -1502,7 +1722,7 @@ section {
   </div>
 </section>
 
-<!-- Enhanced Projects Section -->
+<!-- Projects Section -->
 <section id="projects" class="lazy-section">
   <h2 class="section-title">Featured Projects</h2>
   <div class="projects-container">
@@ -1543,11 +1763,11 @@ section {
             </div>
           </div>
           <div class="project-links">
-            <a href="#" class="project-link">
+            <a href="https://www.youtube.com/@Toonomaly" class="project-link" target="_blank">
               <span>Watch Trailer</span>
               <span class="link-icon">▶️</span>
             </a>
-            <a href="#" class="project-link secondary">
+            <a href="https://drive.google.com" class="project-link secondary" target="_blank">
               <span>Behind Scenes</span>
               <span class="link-icon">🎬</span>
             </a>
@@ -1567,101 +1787,137 @@ section {
       <!-- Project Grid -->
       <div class="projects-grid">
         
-        <div class="project-card interactive-card" data-category="web">
-          <div class="card-inner">
-            <div class="card-front">
-              <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
-                   alt="Portfolio Website" class="project-image">
-              <div class="project-content">
-                <h3 class="project-title">Interactive Portfolio</h3>
-                <p class="project-description">
-                  Responsive portfolio with custom animations and particle effects
-                </p>
-                <div class="project-tags">
-                  <span class="project-tag">HTML/CSS</span>
-                  <span class="project-tag">JavaScript</span>
-                  <span class="project-tag">UI/UX</span>
-                </div>
-              </div>
+        <!-- Project 1 -->
+        <div class="project-card" data-category="web" data-project="1">
+          <div class="project-image-container">
+            <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
+                 alt="Portfolio Website" class="project-image">
+            <div class="project-overlay">
+              <button class="view-project-btn">View Project</button>
             </div>
-            <div class="card-back">
-              <h4>Project Details</h4>
-              <ul class="project-features">
-                <li>Custom particle animations</li>
-                <li>Responsive design</li>
-                <li>Smooth scrolling</li>
-                <li>Interactive elements</li>
-              </ul>
-              <div class="project-links">
-                <a href="#" class="project-link">Live Demo</a>
-                <a href="#" class="project-link secondary">GitHub</a>
-              </div>
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Interactive Portfolio</h3>
+            <p class="project-description">
+              Responsive portfolio with custom animations and particle effects
+            </p>
+            <div class="project-tags">
+              <span class="project-tag">HTML/CSS</span>
+              <span class="project-tag">JavaScript</span>
+              <span class="project-tag">UI/UX</span>
             </div>
           </div>
         </div>
 
-        <div class="project-card interactive-card" data-category="motion">
-          <div class="card-inner">
-            <div class="card-front">
-              <img src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
-                   alt="Motion Graphics" class="project-image">
-              <div class="project-content">
-                <h3 class="project-title">Motion Graphics Showreel</h3>
-                <p class="project-description">
-                  Dynamic animations and visual effects showcase
-                </p>
-                <div class="project-tags">
-                  <span class="project-tag">After Effects</span>
-                  <span class="project-tag">Motion Graphics</span>
-                  <span class="project-tag">VFX</span>
-                </div>
-              </div>
+        <!-- Project 2 -->
+        <div class="project-card" data-category="motion" data-project="2">
+          <div class="project-image-container">
+            <img src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
+                 alt="Motion Graphics" class="project-image">
+            <div class="project-overlay">
+              <button class="view-project-btn">View Project</button>
             </div>
-            <div class="card-back">
-              <h4>Project Details</h4>
-              <ul class="project-features">
-                <li>30+ animation scenes</li>
-                <li>4K resolution</li>
-                <li>Sound design</li>
-                <li>Color grading</li>
-              </ul>
-              <div class="project-links">
-                <a href="#" class="project-link">Watch Video</a>
-                <a href="#" class="project-link secondary">Breakdown</a>
-              </div>
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Motion Graphics Showreel</h3>
+            <p class="project-description">
+              Dynamic animations and visual effects showcase
+            </p>
+            <div class="project-tags">
+              <span class="project-tag">After Effects</span>
+              <span class="project-tag">Motion Graphics</span>
+              <span class="project-tag">VFX</span>
             </div>
           </div>
         </div>
 
-        <div class="project-card interactive-card" data-category="animation">
-          <div class="card-inner">
-            <div class="card-front">
-              <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
-                   alt="Character Design" class="project-image">
-              <div class="project-content">
-                <h3 class="project-title">Character Design Pack</h3>
-                <p class="project-description">
-                  Complete character design and modeling package
-                </p>
-                <div class="project-tags">
-                  <span class="project-tag">Blender</span>
-                  <span class="project-tag">Character Design</span>
-                  <span class="project-tag">3D Modeling</span>
-                </div>
-              </div>
+        <!-- Project 3 -->
+        <div class="project-card" data-category="animation" data-project="3">
+          <div class="project-image-container">
+            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
+                 alt="Character Design" class="project-image">
+            <div class="project-overlay">
+              <button class="view-project-btn">View Project</button>
             </div>
-            <div class="card-back">
-              <h4>Project Details</h4>
-              <ul class="project-features">
-                <li>10+ character models</li>
-                <li>Full rigging</li>
-                <li>Texture mapping</li>
-                <li>Animation ready</li>
-              </ul>
-              <div class="project-links">
-                <a href="#" class="project-link">View Gallery</a>
-                <a href="#" class="project-link secondary">Download</a>
-              </div>
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Character Design Pack</h3>
+            <p class="project-description">
+              Complete character design and modeling package
+            </p>
+            <div class="project-tags">
+              <span class="project-tag">Blender</span>
+              <span class="project-tag">Character Design</span>
+              <span class="project-tag">3D Modeling</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 4 -->
+        <div class="project-card" data-category="web" data-project="4">
+          <div class="project-image-container">
+            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
+                 alt="E-Commerce Website" class="project-image">
+            <div class="project-overlay">
+              <button class="view-project-btn">View Project</button>
+            </div>
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Modern E-Commerce Platform</h3>
+            <p class="project-description">
+              Full-stack e-commerce solution with payment integration and admin dashboard
+            </p>
+            <div class="project-tags">
+              <span class="project-tag">React</span>
+              <span class="project-tag">Node.js</span>
+              <span class="project-tag">MongoDB</span>
+              <span class="project-tag">Stripe API</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 5 -->
+        <div class="project-card" data-category="animation" data-project="5">
+          <div class="project-image-container">
+            <img src="https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
+                 alt="3D Environment" class="project-image">
+            <div class="project-overlay">
+              <button class="view-project-btn">View Project</button>
+            </div>
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Fantasy 3D Environment</h3>
+            <p class="project-description">
+              Immersive fantasy world with detailed landscapes and atmospheric effects
+            </p>
+            <div class="project-tags">
+              <span class="project-tag">Blender</span>
+              <span class="project-tag">Substance Painter</span>
+              <span class="project-tag">Unreal Engine</span>
+              <span class="project-tag">Environment Design</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 6 -->
+        <div class="project-card" data-category="motion" data-project="6">
+          <div class="project-image-container">
+            <img src="https://images.unsplash.com/photo-1611224885990-ab7363d7f2a9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
+                 alt="Product Animation" class="project-image">
+            <div class="project-overlay">
+              <button class="view-project-btn">View Project</button>
+            </div>
+          </div>
+          <div class="project-content">
+            <h3 class="project-title">Product Explainer Animation</h3>
+            <p class="project-description">
+              Engaging product demonstration with 3D animation and motion graphics
+            </p>
+            <div class="project-tags">
+              <span class="project-tag">Cinema 4D</span>
+              <span class="project-tag">After Effects</span>
+              <span class="project-tag">Motion Graphics</span>
+              <span class="project-tag">Product Visualization</span>
             </div>
           </div>
         </div>
@@ -1819,7 +2075,7 @@ section {
       <!-- Web Development Tools -->
       <div class="tool-card">
         <span class="tool-icon">⚡</span>
-        <h3 class="tool-name">VS Code</h3>
+        <h3 class="tool-name">NotePad</h3>
         <p class="tool-category">Code Editor</p>
         <p class="tool-description">Lightweight but powerful source code editor</p>
       </div>
@@ -1834,14 +2090,14 @@ section {
       <!-- Design Tools -->
       <div class="tool-card">
         <span class="tool-icon">🎯</span>
-        <h3 class="tool-name">Figma</h3>
+        <h3 class="tool-name">Blender</h3>
         <p class="tool-category">UI/UX Design</p>
         <p class="tool-description">Collaborative interface design tool</p>
       </div>
 
       <div class="tool-card">
         <span class="tool-icon">📹</span>
-        <h3 class="tool-name">Premiere Pro</h3>
+        <h3 class="tool-name">Hitfilm</h3>
         <p class="tool-category">Video Editing</p>
         <p class="tool-description">Professional video editing software</p>
       </div>
@@ -1983,7 +2239,7 @@ section {
 
 <!-- Contact Section -->
 <section id="contact" class="lazy-section">
-  <h2 class="section-title">Get In Touch</h2>
+  <h2 class="section-title">Find Me</h2>
   <div class="contact-container">
     
     <div class="contact-info">
@@ -2049,6 +2305,68 @@ section {
   </div>
 </section>
 
+<!-- Footer Section -->
+<footer>
+  <div class="footer-content">
+    <p class="copyright">&copy; 2025 All Rights Reserved</p>
+    <p class="footer-note">Portfolio - Asri | 3D Animator & Web Developer</p>
+  </div>
+</footer>
+
+<!-- Project Modal -->
+<div id="projectModal" class="project-modal">
+  <div class="modal-content">
+    <button class="close-modal">&times;</button>
+    
+    <div class="modal-header">
+      <div>
+        <img id="modalImage" src="" alt="" class="modal-image">
+      </div>
+      <div class="modal-info">
+        <h2 id="modalTitle" class="modal-title"></h2>
+        <p id="modalDescription" class="modal-description"></p>
+        
+        <div class="modal-stats">
+          <div class="modal-stat">
+            <span id="modalStat1" class="modal-stat-number">0</span>
+            <span class="modal-stat-label" id="modalLabel1">Projects</span>
+          </div>
+          <div class="modal-stat">
+            <span id="modalStat2" class="modal-stat-number">0</span>
+            <span class="modal-stat-label" id="modalLabel2">Months</span>
+          </div>
+          <div class="modal-stat">
+            <span id="modalStat3" class="modal-stat-number">0%</span>
+            <span class="modal-stat-label" id="modalLabel3">Completion</span>
+          </div>
+        </div>
+        
+        <div class="project-tags" id="modalTags"></div>
+      </div>
+    </div>
+    
+    <div class="modal-features">
+      <h4>Project Features</h4>
+      <ul class="modal-features-list" id="modalFeatures"></ul>
+    </div>
+    
+    <div class="modal-footer">
+      <a href="#" id="modalLiveLink" class="project-link" target="_blank">
+        <span>Live Demo</span>
+        <span class="link-icon">🌐</span>
+      </a>
+      <a href="#" id="modalGithubLink" class="project-link secondary" target="_blank">
+        <span>GitHub</span>
+        <span class="link-icon">💻</span>
+      </a>
+      <a href="#" id="modalDetailsLink" class="project-link secondary" target="_blank">
+        <span>View Details</span>
+        <span class="link-icon">📖</span>
+      </a>
+    </div>
+  </div>
+</div>
+
 <!-- JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -2060,7 +2378,8 @@ document.addEventListener('DOMContentLoaded', function() {
   initializeParticles();
   initializeLazyLoading();
   initializeContactForm();
-  initializeInteractiveProjects(); // Add this line
+  initializeInteractiveProjects();
+  initializeProjectModal();
 });
 
 // =================== TYPING EFFECT ===================
@@ -2215,25 +2534,52 @@ function initializeSkillsAnimation() {
 function initializeCursor() {
   const cursor = document.getElementById('circle-cursor');
   
+  // Update cursor position
   document.addEventListener('mousemove', (e) => {
     cursor.style.left = e.clientX + 'px';
     cursor.style.top = e.clientY + 'px';
   });
 
-  const hoverElements = document.querySelectorAll(
-    'a, button, .skill-item, .skills-chart-container, .skills-bars-container, .highlight-card, .fact-item, .about-photo, .project-card, .project-link, .tool-card, .step-content, .testimonial-card, .contact-item, .submit-btn'
+  // Elements that should show the pointer style
+  const pointerElements = document.querySelectorAll(
+    'a, button, .filter-btn, .project-link, .submit-btn, .play-button, .close-modal, .view-project-btn'
   );
+  
+  // Elements that should show the hovering style
+  const hoverElements = document.querySelectorAll(
+    '.skill-item, .skills-chart-container, .skills-bars-container, .highlight-card, .fact-item, .about-photo, .project-card, .tool-card, .step-content, .testimonial-card, .contact-item, .modal-content, .modal-features-list li'
+  );
+
+  // Add pointer style for clickable elements
+  pointerElements.forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.classList.add('pointer');
+      cursor.classList.remove('hovering');
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.classList.remove('pointer');
+    });
+  });
+
+  // Add hovering style for interactive elements
   hoverElements.forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+    el.addEventListener('mouseenter', () => {
+      if (!cursor.classList.contains('pointer')) {
+        cursor.classList.add('hovering');
+      }
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.classList.remove('hovering');
+    });
   });
 }
 
-// =================== PARTICLE BACKGROUND ===================
+// =================== PARTICLE NETWORK BACKGROUND ===================
 function initializeParticles() {
   const canvas = document.getElementById('particle-canvas');
   const ctx = canvas.getContext('2d');
   let particles = [];
+  const mouse = { x: null, y: null, radius: 100 };
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -2242,16 +2588,13 @@ function initializeParticles() {
 
   class Particle {
     constructor() {
-      this.reset();
-    }
-
-    reset() {
       this.x = Math.random() * canvas.width;
       this.y = Math.random() * canvas.height;
-      this.size = Math.random() * 2 + 1;
+      this.size = Math.random() * 2 + 0.5;
       this.speedX = Math.random() * 0.5 - 0.25;
       this.speedY = Math.random() * 0.5 - 0.25;
-      this.alpha = Math.random() * 0.5 + 0.2;
+      this.color = '#00ffff';
+      this.alpha = Math.random() * 0.5 + 0.1;
     }
 
     update() {
@@ -2260,12 +2603,24 @@ function initializeParticles() {
 
       if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
       if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+
+      // Mouse interaction
+      if (mouse.x && mouse.y) {
+        const dx = mouse.x - this.x;
+        const dy = mouse.y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < mouse.radius) {
+          const force = (mouse.radius - distance) / mouse.radius;
+          this.x -= dx * force * 0.05;
+          this.y -= dy * force * 0.05;
+        }
+      }
     }
 
     draw() {
       ctx.save();
       ctx.globalAlpha = this.alpha;
-      ctx.fillStyle = '#00ffff';
+      ctx.fillStyle = this.color;
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
       ctx.fill();
@@ -2274,19 +2629,59 @@ function initializeParticles() {
   }
 
   function initParticles() {
-    particles = Array.from({ length: 50 }, () => new Particle());
+    particles = [];
+    const numberOfParticles = (canvas.width * canvas.height) / 9000;
+    for (let i = 0; i < numberOfParticles; i++) {
+      particles.push(new Particle());
+    }
+  }
+
+  function connectParticles() {
+    const maxDistance = 150;
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < maxDistance) {
+          const opacity = 1 - (distance / maxDistance);
+          ctx.save();
+          ctx.globalAlpha = opacity * 0.2;
+          ctx.strokeStyle = '#00ffff';
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+    }
   }
 
   function animateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    particles.forEach(p => {
-      p.update();
-      p.draw();
+    particles.forEach(particle => {
+      particle.update();
+      particle.draw();
     });
+
+    connectParticles();
 
     requestAnimationFrame(animateParticles);
   }
+
+  window.addEventListener('mousemove', (e) => {
+    mouse.x = e.x;
+    mouse.y = e.y;
+  });
+
+  window.addEventListener('mouseout', () => {
+    mouse.x = null;
+    mouse.y = null;
+  });
 
   window.addEventListener('resize', () => {
     resizeCanvas();
@@ -2377,17 +2772,6 @@ function initializeProjectFilters() {
 }
 
 function initializeProjectCards() {
-  // Add click handlers for project links
-  const projectLinks = document.querySelectorAll('.project-link');
-  
-  projectLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      // Add your project link handling logic here
-      console.log('Project link clicked:', link.textContent);
-    });
-  });
-
   // Add animation on scroll for project cards
   const projectCards = document.querySelectorAll('.project-card');
   
@@ -2405,6 +2789,266 @@ function initializeProjectCards() {
     card.style.transform = 'translateY(30px)';
     observer.observe(card);
   });
+}
+
+// =================== PROJECT MODAL ===================
+function initializeProjectModal() {
+  const modal = document.getElementById('projectModal');
+  const closeBtn = document.querySelector('.close-modal');
+  const projectCards = document.querySelectorAll('.project-card');
+  
+  // Project data
+  const projectsData = {
+    1: {
+      title: "Interactive Portfolio",
+      image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80",
+      description: "A fully responsive portfolio website featuring custom particle animations, smooth scrolling, and interactive elements. Built with modern web technologies to showcase creative work in an engaging way.",
+      stats: [
+        { number: "1", label: "Project" },
+        { number: "2", label: "Weeks" },
+        { number: "100%", label: "Completed" }
+      ],
+      tags: ["HTML/CSS", "JavaScript", "UI/UX", "Responsive"],
+      features: [
+        "Custom particle background animations",
+        "Smooth scrolling navigation",
+        "Responsive design for all devices",
+        "Interactive project cards",
+        "Modern glass morphism design",
+        "Performance optimized"
+      ],
+      links: {
+        live: "https://toonomaly.github.io/Portofolio/",
+        github: "https://github.com/Toonomaly/Portofolio",
+        details: "https://github.com/Toonomaly/Portofolio"
+      }
+    },
+    2: {
+      title: "Motion Graphics Showreel",
+      image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80",
+      description: "A dynamic motion graphics showcase featuring 30+ animation scenes with professional sound design and color grading. Created for commercial and artistic purposes.",
+      stats: [
+        { number: "30+", label: "Scenes" },
+        { number: "3", label: "Months" },
+        { number: "100%", label: "Completed" }
+      ],
+      tags: ["After Effects", "Motion Graphics", "VFX", "4K"],
+      features: [
+        "30+ unique animation scenes",
+        "4K resolution rendering",
+        "Professional sound design",
+        "Advanced color grading",
+        "Smooth transitions",
+        "Multi-format exports"
+      ],
+      links: {
+        live: "https://youtube.com",
+        github: "https://github.com",
+        details: "https://artstation.com"
+      }
+    },
+    3: {
+      title: "Character Design Pack",
+      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80",
+      description: "Complete character design and modeling package featuring 10+ unique characters with full rigging and animation capabilities.",
+      stats: [
+        { number: "10+", label: "Characters" },
+        { number: "4", label: "Months" },
+        { number: "90%", label: "Completed" }
+      ],
+      tags: ["Blender", "Character Design", "3D Modeling", "Rigging"],
+      features: [
+        "10+ unique character models",
+        "Full skeletal rigging",
+        "Advanced texture mapping",
+        "Animation ready models",
+        "Custom shaders and materials",
+        "Optimized for real-time rendering"
+      ],
+      links: {
+        live: "https://artstation.com",
+        github: "https://github.com",
+        details: "https://drive.google.com"
+      }
+    },
+    4: {
+      title: "Modern E-Commerce Platform",
+      image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80",
+      description: "Full-stack e-commerce solution with secure payment integration, admin dashboard, and responsive design for optimal user experience.",
+      stats: [
+        { number: "1", label: "Platform" },
+        { number: "6", label: "Months" },
+        { number: "95%", label: "Completed" }
+      ],
+      tags: ["React", "Node.js", "MongoDB", "Stripe API"],
+      features: [
+        "User authentication & authorization",
+        "Payment processing with Stripe",
+        "Admin dashboard for product management",
+        "Responsive design for all devices",
+        "Order tracking system",
+        "Inventory management"
+      ],
+      links: {
+        live: "https://example-ecommerce.com",
+        github: "https://github.com/example/ecommerce",
+        details: "https://github.com/example/ecommerce"
+      }
+    },
+    5: {
+      title: "Fantasy 3D Environment",
+      image: "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80",
+      description: "Immersive fantasy world with detailed landscapes, dynamic weather systems, and atmospheric effects optimized for real-time rendering.",
+      stats: [
+        { number: "1", label: "Environment" },
+        { number: "8", label: "Months" },
+        { number: "85%", label: "Completed" }
+      ],
+      tags: ["Blender", "Substance Painter", "Unreal Engine", "Environment Design"],
+      features: [
+        "Procedural terrain generation",
+        "Dynamic weather system",
+        "Real-time global illumination",
+        "Interactive elements and NPCs",
+        "Optimized for VR compatibility",
+        "Custom particle effects"
+      ],
+      links: {
+        live: "https://artstation.com/artwork/fantasy-environment",
+        github: "https://github.com",
+        details: "https://drive.google.com/fantasy-environment"
+      }
+    },
+    6: {
+      title: "Product Explainer Animation",
+      image: "https://images.unsplash.com/photo-1611224885990-ab7363d7f2a9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80",
+      description: "Engaging product demonstration with 3D animation and motion graphics, featuring dynamic camera movements and professional sound design.",
+      stats: [
+        { number: "1", label: "Animation" },
+        { number: "3", label: "Weeks" },
+        { number: "100%", label: "Completed" }
+      ],
+      tags: ["Cinema 4D", "After Effects", "Motion Graphics", "Product Visualization"],
+      features: [
+        "3D product modeling and texturing",
+        "Dynamic camera movements",
+        "Particle effects and simulations",
+        "Sound design and voiceover",
+        "Multiple format outputs",
+        "4K resolution rendering"
+      ],
+      links: {
+        live: "https://youtube.com/product-animation",
+        github: "https://github.com",
+        details: "https://drive.google.com/product-breakdown"
+      }
+    }
+  };
+
+  // Open modal when project card is clicked
+  projectCards.forEach(card => {
+    card.addEventListener('click', (e) => {
+      // Don't open modal if clicking on links inside the card
+      if (e.target.tagName === 'A' || e.target.closest('a')) {
+        return;
+      }
+      
+      const projectId = card.getAttribute('data-project');
+      const projectData = projectsData[projectId];
+      
+      if (projectData) {
+        openModal(projectData);
+      }
+    });
+  });
+
+  // Also make view project buttons work
+  document.querySelectorAll('.view-project-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = btn.closest('.project-card');
+      const projectId = card.getAttribute('data-project');
+      const projectData = projectsData[projectId];
+      
+      if (projectData) {
+        openModal(projectData);
+      }
+    });
+  });
+
+  // Close modal
+  closeBtn.addEventListener('click', closeModal);
+  
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  });
+
+  function openModal(project) {
+    // Set modal content
+    document.getElementById('modalImage').src = project.image;
+    document.getElementById('modalImage').alt = project.title;
+    document.getElementById('modalTitle').textContent = project.title;
+    document.getElementById('modalDescription').textContent = project.description;
+    
+    // Set stats
+    const stats = project.stats;
+    document.getElementById('modalStat1').textContent = stats[0].number;
+    document.getElementById('modalLabel1').textContent = stats[0].label;
+    document.getElementById('modalStat2').textContent = stats[1].number;
+    document.getElementById('modalLabel2').textContent = stats[1].label;
+    document.getElementById('modalStat3').textContent = stats[2].number;
+    document.getElementById('modalLabel3').textContent = stats[2].label;
+    
+    // Set tags
+    const tagsContainer = document.getElementById('modalTags');
+    tagsContainer.innerHTML = '';
+    project.tags.forEach(tag => {
+      const tagElement = document.createElement('span');
+      tagElement.className = 'project-tag';
+      tagElement.textContent = tag;
+      tagsContainer.appendChild(tagElement);
+    });
+    
+    // Set features
+    const featuresContainer = document.getElementById('modalFeatures');
+    featuresContainer.innerHTML = '';
+    project.features.forEach(feature => {
+      const featureElement = document.createElement('li');
+      featureElement.textContent = feature;
+      featuresContainer.appendChild(featureElement);
+    });
+    
+    // Set links
+    document.getElementById('modalLiveLink').href = project.links.live;
+    document.getElementById('modalGithubLink').href = project.links.github;
+    document.getElementById('modalDetailsLink').href = project.links.details;
+    
+    // Show modal
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    
+    // Ensure cursor stays on top
+    const cursor = document.getElementById('circle-cursor');
+    cursor.style.zIndex = '100000';
+  }
+
+  function closeModal() {
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+    
+    // Reset cursor z-index if needed
+    const cursor = document.getElementById('circle-cursor');
+    cursor.style.zIndex = '100000';
+  }
 }
 
 // =================== WINDOW RESIZE HANDLER ===================
