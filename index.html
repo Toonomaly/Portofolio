@@ -70,6 +70,67 @@ a, button, .filter-btn, .project-link, .submit-btn, .play-button, .close-modal, 
   border: 2px solid var(--primary);
 }
 
+/* =================== MINIMAL TEXT CLOCK =================== */
+.floating-clock {
+  position: fixed;
+  bottom: 90px; /* Position above dock */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9998;
+  text-align: center;
+  color: var(--text);
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  /* NO BACKGROUND, NO BORDER, NO EFFECTS - JUST TEXT */
+}
+
+.clock-time {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--primary);
+  letter-spacing: 2px;
+  margin-bottom: 2px;
+  font-variant-numeric: tabular-nums; /* Ensures equal width for all numbers */
+}
+
+.clock-date {
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-weight: 300;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .floating-clock {
+    bottom: 85px;
+  }
+  
+  .clock-time {
+    font-size: 0.9rem;
+    letter-spacing: 1.5px;
+  }
+  
+  .clock-date {
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-clock {
+    bottom: 80px;
+  }
+  
+  .clock-time {
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+  }
+  
+  .clock-date {
+    font-size: 0.6rem;
+  }
+}
+
 /* =================== FIX Z-INDEX HIERARCHY =================== */
 #particle-canvas {
   position: fixed;
@@ -86,11 +147,6 @@ section {
   z-index: 2 !important;
 }
 
-.navbar {
-  position: fixed;
-  z-index: 9999 !important;
-}
-
 .hero-content, .about-container, .projects-container, 
 .skills-container, .tools-container, .workflow-container,
 .testimonials-container, .contact-container {
@@ -98,43 +154,235 @@ section {
   z-index: 3 !important;
 }
 
-/* =================== NAVBAR =================== */
-.navbar {
+/* =================== DOCK NAVBAR =================== */
+.dock-nav {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  background-color: var(--blur);
-  backdrop-filter: blur(8px);
-  padding: 1rem 2rem;
-  transition: background 0.3s ease;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: var(--blur);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--highlight);
+  border-radius: 24px;
+  padding: 8px 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-.navbar ul {
-  list-style: none;
+.dock-container {
   display: flex;
-  gap: 1.5rem;
   justify-content: center;
-  padding: 1rem;
-  margin: 0;
 }
 
-.navbar a {
-  color: var(--text);
+.dock-items {
+  display: flex;
+  gap: 8px;
+  align-items: end;
+}
+
+.dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-decoration: none;
-  font-weight: bold;
-  display: inline-block;
-  transition: color 0.3s ease, transform 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
-  z-index: 100; /* Ensure links are clickable */
 }
 
-.navbar a:hover {
-  color: var(--primary);
-  transform: scale(1.1);
+.dock-icon {
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+  filter: grayscale(0.3);
 }
 
+.dock-item:hover {
+  background: rgba(0, 255, 255, 0.1);
+  transform: translateY(-8px);
+}
+
+.dock-item:hover .dock-icon {
+  filter: grayscale(0);
+  transform: scale(1.2);
+}
+
+/* Dock magnification effect */
+.dock-item:nth-child(1):hover { transform: translateY(-12px) scale(1.1); }
+.dock-item:nth-child(2):hover { transform: translateY(-14px) scale(1.15); }
+.dock-item:nth-child(3):hover { transform: translateY(-16px) scale(1.2); }
+.dock-item:nth-child(4):hover { transform: translateY(-16px) scale(1.2); }
+.dock-item:nth-child(5):hover { transform: translateY(-14px) scale(1.15); }
+.dock-item:nth-child(6):hover { transform: translateY(-12px) scale(1.1); }
+.dock-item:nth-child(7):hover { transform: translateY(-10px) scale(1.05); }
+.dock-item:nth-child(8):hover { transform: translateY(-8px) scale(1.02); }
+
+/* Tooltip */
+.dock-item::after {
+  content: attr(data-title);
+  position: absolute;
+  bottom: -30px;
+  background: var(--primary);
+  color: #000;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.dock-item:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =================== DOCK NAVBAR FIX =================== */
+.dock-nav {
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: var(--blur);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--highlight);
+  border-radius: 20px;
+  padding: 6px 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  max-width: 90vw;
+  overflow-x: auto;
+  white-space: nowrap;
+  /* PASTIKAN DOCK SELALU TERLIHAT */
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.dock-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.dock-items {
+  display: flex;
+  gap: 6px;
+  align-items: end;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 14px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.dock-icon {
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  filter: grayscale(0.3);
+  min-width: 20px;
+  text-align: center;
+}
+
+/* HAPUS MEDIA QUERY YANG LAMA DAN GANTI DENGAN INI */
+@media screen and (max-width: 768px) {
+  .dock-nav {
+    bottom: 10px;
+    padding: 5px 10px;
+    max-width: 95vw;
+    border-radius: 18px;
+    /* PASTIKAN TIDAK ADA YANG MENYEMBUNYIKAN */
+    display: flex !important;
+    visibility: visible !important;
+  }
+  
+  .dock-item {
+    padding: 5px 8px;
+    border-radius: 12px;
+  }
+  
+  .dock-icon {
+    font-size: 1.1rem;
+  }
+  
+  .dock-item::after {
+    font-size: 0.6rem;
+    bottom: -25px;
+    padding: 3px 6px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .dock-nav {
+    bottom: 8px;
+    padding: 4px 8px;
+    max-width: 98vw;
+    border-radius: 16px;
+    /* FORCE TAMPIL DI MOBILE */
+    display: flex !important;
+    visibility: visible !important;
+  }
+  
+  .dock-items {
+    gap: 4px;
+  }
+  
+  .dock-item {
+    padding: 4px 6px;
+    border-radius: 10px;
+  }
+  
+  .dock-icon {
+    font-size: 1rem;
+  }
+  
+  /* Tooltip disembunyikan di mobile sangat kecil */
+  .dock-item::after {
+    display: none;
+  }
+  
+  /* Efek hover yang lebih subtle di mobile */
+  .dock-item:hover {
+    transform: translateY(-3px) scale(1.05) !important;
+    background: rgba(0, 255, 255, 0.15);
+  }
+}
+
+/* HAPUS SCROLLBAR STYLING JIKA TIDAK DIBUTUHKAN */
+.dock-nav::-webkit-scrollbar {
+  display: none; /* Sembunyikan scrollbar untuk tampilan lebih bersih */
+}
+
+/* OPTIONAL: Tambahkan ini untuk memastikan tidak ada media query lain yang menimpa */
+@media (max-width: 1024px) {
+  .dock-nav {
+    display: flex !important;
+  }
+}
+
+/* FIX UNTUK MOBILE TOUCH */
+@media (hover: none) and (pointer: coarse) {
+  .dock-item:hover {
+    transform: none !important;
+  }
+  
+  .dock-item:active {
+    transform: scale(0.95) !important;
+    background: rgba(0, 255, 255, 0.2);
+  }
+}
 /* =================== SECTION LAYOUT =================== */
 section {
   min-height: 100vh;
@@ -499,6 +747,56 @@ section {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
+/* =================== VIDEO STYLING =================== */
+.preview-video {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.preview-container:hover .preview-video {
+  transform: scale(1.05);
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 70%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 12px;
+}
+
+.preview-container:hover .video-overlay {
+  opacity: 1;
+}
+
+.play-indicator {
+  background: rgba(0, 255, 255, 0.9);
+  color: #000;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Fallback image styling */
 .preview-image {
   width: 100%;
   height: 300px;
@@ -544,6 +842,28 @@ section {
 
 .play-button:hover {
   transform: scale(1.1);
+}
+
+/* Manual play button for autoplay restrictions */
+.manual-play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--primary);
+  color: #000;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 5;
+  transition: all 0.3s ease;
+}
+
+.manual-play-button:hover {
+  background: #fff;
+  transform: translate(-50%, -50%) scale(1.1);
 }
 
 /* =================== PROJECT CARD HOVER EFFECTS =================== */
@@ -960,184 +1280,870 @@ section {
   width: 100%;
 }
 
-/* =================== TOOLS SECTION =================== */
-#tools {
-  padding: 4rem 1rem;
-  background-color: rgba(255, 255, 255, 0.02);
+/* =================== TOOLS CAROUSEL =================== */
+.tools-carousel-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  padding: 0 60px;
+}
+
+.carousel-wrapper {
+  overflow: hidden;
+  border-radius: 20px;
   position: relative;
 }
 
-.tools-container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   gap: 2rem;
-  margin-top: 2rem;
+  padding: 2rem 0;
 }
 
 .tool-card {
+  flex: 0 0 350px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--highlight);
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 2rem;
-  text-align: center;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.tool-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tool-card:hover::before {
+  opacity: 1;
 }
 
 .tool-card:hover {
-  transform: translateY(-5px);
   border-color: var(--primary);
-  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.15);
+}
+
+.tool-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .tool-icon {
   font-size: 3rem;
-  margin-bottom: 1rem;
-  display: block;
-  transition: transform 0.3s ease;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 255, 255, 0.1);
+  border-radius: 12px;
 }
 
-.tool-card:hover .tool-icon {
-  transform: scale(1.2);
-}
-
-.tool-name {
+.tool-title {
   color: var(--primary);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
 }
 
 .tool-category {
   color: var(--muted);
   font-size: 0.9rem;
-  margin-bottom: 1rem;
 }
 
 .tool-description {
   color: var(--text);
-  font-size: 0.9rem;
-  line-height: 1.5;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
 }
 
-/* =================== WORKFLOW SECTION =================== */
+.tool-features {
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
+.tool-features li {
+  color: var(--text);
+  padding: 0.5rem 0;
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.tool-features li::before {
+  content: '▸';
+  color: var(--primary);
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+.tool-proficiency {
+  margin-top: auto;
+}
+
+.proficiency-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.proficiency-bar {
+  width: 100%;
+  height: 6px;
+  background: #2b2b2b;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.proficiency-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), #00ccff);
+  border-radius: 3px;
+  transition: width 1s ease-in-out;
+}
+
+.proficiency-percent {
+  color: var(--primary);
+  font-size: 0.9rem;
+  font-weight: bold;
+  float: right;
+}
+
+/* Carousel Navigation */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.5;
+}
+
+.carousel-dot.active {
+  background: var(--primary);
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--highlight);
+  color: var(--primary);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.5rem;
+  z-index: 10;
+}
+
+.carousel-arrow:hover {
+  background: rgba(0, 255, 255, 0.1);
+  border-color: var(--primary);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-arrow-prev {
+  left: 0;
+}
+
+.carousel-arrow-next {
+  right: 0;
+}
+
+/* Touch/swipe support */
+.carousel-track {
+  cursor: grab;
+}
+
+.carousel-track:active {
+  cursor: grabbing;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .tool-card {
+    flex: 0 0 300px;
+  }
+  
+  .tools-carousel-container {
+    padding: 0 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tools-carousel-container {
+    padding: 0 40px;
+  }
+  
+  .tool-card {
+    flex: 0 0 280px;
+    padding: 1.5rem;
+  }
+  
+  .tool-icon {
+    font-size: 2.5rem;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .tool-title {
+    font-size: 1.2rem;
+  }
+  
+  .carousel-arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tools-carousel-container {
+    padding: 0 30px;
+  }
+  
+  .tool-card {
+    flex: 0 0 250px;
+    padding: 1rem;
+  }
+  
+  .tool-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .tool-icon {
+    font-size: 2rem;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .carousel-arrow {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+}
+
+/* =================== BOUNCE CARDS WORKFLOW SECTION =================== */
 #workflow {
   padding: 4rem 1rem;
   background-color: rgba(255, 255, 255, 0.02);
   position: relative;
+  overflow: hidden;
 }
 
 .workflow-container {
   max-width: 1200px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
 }
 
-.workflow-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  margin-top: 2rem;
+/* Bounce Cards Container */
+.bounce-cards-container {
   position: relative;
+  width: 100%;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px;
 }
 
-.workflow-steps::before {
-  content: '';
+.bounce-card {
   position: absolute;
-  left: 30px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--primary);
-  opacity: 0.3;
+  width: 180px;
+  height: 240px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--highlight);
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: scale(0.8) rotate(-10deg);
 }
 
-.workflow-step {
-  display: flex;
-  align-items: flex-start;
-  gap: 2rem;
-  position: relative;
+/* Initial positions for cards */
+.bounce-card:nth-child(1) {
+  transform: rotate(5deg) translateX(-160px) translateY(-10px) scale(0.8);
+  z-index: 1;
+  transition-delay: 0.1s;
 }
 
-.step-number {
-  width: 60px;
-  height: 60px;
+.bounce-card:nth-child(2) {
+  transform: rotate(2deg) translateX(-80px) translateY(-5px) scale(0.85);
+  z-index: 2;
+  transition-delay: 0.2s;
+}
+
+.bounce-card:nth-child(3) {
+  transform: rotate(0deg) scale(0.9);
+  z-index: 3;
+  transition-delay: 0.3s;
+}
+
+.bounce-card:nth-child(4) {
+  transform: rotate(-2deg) translateX(80px) translateY(-5px) scale(0.85);
+  z-index: 2;
+  transition-delay: 0.4s;
+}
+
+.bounce-card:nth-child(5) {
+  transform: rotate(-5deg) translateX(160px) translateY(-10px) scale(0.8);
+  z-index: 1;
+  transition-delay: 0.5s;
+}
+
+/* Animation when section becomes visible */
+#workflow.visible .bounce-card {
+  opacity: 1;
+  transform: scale(1);
+}
+
+#workflow.visible .bounce-card:nth-child(1) {
+  transform: rotate(5deg) translateX(-160px) translateY(-10px) scale(1);
+}
+
+#workflow.visible .bounce-card:nth-child(2) {
+  transform: rotate(2deg) translateX(-80px) translateY(-5px) scale(1);
+}
+
+#workflow.visible .bounce-card:nth-child(3) {
+  transform: rotate(0deg) scale(1);
+}
+
+#workflow.visible .bounce-card:nth-child(4) {
+  transform: rotate(-2deg) translateX(80px) translateY(-5px) scale(1);
+}
+
+#workflow.visible .bounce-card:nth-child(5) {
+  transform: rotate(-5deg) translateX(160px) translateY(-10px) scale(1);
+}
+
+/* Hover states */
+.bounce-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 20px 50px rgba(0, 255, 255, 0.3);
+  z-index: 20 !important;
+}
+
+.bounce-card.active {
+  border-color: var(--primary);
+  box-shadow: 0 15px 40px rgba(0, 255, 255, 0.2);
+  z-index: 15;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.bounce-card:hover .card-image {
+  transform: scale(1.08);
+}
+
+.card-step {
+  position: absolute;
+  top: 12px;
+  left: 12px;
   background: var(--primary);
   color: #000;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
   font-weight: bold;
-  flex-shrink: 0;
+  font-size: 0.8rem;
   z-index: 2;
-  position: relative;
 }
 
-.step-content {
-  flex: 1;
+.card-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+  padding: 1.2rem 0.8rem 0.8rem;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bounce-card:hover .card-content,
+.bounce-card.active .card-content {
+  transform: translateY(0);
+}
+
+.card-content h4 {
+  color: var(--primary);
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 0.4rem;
+}
+
+.card-content p {
+  color: var(--text);
+  font-size: 0.7rem;
+  line-height: 1.3;
+  opacity: 0.9;
+}
+
+/* Workflow Description */
+.workflow-description {
+  padding: 2rem;
+}
+
+.workflow-description h3 {
+  color: var(--primary);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.workflow-description > p {
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.process-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.process-step {
+  padding: 1.5rem;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--highlight);
   border-radius: 12px;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  opacity: 0.6;
 }
 
-.step-content:hover {
+.process-step.active {
+  opacity: 1;
   border-color: var(--primary);
+  background: rgba(0, 255, 255, 0.05);
   transform: translateX(10px);
 }
 
-.step-title {
+.process-step:hover {
+  border-color: var(--primary);
+  transform: translateX(5px);
+}
+
+.process-step h4 {
   color: var(--primary);
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
-  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
 }
 
-.step-description {
+.process-step p {
   color: var(--muted);
-  line-height: 1.6;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
-/* =================== TESTIMONIALS SECTION =================== */
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .workflow-container {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  
+  .bounce-cards-container {
+    height: 350px;
+    order: -1;
+  }
+  
+  .bounce-card {
+    width: 160px;
+    height: 220px;
+  }
+  
+  .bounce-card:nth-child(1) {
+    transform: rotate(5deg) translateX(-140px) translateY(-10px) scale(0.8);
+  }
+  
+  .bounce-card:nth-child(2) {
+    transform: rotate(2deg) translateX(-70px) translateY(-5px) scale(0.85);
+  }
+  
+  .bounce-card:nth-child(4) {
+    transform: rotate(-2deg) translateX(70px) translateY(-5px) scale(0.85);
+  }
+  
+  .bounce-card:nth-child(5) {
+    transform: rotate(-5deg) translateX(140px) translateY(-10px) scale(0.8);
+  }
+}
+
+@media (max-width: 768px) {
+  .bounce-cards-container {
+    height: 300px;
+  }
+  
+  .bounce-card {
+    width: 140px;
+    height: 190px;
+  }
+  
+  .bounce-card:nth-child(1) {
+    transform: rotate(5deg) translateX(-120px) translateY(-10px) scale(0.8);
+  }
+  
+  .bounce-card:nth-child(2) {
+    transform: rotate(2deg) translateX(-60px) translateY(-5px) scale(0.85);
+  }
+  
+  .bounce-card:nth-child(4) {
+    transform: rotate(-2deg) translateX(60px) translateY(-5px) scale(0.85);
+  }
+  
+  .bounce-card:nth-child(5) {
+    transform: rotate(-5deg) translateX(120px) translateY(-10px) scale(0.8);
+  }
+  
+  .workflow-description {
+    padding: 1rem 0;
+  }
+  
+  .workflow-description h3 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .bounce-cards-container {
+    height: 250px;
+  }
+  
+  .bounce-card {
+    width: 110px;
+    height: 160px;
+  }
+  
+  .bounce-card:nth-child(1) {
+    transform: rotate(5deg) translateX(-90px) translateY(-5px) scale(0.8);
+  }
+  
+  .bounce-card:nth-child(2) {
+    transform: rotate(2deg) translateX(-45px) translateY(-2px) scale(0.85);
+  }
+  
+  .bounce-card:nth-child(3) {
+    transform: rotate(0deg) scale(0.9);
+  }
+  
+  .bounce-card:nth-child(4) {
+    transform: rotate(-2deg) translateX(45px) translateY(-2px) scale(0.85);
+  }
+  
+  .bounce-card:nth-child(5) {
+    transform: rotate(-5deg) translateX(90px) translateY(-5px) scale(0.8);
+  }
+  
+  .card-content {
+    padding: 0.8rem 0.6rem 0.6rem;
+  }
+  
+  .card-content h4 {
+    font-size: 0.8rem;
+  }
+  
+  .card-content p {
+    font-size: 0.65rem;
+  }
+  
+  .process-step {
+    padding: 1rem;
+  }
+  
+  .process-step h4 {
+    font-size: 1rem;
+  }
+}
+
+/* =================== SEARCH SUGGESTIONS STYLES =================== */
+.search-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(15, 15, 15, 0.95);
+  border: 1px solid var(--highlight);
+  border-radius: 8px;
+  margin-top: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  display: none;
+  backdrop-filter: blur(10px);
+}
+
+.search-suggestion {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-suggestion:hover {
+  background-color: rgba(0, 255, 255, 0.1);
+}
+
+.search-suggestion:last-child {
+  border-bottom: none;
+}
+
+.suggestion-icon {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* Search highlight */
+.highlight {
+  background: rgba(0, 255, 255, 0.2);
+  color: var(--primary);
+  padding: 0.1rem 0.2rem;
+  border-radius: 3px;
+}
+
+/* No results message */
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--muted);
+  padding: 2rem;
+  font-style: italic;
+}
+
+/* =================== CARD NAV TESTIMONIALS =================== */
 #testimonials {
   padding: 4rem 1rem;
   background-color: rgba(255, 255, 255, 0.02);
   position: relative;
+  min-height: 100vh;
 }
 
 .testimonials-container {
   max-width: 1200px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
 }
 
-.testimonials-grid {
+.card-nav-testimonials {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.testimonial-nav {
+  display: block;
+  height: 70px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--highlight);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  backdrop-filter: blur(10px);
+}
+
+.testimonial-nav.expanded {
+  height: 500px;
+  border-color: var(--primary);
+}
+
+.testimonial-nav-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  z-index: 10;
+  background: rgba(15, 15, 15, 0.8);
+  border-radius: 16px;
+}
+
+.hamburger-menu-testimonial {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  gap: 6px;
+  width: 30px;
+  transition: all 0.3s ease;
+}
+
+.hamburger-menu-testimonial:hover {
+  transform: scale(1.1);
+}
+
+.hamburger-line-testimonial {
+  width: 25px;
+  height: 2px;
+  background-color: var(--primary);
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.testimonial-nav.expanded .hamburger-line-testimonial:first-child {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.testimonial-nav.expanded .hamburger-line-testimonial:last-child {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+.testimonial-logo-container h3 {
+  color: var(--primary);
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.testimonial-search-container {
+  position: relative;
+  width: 200px;
+}
+
+.testimonial-search {
+  width: 100%;
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--highlight);
+  border-radius: 25px;
+  color: var(--text);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.testimonial-search:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.1);
+}
+
+.testimonial-search::placeholder {
+  color: var(--muted);
+}
+
+.search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.testimonial-nav-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 70px;
+  bottom: 0;
+  padding: 1.5rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.testimonial-nav.expanded .testimonial-nav-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 .testimonial-card {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--highlight);
-  border-radius: 16px;
-  padding: 2rem;
+  border-radius: 12px;
+  padding: 1.5rem;
   transition: all 0.3s ease;
-  position: relative;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.testimonial-nav.expanded .testimonial-card {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .testimonial-card:hover {
-  transform: translateY(-5px);
   border-color: var(--primary);
-  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.1);
 }
 
 .testimonial-content {
@@ -1146,16 +2152,17 @@ section {
   line-height: 1.6;
   margin-bottom: 1.5rem;
   position: relative;
+  font-size: 0.95rem;
 }
 
 .testimonial-content::before {
   content: '"';
-  font-size: 4rem;
+  font-size: 3rem;
   color: var(--primary);
   opacity: 0.3;
   position: absolute;
-  top: -2rem;
-  left: -1rem;
+  top: -1.5rem;
+  left: -0.5rem;
   line-height: 1;
 }
 
@@ -1166,8 +2173,8 @@ section {
 }
 
 .author-avatar {
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--primary);
@@ -1176,14 +2183,211 @@ section {
 .author-info h4 {
   color: var(--primary);
   margin-bottom: 0.2rem;
+  font-size: 1rem;
 }
 
 .author-info p {
   color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.testimonial-rating {
+  margin-top: 0.5rem;
+  color: #ffd700;
   font-size: 0.9rem;
 }
 
-/* =================== CONTACT SECTION =================== */
+/* Featured Testimonials */
+.featured-testimonials {
+  margin-top: 2rem;
+}
+
+.featured-testimonials h3 {
+  color: var(--primary);
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.featured-testimonial {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--highlight);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.featured-testimonial::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+}
+
+.featured-testimonial:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary);
+  box-shadow: 0 15px 40px rgba(0, 255, 255, 0.15);
+}
+
+.featured-content {
+  color: var(--text);
+  font-style: italic;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  position: relative;
+  font-size: 1rem;
+}
+
+.featured-content::before {
+  content: '"';
+  font-size: 4rem;
+  color: var(--primary);
+  opacity: 0.2;
+  position: absolute;
+  top: -2rem;
+  left: -1rem;
+  line-height: 1;
+}
+
+.featured-author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.featured-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary);
+}
+
+.featured-author-info h4 {
+  color: var(--primary);
+  margin-bottom: 0.3rem;
+  font-size: 1.1rem;
+}
+
+.featured-author-info p {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.featured-rating {
+  margin-top: 0.5rem;
+  color: #ffd700;
+  font-size: 1rem;
+}
+
+/* Stagger animation for cards */
+.testimonial-card:nth-child(1) { transition-delay: 0.1s; }
+.testimonial-card:nth-child(2) { transition-delay: 0.2s; }
+.testimonial-card:nth-child(3) { transition-delay: 0.3s; }
+.testimonial-card:nth-child(4) { transition-delay: 0.4s; }
+.testimonial-card:nth-child(5) { transition-delay: 0.5s; }
+.testimonial-card:nth-child(6) { transition-delay: 0.6s; }
+.testimonial-card:nth-child(7) { transition-delay: 0.7s; }
+.testimonial-card:nth-child(8) { transition-delay: 0.8s; }
+.testimonial-card:nth-child(9) { transition-delay: 0.9s; }
+.testimonial-card:nth-child(10) { transition-delay: 1s; }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .testimonial-nav-top {
+    padding: 0 1rem;
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 70px;
+  }
+  
+  .testimonial-search-container {
+    width: 150px;
+    order: 3;
+    margin-top: 0.5rem;
+    flex-basis: 100%;
+  }
+  
+  .hamburger-menu-testimonial {
+    order: 1;
+  }
+  
+  .testimonial-logo-container {
+    order: 2;
+    flex: 1;
+    text-align: center;
+  }
+  
+  .testimonial-logo-container h3 {
+    font-size: 1.3rem;
+  }
+  
+  .testimonial-nav.expanded {
+    height: 600px;
+  }
+  
+  .testimonial-nav-content {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+  
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .testimonial-nav-top {
+    padding: 0.5rem;
+  }
+  
+  .testimonial-search {
+    font-size: 0.8rem;
+  }
+  
+  .testimonial-card {
+    padding: 1rem;
+  }
+  
+  .featured-testimonial {
+    padding: 1.5rem;
+  }
+  
+  .featured-content {
+    font-size: 0.9rem;
+  }
+}
+
+/* Search highlight */
+.highlight {
+  background: rgba(0, 255, 255, 0.2);
+  color: var(--primary);
+  padding: 0.1rem 0.2rem;
+  border-radius: 3px;
+}
+
+/* No results message */
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--muted);
+  padding: 2rem;
+  font-style: italic;
+}
+
+/* =================== STEPPER CONTACT SECTION =================== */
 #contact {
   padding: 4rem 1rem;
   background-color: rgba(255, 255, 255, 0.02);
@@ -1191,62 +2395,250 @@ section {
 }
 
 .contact-container {
-  max-width: 1200px;
+  max-width: 800px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
 }
 
-.contact-info {
+.stepper-container {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--highlight);
+  border-radius: 24px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+/* Step Indicators */
+.step-indicators {
   display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3rem;
+  position: relative;
 }
 
-.contact-item {
+.step-indicator {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.step-indicator-inner {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #222;
+  border: 2px solid #333;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.step-indicator.active .step-indicator-inner {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #000;
+  transform: scale(1.1);
+}
+
+.step-indicator.completed .step-indicator-inner {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #000;
+}
+
+.step-number {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.step-connector {
+  flex: 1;
+  height: 2px;
+  background: #333;
+  margin: 0 10px;
+  position: relative;
+  max-width: 80px;
+}
+
+.step-connector::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--primary);
+  width: 0;
+  transition: width 0.3s ease;
+}
+
+.step-connector.completed::after {
+  width: 100%;
+}
+
+/* Step Contents */
+.step-contents {
+  position: relative;
+  min-height: 400px;
+  overflow: hidden;
+}
+
+.step-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  transform: translateX(50px);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.step-content.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: all;
+  position: relative;
+}
+
+.step-content.exit-left {
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+.step-content.exit-right {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+.step-inner {
+  padding: 0 1rem;
+}
+
+.step-content h3 {
+  color: var(--primary);
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.step-content p {
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Welcome Step */
+.welcome-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid var(--highlight);
+  transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.feature-icon {
+  font-size: 1.5rem;
+}
+
+/* Project Options */
+.project-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.project-option {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
   padding: 1.5rem;
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--highlight);
-  border-radius: 12px;
+  border: 2px solid var(--highlight);
+  border-radius: 16px;
+  cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.contact-item:hover {
+.project-option::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.project-option:hover::before {
+  left: 100%;
+}
+
+.project-option:hover {
   border-color: var(--primary);
-  transform: translateX(5px);
+  transform: translateY(-2px);
 }
 
-.contact-icon {
-  font-size: 1.5rem;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 255, 255, 0.1);
-  border-radius: 8px;
+.project-option.selected {
+  border-color: var(--primary);
+  background: rgba(0, 255, 255, 0.05);
+}
+
+.option-icon {
+  font-size: 2rem;
   flex-shrink: 0;
 }
 
-.contact-details h4 {
+.option-content h4 {
   color: var(--primary);
   margin-bottom: 0.5rem;
+  font-size: 1.2rem;
 }
 
-.contact-details p {
+.option-content p {
   color: var(--muted);
+  font-size: 0.9rem;
+  text-align: left;
+  margin: 0;
   line-height: 1.5;
 }
 
-.contact-form {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--highlight);
-  border-radius: 16px;
-  padding: 2rem;
+/* Forms */
+.contact-details-form,
+.project-details-form {
+  margin-top: 2rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-group {
@@ -1258,21 +2650,25 @@ section {
   color: var(--text);
   margin-bottom: 0.5rem;
   font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .form-group input,
+.form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 0.8rem;
+  padding: 0.8rem 1rem;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--highlight);
   border-radius: 8px;
   color: var(--text);
   font-family: inherit;
+  font-size: 1rem;
   transition: all 0.3s ease;
 }
 
 .form-group input:focus,
+.form-group select:focus,
 .form-group textarea:focus {
   outline: none;
   border-color: var(--primary);
@@ -1281,28 +2677,231 @@ section {
 
 .form-group textarea {
   resize: vertical;
-  min-height: 120px;
+  min-height: 100px;
 }
 
-.submit-btn {
-  background: var(--primary);
-  color: #000;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 8px;
+/* Completion Step */
+.completion-step .step-inner {
+  text-align: center;
+}
+
+.completion-content {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.completion-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.completion-step h3 {
+  color: var(--primary);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.completion-step p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.next-steps {
+  margin: 2.5rem 0;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--highlight);
+}
+
+.next-steps h4 {
+  color: var(--primary);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.next-steps ul {
+  list-style: none;
+  padding: 0;
+}
+
+.next-steps li {
+  color: var(--text);
+  padding: 0.5rem 0;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.next-steps li::before {
+  content: '✓';
+  color: var(--primary);
+  position: absolute;
+  left: 0;
   font-weight: bold;
+}
+
+.completion-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Stepper Buttons */
+.stepper-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--highlight);
+}
+
+.btn-back,
+.btn-next,
+.btn-submit,
+.btn-primary,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 100%;
-  position: relative;
-  z-index: 10; /* Ensure button is clickable */
+  text-decoration: none;
 }
 
-.submit-btn:hover {
+.btn-back {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--highlight);
+}
+
+.btn-back:not(:disabled):hover {
+  color: var(--text);
+  border-color: var(--primary);
+}
+
+.btn-back:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-next,
+.btn-submit,
+.btn-primary {
+  background: var(--primary);
+  color: #000;
+}
+
+.btn-next:hover,
+.btn-submit:hover,
+.btn-primary:hover {
   background: #fff;
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--highlight);
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.btn-icon {
+  font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .stepper-container {
+    padding: 1.5rem;
+  }
+  
+  .step-indicators {
+    margin-bottom: 2rem;
+  }
+  
+  .step-indicator-inner {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .step-connector {
+    max-width: 50px;
+    margin: 0 5px;
+  }
+  
+  .step-content h3 {
+    font-size: 1.5rem;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .project-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .welcome-features {
+    grid-template-columns: 1fr;
+  }
+  
+  .stepper-buttons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .btn-back,
+  .btn-next,
+  .btn-submit {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .completion-actions {
+    flex-direction: column;
+  }
+  
+  .completion-actions .btn-primary,
+  .completion-actions .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .step-inner {
+    padding: 0;
+  }
+  
+  .step-content h3 {
+    font-size: 1.3rem;
+  }
+  
+  .step-content p {
+    font-size: 1rem;
+  }
+  
+  .project-option {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .option-content p {
+    text-align: center;
+  }
 }
 
 /* =================== FOOTER =================== */
@@ -1367,10 +2966,6 @@ footer {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
 
-  .tools-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  }
-
   .featured-project {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -1384,17 +2979,28 @@ footer {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
+
+  .card-swap-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
 }
 
 @media (max-width: 768px) {
-  .navbar {
-    padding: 0.5rem 1rem;
+  .dock-nav {
+    bottom: 10px;
+    padding: 6px 12px;
   }
-
-  .navbar ul {
-    gap: 1rem;
-    padding: 0.8rem;
-    overflow-x: auto;
+  
+  .dock-items {
+    gap: 4px;
+  }
+  
+  .dock-item {
+    padding: 6px 8px;
+  }
+  
+  .dock-icon {
+    font-size: 1.2rem;
   }
 
   .section-title {
@@ -1489,6 +3095,15 @@ footer {
     flex-direction: column;
   }
 
+  .card-swap-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .card-swap {
+    height: 250px;
+  }
+
   footer {
     padding: 1.5rem 1rem;
   }
@@ -1503,6 +3118,15 @@ footer {
 }
 
 @media (max-width: 480px) {
+  .dock-item span {
+    font-size: 1rem;
+  }
+  
+  .dock-item::after {
+    font-size: 0.6rem;
+    bottom: -25px;
+  }
+
   .section-title {
     font-size: 1.8rem;
   }
@@ -1555,10 +3179,6 @@ footer {
     display: none;
   }
 
-  .tools-grid {
-    grid-template-columns: 1fr;
-  }
-
   .contact-item {
     flex-direction: column;
     text-align: center;
@@ -1566,6 +3186,10 @@ footer {
 
   .project-card {
     height: 350px;
+  }
+
+  .card-swap {
+    height: 230px;
   }
 }
 
@@ -1601,6 +3225,21 @@ footer {
 .modal-content *:hover {
   cursor: none !important;
 }
+
+/* Mobile flip support */
+@media (max-width: 768px) {
+  .card-swap.flipped .card-front {
+    transform: rotateY(-180deg);
+  }
+  
+  .card-swap.flipped .card-back {
+    transform: rotateY(0deg);
+  }
+  
+  .card-hover-indicator {
+    display: none;
+  }
+}
 </style>
 </head>
 <body>
@@ -1611,18 +3250,46 @@ footer {
 <!-- Custom Cursor -->
 <div id="circle-cursor"></div>
 
-<!-- Navbar -->
-<nav class="navbar">
-  <ul>
-    <li><a href="#home">Home</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#tools">Tools</a></li>
-    <li><a href="#workflow">Workflow</a></li>
-    <li><a href="#testimonials">Testimonials</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
+<!-- Floating Digital Clock -->
+<div class="floating-clock">
+  <div class="clock-time">
+    <span id="floating-hours">00</span>:<span id="floating-minutes">00</span>
+  </div>
+  <div class="clock-date">
+    <span id="floating-day">Senin</span>, <span id="floating-date">1 Jan</span>
+  </div>
+</div>
+
+<!-- Dock Navbar -->
+<nav class="dock-nav">
+  <div class="dock-container">
+    <div class="dock-items">
+      <a href="#home" class="dock-item" data-title="Home">
+        <span class="dock-icon">🏠</span>
+      </a>
+      <a href="#about" class="dock-item" data-title="About">
+        <span class="dock-icon">👤</span>
+      </a>
+      <a href="#projects" class="dock-item" data-title="Projects">
+        <span class="dock-icon">💼</span>
+      </a>
+      <a href="#skills" class="dock-item" data-title="Skills">
+        <span class="dock-icon">⚡</span>
+      </a>
+      <a href="#tools" class="dock-item" data-title="Tools">
+        <span class="dock-icon">🛠️</span>
+      </a>
+      <a href="#workflow" class="dock-item" data-title="Workflow">
+        <span class="dock-icon">📊</span>
+      </a>
+      <a href="#testimonials" class="dock-item" data-title="Testimonials">
+        <span class="dock-icon">💬</span>
+      </a>
+      <a href="#contact" class="dock-item" data-title="Contact">
+        <span class="dock-icon">📞</span>
+      </a>
+    </div>
+  </div>
 </nav>
 
 <!-- Home Section -->
@@ -1775,10 +3442,12 @@ footer {
         </div>
         <div class="featured-preview">
           <div class="preview-container">
-            <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
-                 alt="Kumi 3D Animation" class="preview-image">
-            <div class="play-overlay">
-              <div class="play-button">▶</div>
+            <video class="preview-video" autoplay loop muted playsinline>
+              <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="video-overlay">
+              <div class="play-indicator">🔊 Autoplay</div>
             </div>
           </div>
         </div>
@@ -2051,257 +3720,361 @@ footer {
   </div>
 </section>
 
-<!-- Tools Section -->
+<!-- Tools Section dengan Carousel -->
 <section id="tools" class="lazy-section">
-  <h2 class="section-title">My Tools</h2>
-  <div class="tools-container">
-    <div class="tools-grid">
-      
-      <!-- 3D Animation Tools -->
-      <div class="tool-card">
-        <span class="tool-icon">🎬</span>
-        <h3 class="tool-name">Blender</h3>
-        <p class="tool-category">3D Animation</p>
-        <p class="tool-description">Complete 3D creation suite for modeling, animation, and rendering</p>
+  <h2 class="section-title">My Tools & Technologies</h2>
+  <div class="tools-carousel-container">
+    <div class="carousel-wrapper">
+      <div class="carousel-track">
+        <!-- Tools akan di-generate oleh JavaScript -->
       </div>
-
-      <div class="tool-card">
-        <span class="tool-icon">🎨</span>
-        <h3 class="tool-name">Adobe After Effects</h3>
-        <p class="tool-category">Motion Graphics</p>
-        <p class="tool-description">Professional motion graphics and visual effects software</p>
-      </div>
-
-      <!-- Web Development Tools -->
-      <div class="tool-card">
-        <span class="tool-icon">⚡</span>
-        <h3 class="tool-name">NotePad</h3>
-        <p class="tool-category">Code Editor</p>
-        <p class="tool-description">Lightweight but powerful source code editor</p>
-      </div>
-
-      <div class="tool-card">
-        <span class="tool-icon">🌐</span>
-        <h3 class="tool-name">Git & GitHub</h3>
-        <p class="tool-category">Version Control</p>
-        <p class="tool-description">Version control system for tracking code changes</p>
-      </div>
-
-      <!-- Design Tools -->
-      <div class="tool-card">
-        <span class="tool-icon">🎯</span>
-        <h3 class="tool-name">Blender</h3>
-        <p class="tool-category">UI/UX Design</p>
-        <p class="tool-description">Collaborative interface design tool</p>
-      </div>
-
-      <div class="tool-card">
-        <span class="tool-icon">📹</span>
-        <h3 class="tool-name">Hitfilm</h3>
-        <p class="tool-category">Video Editing</p>
-        <p class="tool-description">Professional video editing software</p>
-      </div>
-
     </div>
+    
+    <!-- Navigation Dots -->
+    <div class="carousel-dots">
+      <!-- Dots akan di-generate oleh JavaScript -->
+    </div>
+    
+    <!-- Navigation Arrows -->
+    <button class="carousel-arrow carousel-arrow-prev">
+      <span>‹</span>
+    </button>
+    <button class="carousel-arrow carousel-arrow-next">
+      <span>›</span>
+    </button>
   </div>
 </section>
 
 <!-- Workflow Section -->
 <section id="workflow" class="lazy-section">
-  <h2 class="section-title">My Workflow</h2>
+  <h2 class="section-title">My Creative Process</h2>
   <div class="workflow-container">
-    <div class="workflow-steps">
-      
-      <div class="workflow-step">
-        <div class="step-number">1</div>
-        <div class="step-content">
-          <h3 class="step-title">Discovery & Research</h3>
-          <p class="step-description">
-            Understanding project requirements, target audience, and goals. 
-            Conducting market research and analyzing competitors.
-          </p>
+    <div class="bounce-cards-container">
+      <div class="bounce-card" data-step="0">
+        <div class="card-step">1</div>
+        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80" alt="Discovery" class="card-image">
+        <div class="card-content">
+          <h4>Discovery & Research</h4>
+          <p>Understanding your vision and project requirements</p>
         </div>
       </div>
-
-      <div class="workflow-step">
-        <div class="step-number">2</div>
-        <div class="step-content">
-          <h3 class="step-title">Planning & Strategy</h3>
-          <p class="step-description">
-            Creating project timelines, defining milestones, and selecting 
-            appropriate technologies and tools for the project.
-          </p>
+      <div class="bounce-card" data-step="1">
+        <div class="card-step">2</div>
+        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80" alt="Planning" class="card-image">
+        <div class="card-content">
+          <h4>Planning & Strategy</h4>
+          <p>Creating detailed project roadmap and timeline</p>
         </div>
       </div>
-
-      <div class="workflow-step">
-        <div class="step-number">3</div>
-        <div class="step-content">
-          <h3 class="step-title">Design & Prototyping</h3>
-          <p class="step-description">
-            Developing wireframes, mockups, and interactive prototypes. 
-            Focusing on user experience and visual design principles.
-          </p>
+      <div class="bounce-card" data-step="2">
+        <div class="card-step">3</div>
+        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80" alt="Design" class="card-image">
+        <div class="card-content">
+          <h4>Design & Prototyping</h4>
+          <p>Developing concepts and interactive prototypes</p>
         </div>
       </div>
-
-      <div class="workflow-step">
-        <div class="step-number">4</div>
-        <div class="step-content">
-          <h3 class="step-title">Development & Animation</h3>
-          <p class="step-description">
-            Building the project with clean, efficient code and creating 
-            smooth animations. Following best practices and standards.
-          </p>
+      <div class="bounce-card" data-step="3">
+        <div class="card-step">4</div>
+        <img src="https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80" alt="Development" class="card-image">
+        <div class="card-content">
+          <h4>Development & Animation</h4>
+          <p>Bringing designs to life with code and motion</p>
         </div>
       </div>
-
-      <div class="workflow-step">
-        <div class="step-number">5</div>
-        <div class="step-content">
-          <h3 class="step-title">Testing & Quality Assurance</h3>
-          <p class="step-description">
-            Thorough testing across different devices and browsers. 
-            Ensuring performance, accessibility, and user satisfaction.
-          </p>
+      <div class="bounce-card" data-step="4">
+        <div class="card-step">5</div>
+        <img src="https://images.unsplash.com/photo-1556655848-f3a7049ea836?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80" alt="Testing" class="card-image">
+        <div class="card-content">
+          <h4>Testing & Refinement</h4>
+          <p>Ensuring quality and perfecting every detail</p>
         </div>
       </div>
-
-      <div class="workflow-step">
-        <div class="step-number">6</div>
-        <div class="step-content">
-          <h3 class="step-title">Deployment & Maintenance</h3>
-          <p class="step-description">
-            Launching the project and providing ongoing support, 
-            updates, and improvements based on user feedback.
-          </p>
+    </div>
+    
+    <div class="workflow-description">
+      <h3>From Concept to Completion</h3>
+      <p>My workflow follows a structured yet creative process that ensures every project receives the attention to detail it deserves.</p>
+      <div class="process-steps">
+        <div class="process-step active" data-step="0">
+          <h4>Discovery & Research</h4>
+          <p>Understanding your vision and project requirements</p>
+        </div>
+        <div class="process-step" data-step="1">
+          <h4>Planning & Strategy</h4>
+          <p>Creating detailed project roadmap and timeline</p>
+        </div>
+        <div class="process-step" data-step="2">
+          <h4>Design & Prototyping</h4>
+          <p>Developing concepts and interactive prototypes</p>
+        </div>
+        <div class="process-step" data-step="3">
+          <h4>Development & Animation</h4>
+          <p>Bringing designs to life with code and motion</p>
+        </div>
+        <div class="process-step" data-step="4">
+          <h4>Testing & Refinement</h4>
+          <p>Ensuring quality and perfecting every detail</p>
         </div>
       </div>
-
     </div>
   </div>
 </section>
 
 <!-- Testimonials Section -->
 <section id="testimonials" class="lazy-section">
-  <h2 class="section-title">Testimonials</h2>
+  <h2 class="section-title">What Clients Say</h2>
   <div class="testimonials-container">
-    <div class="testimonials-grid">
-      
-      <div class="testimonial-card">
-        <div class="testimonial-content">
-          Asri's attention to detail in 3D animation is exceptional. He brought our character 
-          to life with fluid movements and personality that exceeded our expectations.
-        </div>
-        <div class="testimonial-author">
-          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&h=100&q=80" 
-               alt="Client" class="author-avatar">
-          <div class="author-info">
-            <h4>Sarah Johnson</h4>
-            <p>Creative Director, Animation Studio</p>
+    <div class="card-nav-testimonials">
+      <nav class="testimonial-nav">
+        <div class="testimonial-nav-top">
+          <div class="hamburger-menu-testimonial">
+            <div class="hamburger-line-testimonial"></div>
+            <div class="hamburger-line-testimonial"></div>
+          </div>
+
+          <div class="testimonial-logo-container">
+            <h3>Testimonials</h3>
+          </div>
+
+          <div class="testimonial-search-container">
+            <input type="text" class="testimonial-search" placeholder="Search testimonials..." id="testimonialSearch">
+            <span class="search-icon">🔍</span>
           </div>
         </div>
-      </div>
 
-      <div class="testimonial-card">
-        <div class="testimonial-content">
-          The portfolio website Asri created for us is not only visually stunning but also 
-          highly functional. His understanding of both design and development is impressive.
+        <div class="testimonial-nav-content">
+          <!-- Testimonial cards will be generated by JavaScript -->
         </div>
-        <div class="testimonial-author">
-          <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&h=100&q=80" 
-               alt="Client" class="author-avatar">
-          <div class="author-info">
-            <h4>Michael Chen</h4>
-            <p>CEO, Tech Startup</p>
-          </div>
-        </div>
-      </div>
+      </nav>
+    </div>
 
-      <div class="testimonial-card">
-        <div class="testimonial-content">
-          Working with Asri was a pleasure. His motion graphics work added tremendous value 
-          to our marketing campaign, and he was professional throughout the entire process.
-        </div>
-        <div class="testimonial-author">
-          <img src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&h=100&q=80" 
-               alt="Client" class="author-avatar">
-          <div class="author-info">
-            <h4>Alex Rodriguez</h4>
-            <p>Marketing Manager</p>
-          </div>
-        </div>
+    <!-- Featured Testimonials (3 random) -->
+    <div class="featured-testimonials">
+      <h3>Featured Testimonials</h3>
+      <div class="featured-grid" id="featuredTestimonials">
+        <!-- Random 3 testimonials will be inserted here -->
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- Contact Section -->
+<!-- Ganti section contact yang ada dengan ini: -->
 <section id="contact" class="lazy-section">
-  <h2 class="section-title">Find Me</h2>
+  <h2 class="section-title">Get In Touch</h2>
   <div class="contact-container">
-    
-    <div class="contact-info">
-      <div class="contact-item">
-        <div class="contact-icon">📧</div>
-        <div class="contact-details">
-          <h4>Email</h4>
-          <p>kangfitnahorang@gmail.com</p>
+    <div class="stepper-container">
+      <div class="stepper">
+        <!-- Step indicators -->
+        <div class="step-indicators">
+          <div class="step-indicator active" data-step="1">
+            <div class="step-indicator-inner">
+              <span class="step-number">1</span>
+            </div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-indicator" data-step="2">
+            <div class="step-indicator-inner">
+              <span class="step-number">2</span>
+            </div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-indicator" data-step="3">
+            <div class="step-indicator-inner">
+              <span class="step-number">3</span>
+            </div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-indicator" data-step="4">
+            <div class="step-indicator-inner">
+              <span class="step-number">4</span>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="contact-item">
-        <div class="contact-icon">📱</div>
-        <div class="contact-details">
-          <h4>Phone</h4>
-          <p>+62 813-1145-0360</p>
+        <!-- Step contents -->
+        <div class="step-contents">
+          <!-- Step 1: Welcome -->
+          <div class="step-content active" data-step="1">
+            <div class="step-inner">
+              <h3>Welcome to My Contact Form!</h3>
+              <p>Let's get started with your inquiry. This step-by-step process will help me understand your project needs better.</p>
+              <div class="welcome-features">
+                <div class="feature-item">
+                  <span class="feature-icon">🚀</span>
+                  <span>Quick & Easy Process</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-icon">💬</span>
+                  <span>Clear Communication</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-icon">⚡</span>
+                  <span>Fast Response Time</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Project Type -->
+          <div class="step-content" data-step="2">
+            <div class="step-inner">
+              <h3>What type of project are you interested in?</h3>
+              <p>Select the category that best matches your needs:</p>
+              
+              <div class="project-options">
+                <div class="project-option" data-value="3d-animation">
+                  <div class="option-icon">🎬</div>
+                  <div class="option-content">
+                    <h4>3D Animation</h4>
+                    <p>Character animation, motion graphics, 3D modeling</p>
+                  </div>
+                </div>
+                
+                <div class="project-option" data-value="web-development">
+                  <div class="option-icon">💻</div>
+                  <div class="option-content">
+                    <h4>Web Development</h4>
+                    <p>Portfolio sites, interactive experiences, web apps</p>
+                  </div>
+                </div>
+                
+                <div class="project-option" data-value="motion-graphics">
+                  <div class="option-icon">🎨</div>
+                  <div class="option-content">
+                    <h4>Motion Graphics</h4>
+                    <p>Animated explainers, promotional videos, VFX</p>
+                  </div>
+                </div>
+                
+                <div class="project-option" data-value="consultation">
+                  <div class="option-icon">🤝</div>
+                  <div class="option-content">
+                    <h4>Consultation</h4>
+                    <p>Project advice, technical guidance, creative direction</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Contact Details -->
+          <div class="step-content" data-step="3">
+            <div class="step-inner">
+              <h3>Tell me about yourself</h3>
+              <p>Please provide your contact information so I can get back to you:</p>
+              
+              <form class="contact-details-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required placeholder="Your full name">
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="company">Company/Organization (Optional)</label>
+                  <input type="text" id="company" name="company" placeholder="Where you work">
+                </div>
+                
+                <div class="form-group">
+                  <label for="budget">Project Budget Range</label>
+                  <select id="budget" name="budget">
+                    <option value="">Select a range</option>
+                    <option value="under-1k">Under $1,000</option>
+                    <option value="1k-5k">$1,000 - $5,000</option>
+                    <option value="5k-10k">$5,000 - $10,000</option>
+                    <option value="10k-plus">$10,000+</option>
+                    <option value="not-sure">Not sure yet</option>
+                  </select>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Step 4: Project Details -->
+          <div class="step-content" data-step="4">
+            <div class="step-inner">
+              <h3>Final Step: Project Details</h3>
+              <p>Tell me more about your project requirements and timeline:</p>
+              
+              <form class="project-details-form">
+                <div class="form-group">
+                  <label for="project-title">Project Title</label>
+                  <input type="text" id="project-title" name="project_title" required placeholder="e.g., Character Animation for Game">
+                </div>
+                
+                <div class="form-group">
+                  <label for="description">Project Description</label>
+                  <textarea id="description" name="description" required placeholder="Please describe your project in detail..." rows="4"></textarea>
+                </div>
+                
+                <div class="form-group">
+                  <label for="timeline">Expected Timeline</label>
+                  <select id="timeline" name="timeline">
+                    <option value="">Select timeline</option>
+                    <option value="asap">As soon as possible</option>
+                    <option value="1-month">Within 1 month</option>
+                    <option value="3-months">Within 3 months</option>
+                    <option value="flexible">Flexible</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label for="reference">Reference Materials (Optional)</label>
+                  <input type="text" id="reference" name="reference" placeholder="Links to references, inspiration, or existing assets">
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Completion Step -->
+          <div class="step-content completion-step" data-step="5">
+            <div class="step-inner">
+              <div class="completion-content">
+                <div class="completion-icon">🎉</div>
+                <h3>Thank You!</h3>
+                <p>Your project details have been submitted successfully. I'll review your information and get back to you within 24 hours.</p>
+                
+                <div class="next-steps">
+                  <h4>What happens next?</h4>
+                  <ul>
+                    <li>I'll review your project requirements</li>
+                    <li>We'll schedule a quick call to discuss details</li>
+                    <li>I'll provide a customized proposal and timeline</li>
+                  </ul>
+                </div>
+                
+                <div class="completion-actions">
+                  <button class="btn-secondary" id="startNewProject">Start New Project</button>
+                  <button class="btn-primary" id="viewPortfolio">View My Portfolio</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="contact-item">
-        <div class="contact-icon">📍</div>
-        <div class="contact-details">
-          <h4>Location</h4>
-          <p>Indonesia</p>
-        </div>
-      </div>
-
-      <div class="contact-item">
-        <div class="contact-icon">🌐</div>
-        <div class="contact-details">
-          <h4>Social Media</h4>
-          <p>YouTube | Instagram | GitHub</p>
+        <!-- Navigation buttons -->
+        <div class="stepper-buttons">
+          <button class="btn-back" disabled>
+            <span class="btn-icon">←</span>
+            Previous
+          </button>
+          <button class="btn-next">
+            Next
+            <span class="btn-icon">→</span>
+          </button>
+          <button class="btn-submit" style="display: none;">
+            Submit Project
+            <span class="btn-icon">🚀</span>
+          </button>
         </div>
       </div>
     </div>
-
-    <div class="contact-form">
-      <form id="contactForm">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" required>
-        </div>
-        
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required>
-        </div>
-        
-        <div class="form-group">
-          <label for="subject">Subject</label>
-          <input type="text" id="subject" name="subject" required>
-        </div>
-        
-        <div class="form-group">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" required></textarea>
-        </div>
-        
-        <button type="submit" class="submit-btn">Send Message</button>
-      </form>
-    </div>
-
   </div>
 </section>
 
@@ -2380,6 +4153,11 @@ document.addEventListener('DOMContentLoaded', function() {
   initializeContactForm();
   initializeInteractiveProjects();
   initializeProjectModal();
+  initializeVideoFeatures();
+  initializeDockNav();
+  initializeCardSwap();
+  initializeBounceCards();
+  initializeTestimonialNav();
 });
 
 // =================== TYPING EFFECT ===================
@@ -2542,12 +4320,12 @@ function initializeCursor() {
 
   // Elements that should show the pointer style
   const pointerElements = document.querySelectorAll(
-    'a, button, .filter-btn, .project-link, .submit-btn, .play-button, .close-modal, .view-project-btn'
+    'a, button, .filter-btn, .project-link, .submit-btn, .play-button, .close-modal, .view-project-btn, .dock-item'
   );
   
   // Elements that should show the hovering style
   const hoverElements = document.querySelectorAll(
-    '.skill-item, .skills-chart-container, .skills-bars-container, .highlight-card, .fact-item, .about-photo, .project-card, .tool-card, .step-content, .testimonial-card, .contact-item, .modal-content, .modal-features-list li'
+    '.skill-item, .skills-chart-container, .skills-bars-container, .highlight-card, .fact-item, .about-photo, .project-card, .card-swap, .step-content, .testimonial-card, .contact-item, .modal-content, .modal-features-list li'
   );
 
   // Add pointer style for clickable elements
@@ -2788,6 +4566,145 @@ function initializeProjectCards() {
     card.style.opacity = '0';
     card.style.transform = 'translateY(30px)';
     observer.observe(card);
+  });
+}
+
+// =================== VIDEO HANDLING ===================
+function initializeVideoFeatures() {
+  const video = document.querySelector('.preview-video');
+  
+  if (video) {
+    // Handle video loading errors
+    video.addEventListener('error', function() {
+      console.error('Video failed to load');
+      
+      // Fallback ke gambar jika video gagal load
+      const fallbackImage = document.createElement('img');
+      fallbackImage.src = 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80';
+      fallbackImage.alt = 'Kumi 3D Animation';
+      fallbackImage.className = 'preview-image';
+      fallbackImage.style.width = '100%';
+      fallbackImage.style.height = '100%';
+      fallbackImage.style.objectFit = 'cover';
+      fallbackImage.style.borderRadius = '12px';
+      
+      // Ganti video dengan gambar
+      video.parentNode.replaceChild(fallbackImage, video);
+      
+      // Tambahkan play overlay untuk gambar
+      const playOverlay = document.createElement('div');
+      playOverlay.className = 'play-overlay';
+      playOverlay.innerHTML = '<div class="play-button">▶</div>';
+      fallbackImage.parentNode.appendChild(playOverlay);
+    });
+    
+    // Video loaded successfully
+    video.addEventListener('loadeddata', function() {
+      console.log('Video loaded successfully');
+    });
+    
+    // Attempt to play video (handles autoplay restrictions)
+    video.play().catch(function(error) {
+      console.log('Autoplay prevented:', error);
+      // Show play button if autoplay is blocked
+      showPlayButton();
+    });
+  }
+}
+
+function showPlayButton() {
+  const videoContainer = document.querySelector('.preview-container');
+  const existingPlayBtn = document.querySelector('.manual-play-button');
+  
+  if (!existingPlayBtn && videoContainer) {
+    const playButton = document.createElement('button');
+    playButton.className = 'manual-play-button';
+    playButton.innerHTML = '▶ Play Video';
+    
+    playButton.addEventListener('click', function() {
+      const video = document.querySelector('.preview-video');
+      if (video) {
+        video.play();
+        playButton.style.display = 'none';
+      }
+    });
+    
+    videoContainer.appendChild(playButton);
+  }
+}
+
+// =================== DOCK NAVBAR ===================
+function initializeDockNav() {
+  const dockItems = document.querySelectorAll('.dock-item');
+  
+  dockItems.forEach(item => {
+    item.addEventListener('mouseenter', function() {
+      // Add active class for additional effects
+      this.classList.add('active');
+    });
+    
+    item.addEventListener('mouseleave', function() {
+      this.classList.remove('active');
+    });
+  });
+}
+
+// =================== CARD SWAP ===================
+function initializeCardSwap() {
+  const cards = document.querySelectorAll('.card-swap');
+  
+  cards.forEach(card => {
+    // Add click event for mobile touch
+    card.addEventListener('click', function() {
+      if (window.innerWidth <= 768) {
+        this.classList.toggle('flipped');
+      }
+    });
+  });
+}
+
+// =================== VIDEO MANAGEMENT ===================
+function changeFeaturedVideo(newVideoUrl, fallbackImageUrl = null) {
+  const video = document.querySelector('.preview-video');
+  
+  if (!video) {
+    console.error('Video element not found');
+    return;
+  }
+  
+  const source = video.querySelector('source');
+  
+  // Simpan URL fallback
+  const fallback = fallbackImageUrl || 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80';
+  
+  // Update video source
+  source.src = newVideoUrl;
+  video.load(); // Reload video dengan source baru
+  
+  // Handle jika video baru gagal load
+  video.addEventListener('error', function onError() {
+    console.error('New video failed to load:', newVideoUrl);
+    video.removeEventListener('error', onError);
+    
+    // Fallback ke gambar
+    const fallbackImage = document.createElement('img');
+    fallbackImage.src = fallback;
+    fallbackImage.alt = 'Video preview';
+    fallbackImage.className = 'preview-image';
+    fallbackImage.style.cssText = `
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+    `;
+    
+    video.parentNode.replaceChild(fallbackImage, video);
+  }, { once: true });
+  
+  // Coba play video baru
+  video.play().catch(function(error) {
+    console.log('Autoplay prevented for new video:', error);
+    showPlayButton();
   });
 }
 
@@ -3050,6 +4967,1182 @@ function initializeProjectModal() {
     cursor.style.zIndex = '100000';
   }
 }
+
+// =================== STEPPER CONTACT FORM ===================
+function initializeStepperContact() {
+  const stepper = document.querySelector('.stepper');
+  if (!stepper) return;
+
+  // Elements
+  const stepIndicators = document.querySelectorAll('.step-indicator');
+  const stepContents = document.querySelectorAll('.step-content');
+  const stepConnectors = document.querySelectorAll('.step-connector');
+  const btnBack = document.querySelector('.btn-back');
+  const btnNext = document.querySelector('.btn-next');
+  const btnSubmit = document.querySelector('.btn-submit');
+  const projectOptions = document.querySelectorAll('.project-option');
+  const startNewProjectBtn = document.getElementById('startNewProject');
+  const viewPortfolioBtn = document.getElementById('viewPortfolio');
+
+  // State
+  let currentStep = 1;
+  const totalSteps = 5;
+  const formData = {
+    projectType: '',
+    contactDetails: {},
+    projectDetails: {}
+  };
+
+  // Initialize
+  updateStepper();
+
+  // Event Listeners
+  btnBack.addEventListener('click', goToPreviousStep);
+  btnNext.addEventListener('click', goToNextStep);
+  btnSubmit.addEventListener('click', submitForm);
+
+  // Step indicator clicks
+  stepIndicators.forEach(indicator => {
+    indicator.addEventListener('click', () => {
+      const step = parseInt(indicator.dataset.step);
+      if (step < currentStep) {
+        goToStep(step);
+      }
+    });
+  });
+
+  // Project option selection
+  projectOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      // Remove selected class from all options
+      projectOptions.forEach(opt => opt.classList.remove('selected'));
+      
+      // Add selected class to clicked option
+      option.classList.add('selected');
+      
+      // Store selected value
+      formData.projectType = option.dataset.value;
+      
+      // Enable next button
+      btnNext.disabled = false;
+    });
+  });
+
+  // Form input changes
+  document.querySelectorAll('input, select, textarea').forEach(input => {
+    input.addEventListener('input', validateCurrentStep);
+    input.addEventListener('change', validateCurrentStep);
+  });
+
+  // Completion step buttons
+  if (startNewProjectBtn) {
+    startNewProjectBtn.addEventListener('click', () => {
+      resetStepper();
+    });
+  }
+
+  if (viewPortfolioBtn) {
+    viewPortfolioBtn.addEventListener('click', () => {
+      window.location.href = '#projects';
+    });
+  }
+
+  // Functions
+  function goToNextStep() {
+    if (currentStep < totalSteps) {
+      const currentContent = document.querySelector(`.step-content[data-step="${currentStep}"]`);
+      currentContent.classList.add('exit-left');
+      
+      setTimeout(() => {
+        currentStep++;
+        updateStepper();
+      }, 300);
+    }
+  }
+
+  function goToPreviousStep() {
+    if (currentStep > 1) {
+      const currentContent = document.querySelector(`.step-content[data-step="${currentStep}"]`);
+      currentContent.classList.add('exit-right');
+      
+      setTimeout(() => {
+        currentStep--;
+        updateStepper();
+      }, 300);
+    }
+  }
+
+  function goToStep(step) {
+    if (step >= 1 && step <= totalSteps && step !== currentStep) {
+      const currentContent = document.querySelector(`.step-content[data-step="${currentStep}"]`);
+      const direction = step > currentStep ? 'exit-left' : 'exit-right';
+      currentContent.classList.add(direction);
+      
+      setTimeout(() => {
+        currentStep = step;
+        updateStepper();
+      }, 300);
+    }
+  }
+
+  function updateStepper() {
+    // Update step indicators
+    stepIndicators.forEach((indicator, index) => {
+      const step = index + 1;
+      
+      indicator.classList.remove('active', 'completed');
+      
+      if (step === currentStep) {
+        indicator.classList.add('active');
+      } else if (step < currentStep) {
+        indicator.classList.add('completed');
+      }
+    });
+
+    // Update step connectors
+    stepConnectors.forEach((connector, index) => {
+      connector.classList.remove('completed');
+      
+      if (index + 1 < currentStep) {
+        connector.classList.add('completed');
+      }
+    });
+
+    // Update step contents
+    stepContents.forEach(content => {
+      content.classList.remove('active', 'exit-left', 'exit-right');
+      
+      if (parseInt(content.dataset.step) === currentStep) {
+        setTimeout(() => {
+          content.classList.add('active');
+        }, 50);
+      }
+    });
+
+    // Update buttons
+    btnBack.disabled = currentStep === 1;
+    
+    if (currentStep === totalSteps) {
+      btnNext.style.display = 'none';
+      btnSubmit.style.display = 'none';
+    } else if (currentStep === totalSteps - 1) {
+      btnNext.style.display = 'none';
+      btnSubmit.style.display = 'flex';
+    } else {
+      btnNext.style.display = 'flex';
+      btnSubmit.style.display = 'none';
+    }
+
+    // Validate current step
+    validateCurrentStep();
+  }
+
+  function validateCurrentStep() {
+    let isValid = true;
+
+    switch (currentStep) {
+      case 1: // Welcome step - always valid
+        isValid = true;
+        break;
+        
+      case 2: // Project type
+        isValid = formData.projectType !== '';
+        break;
+        
+      case 3: // Contact details
+        const name = document.getElementById('name');
+        const email = document.getElementById('email');
+        isValid = name.value.trim() !== '' && 
+                 email.value.trim() !== '' && 
+                 isValidEmail(email.value);
+        break;
+        
+      case 4: // Project details
+        const projectTitle = document.getElementById('project-title');
+        const description = document.getElementById('description');
+        isValid = projectTitle.value.trim() !== '' && 
+                 description.value.trim() !== '';
+        break;
+    }
+
+    btnNext.disabled = !isValid;
+    if (btnSubmit.style.display !== 'none') {
+      btnSubmit.disabled = !isValid;
+    }
+  }
+
+  function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  function submitForm() {
+    // Collect all form data
+    collectFormData();
+    
+    // Show completion step
+    goToNextStep();
+    
+    // Here you would typically send the data to a server
+    console.log('Form submitted with data:', formData);
+    
+    // Simulate API call
+    simulateFormSubmission();
+  }
+
+  function collectFormData() {
+    // Contact details
+    formData.contactDetails = {
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      company: document.getElementById('company').value,
+      budget: document.getElementById('budget').value
+    };
+
+    // Project details
+    formData.projectDetails = {
+      title: document.getElementById('project-title').value,
+      description: document.getElementById('description').value,
+      timeline: document.getElementById('timeline').value,
+      reference: document.getElementById('reference').value
+    };
+  }
+
+  function simulateFormSubmission() {
+    // In a real application, you would send this to your backend
+    // For now, we'll just log it and show a success message
+    
+    setTimeout(() => {
+      // You could show a notification here
+      console.log('Form data received:', formData);
+    }, 1000);
+  }
+
+  function resetStepper() {
+    // Reset form data
+    formData.projectType = '';
+    formData.contactDetails = {};
+    formData.projectDetails = {};
+
+    // Reset form inputs
+    document.querySelectorAll('input, select, textarea').forEach(input => {
+      if (input.type !== 'button' && input.type !== 'submit') {
+        input.value = '';
+      }
+    });
+
+    // Reset project options
+    projectOptions.forEach(option => {
+      option.classList.remove('selected');
+    });
+
+    // Go back to first step
+    goToStep(1);
+  }
+}
+
+// Panggil di DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+  // ... fungsi lainnya
+  initializeStepperContact();
+});
+
+
+// =================== BOUNCE CARDS WORKFLOW - VANILLA JS ===================
+function initializeBounceCards() {
+  const cards = document.querySelectorAll('.bounce-card');
+  const processSteps = document.querySelectorAll('.process-step');
+  const workflowSection = document.getElementById('workflow');
+  
+  if (!cards.length) return;
+
+  // Initial animation when section becomes visible
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        
+        // Add slight stagger effect
+        cards.forEach((card, index) => {
+          card.style.transitionDelay = `${index * 0.1}s`;
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+
+  if (workflowSection) {
+    observer.observe(workflowSection);
+  }
+
+  // Card hover interactions
+  cards.forEach((card, index) => {
+    card.addEventListener('mouseenter', () => {
+      pushSiblings(index);
+      activateProcessStep(index);
+    });
+
+    card.addEventListener('mouseleave', () => {
+      resetSiblings();
+    });
+
+    card.addEventListener('click', () => {
+      focusCard(index);
+    });
+  });
+
+  // Process steps interactions
+  processSteps.forEach((step, index) => {
+    step.addEventListener('click', () => {
+      focusCard(index);
+      activateProcessStep(index);
+    });
+  });
+}
+
+function pushSiblings(hoveredIndex) {
+  const cards = document.querySelectorAll('.bounce-card');
+  
+  cards.forEach((card, index) => {
+    const baseTransforms = [
+      'rotate(5deg) translateX(-160px) translateY(-10px)',
+      'rotate(2deg) translateX(-80px) translateY(-5px)', 
+      'rotate(0deg)',
+      'rotate(-2deg) translateX(80px) translateY(-5px)',
+      'rotate(-5deg) translateX(160px) translateY(-10px)'
+    ];
+    
+    if (index === hoveredIndex) {
+      // Hovered card - bring to front and straighten
+      card.style.transform = 'rotate(0deg) translateY(-20px) scale(1.1)';
+      card.style.zIndex = '20';
+      card.classList.add('active');
+    } else {
+      // Other cards - push away
+      const offsetDirection = index < hoveredIndex ? -1 : 1;
+      const distance = Math.abs(hoveredIndex - index);
+      const pushDistance = 60 + (distance * 20);
+      
+      let newTransform = baseTransforms[index];
+      
+      // Extract current rotation and apply new translation
+      const rotateMatch = newTransform.match(/rotate\(([^)]+)\)/);
+      const rotateValue = rotateMatch ? rotateMatch[1] : '0deg';
+      
+      // Calculate new position
+      let translateX;
+      if (index === 0) translateX = -160 - pushDistance;
+      else if (index === 1) translateX = -80 - pushDistance;
+      else if (index === 2) translateX = 0 + (pushDistance * offsetDirection);
+      else if (index === 3) translateX = 80 + pushDistance;
+      else if (index === 4) translateX = 160 + pushDistance;
+      
+      card.style.transform = `rotate(${rotateValue}) translateX(${translateX}px) translateY(-10px) scale(0.9)`;
+      card.style.zIndex = '10';
+      card.classList.remove('active');
+      
+      // Stagger delay based on distance
+      card.style.transitionDelay = `${distance * 0.05}s`;
+    }
+  });
+}
+
+function resetSiblings() {
+  const cards = document.querySelectorAll('.bounce-card');
+  const baseTransforms = [
+    'rotate(5deg) translateX(-160px) translateY(-10px) scale(1)',
+    'rotate(2deg) translateX(-80px) translateY(-5px) scale(1)',
+    'rotate(0deg) scale(1)',
+    'rotate(-2deg) translateX(80px) translateY(-5px) scale(1)',
+    'rotate(-5deg) translateX(160px) translateY(-10px) scale(1)'
+  ];
+  
+  cards.forEach((card, index) => {
+    card.style.transform = baseTransforms[index];
+    card.style.zIndex = index === 2 ? '3' : index === 1 || index === 3 ? '2' : '1';
+    card.style.transitionDelay = `${index * 0.1}s`;
+    card.classList.remove('active');
+  });
+  
+  // Reset process steps
+  const processSteps = document.querySelectorAll('.process-step');
+  processSteps.forEach(step => step.classList.remove('active'));
+}
+
+function focusCard(cardIndex) {
+  const cards = document.querySelectorAll('.bounce-card');
+  const baseTransforms = [
+    'rotate(5deg) translateX(-160px) translateY(-10px)',
+    'rotate(2deg) translateX(-80px) translateY(-5px)',
+    'rotate(0deg)',
+    'rotate(-2deg) translateX(80px) translateY(-5px)',
+    'rotate(-5deg) translateX(160px) translateY(-10px)'
+  ];
+  
+  cards.forEach((card, index) => {
+    if (index === cardIndex) {
+      // Focused card - center and enlarge
+      card.style.transform = 'rotate(0deg) translateY(-30px) scale(1.15)';
+      card.style.zIndex = '30';
+      card.classList.add('active');
+    } else {
+      // Other cards - push further away
+      const offsetDirection = index < cardIndex ? -1 : 1;
+      const distance = Math.abs(cardIndex - index);
+      const pushDistance = 80 + (distance * 30);
+      
+      let newTransform = baseTransforms[index];
+      const rotateMatch = newTransform.match(/rotate\(([^)]+)\)/);
+      const rotateValue = rotateMatch ? rotateMatch[1] : '0deg';
+      
+      let translateX;
+      if (index === 0) translateX = -160 - pushDistance;
+      else if (index === 1) translateX = -80 - pushDistance;
+      else if (index === 2) translateX = 0 + (pushDistance * offsetDirection);
+      else if (index === 3) translateX = 80 + pushDistance;
+      else if (index === 4) translateX = 160 + pushDistance;
+      
+      card.style.transform = `rotate(${rotateValue}) translateX(${translateX}px) translateY(-5px) scale(0.85)`;
+      card.style.zIndex = '5';
+      card.classList.remove('active');
+    }
+  });
+  
+  activateProcessStep(cardIndex);
+}
+
+function activateProcessStep(stepIndex) {
+  const processSteps = document.querySelectorAll('.process-step');
+  processSteps.forEach((step, index) => {
+    if (index === stepIndex) {
+      step.classList.add('active');
+    } else {
+      step.classList.remove('active');
+    }
+  });
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  initializeBounceCards();
+});
+
+// =================== CARD NAV TESTIMONIALS - FIXED VERSION ===================
+function initializeTestimonialNav() {
+  const testimonialNav = document.querySelector('.testimonial-nav');
+  const hamburger = document.querySelector('.hamburger-menu-testimonial');
+  const searchInput = document.getElementById('testimonialSearch');
+  const featuredContainer = document.getElementById('featuredTestimonials');
+  const navContent = document.querySelector('.testimonial-nav-content');
+
+  // Testimonial data (10 testimonials)
+  const testimonials = [
+    {
+      id: 1,
+      name: "Sarah Johnson",
+      position: "Creative Director, Animation Studio",
+      content: "Asri's attention to detail in 3D animation is exceptional. He brought our character to life with fluid movements and personality that exceeded our expectations. The project was delivered on time and the communication was excellent throughout.",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b92a92d6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&h=100&q=80",
+      rating: 5,
+      category: "animation"
+    },
+    {
+      id: 2,
+      name: "Michael Chen",
+      position: "CEO, Tech Startup",
+      content: "The portfolio website Asri created for us is not only visually stunning but also highly functional. His understanding of both design and development is impressive. We've received numerous compliments from our clients.",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&h=100&q=80",
+      rating: 5,
+      category: "web development"
+    },
+    {
+      id: 3,
+      name: "Alex Rodriguez",
+      position: "Marketing Manager",
+      content: "Working with Asri was a pleasure. His motion graphics work added tremendous value to our marketing campaign, and he was professional throughout the entire process. The animations perfectly captured our brand identity.",
+      avatar: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&h=100&q=80",
+      rating: 4,
+      category: "motion graphics"
+    },
+    {
+      id: 4,
+      name: "Emily Watson",
+      position: "Game Studio Art Director",
+      content: "The character design package we received was outstanding. Each character had unique personality and the rigging was flawless. Asri's understanding of anatomy and movement is remarkable.",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&h=100&q=80",
+      rating: 5,
+      category: "character design"
+    },
+    {
+      id: 5,
+      name: "David Kim",
+      position: "Product Manager",
+      content: "Asri developed our e-commerce platform with precision and creativity. The user experience is seamless, and the backend is robust. His technical expertise combined with creative vision is rare.",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&h=100&q=80",
+      rating: 5,
+      category: "web development"
+    },
+    {
+      id: 6,
+      name: "Lisa Wang",
+      position: "Film Director",
+      content: "The 3D environments created by Asri transported our audience to another world. The attention to lighting, texture, and atmosphere was cinematic quality. He truly understands visual storytelling.",
+      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&h=100&q=80",
+      rating: 5,
+      category: "3d environment"
+    },
+    {
+      id: 7,
+      name: "Robert Martinez",
+      position: "Advertising Agency Owner",
+      content: "Asri's product animation made our client's product look incredible. The attention to detail and smooth transitions resulted in a 30% increase in engagement for our campaign. Highly recommended!",
+      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&h=100&q=80",
+      rating: 4,
+      category: "product animation"
+    },
+    {
+      id: 8,
+      name: "Jennifer Lee",
+      position: "UX Lead Designer",
+      content: "Collaborating with Asri on our mobile app interface was fantastic. His animations brought our static designs to life and significantly improved user engagement metrics. The micro-interactions are perfect.",
+      avatar: "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&h=100&q=80",
+      rating: 5,
+      category: "ui animation"
+    },
+    {
+      id: 9,
+      name: "Thomas Brown",
+      position: "Architectural Visualization",
+      content: "The architectural walkthrough animation Asri created for our project was breathtaking. The lighting, materials, and camera work perfectly showcased our design. Clients were absolutely impressed.",
+      avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&h=100&q=80",
+      rating: 5,
+      category: "architectural visualization"
+    },
+    {
+      id: 10,
+      name: "Maria Garcia",
+      position: "Educational Content Producer",
+      content: "Asri created engaging educational animations that made complex topics easy to understand. His ability to simplify concepts through animation is remarkable. The students loved it!",
+      avatar: "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&h=100&q=80",
+      rating: 4,
+      category: "educational animation"
+    }
+  ];
+
+  // Initialize
+  displayRandomFeaturedTestimonials();
+  populateAllTestimonials();
+  initializeSearchSuggestions();
+
+  // Hamburger menu toggle - FIXED
+  if (hamburger) {
+    hamburger.addEventListener('click', function(e) {
+      e.stopPropagation(); // Prevent event bubbling
+      toggleTestimonialNav();
+    });
+  }
+
+  // Search functionality - FIXED
+  if (searchInput) {
+    searchInput.addEventListener('input', handleSearch);
+    searchInput.addEventListener('focus', showSearchSuggestions);
+    searchInput.addEventListener('blur', hideSearchSuggestions);
+  }
+
+  // Close nav when clicking outside - FIXED
+  document.addEventListener('click', function(e) {
+    if (!testimonialNav.contains(e.target) && testimonialNav.classList.contains('expanded')) {
+      testimonialNav.classList.remove('expanded');
+      hideSearchSuggestions();
+    }
+  });
+
+  function toggleTestimonialNav() {
+    testimonialNav.classList.toggle('expanded');
+    
+    // Change hamburger animation
+    const isExpanded = testimonialNav.classList.contains('expanded');
+    const hamburgerLines = document.querySelectorAll('.hamburger-line-testimonial');
+    
+    hamburgerLines.forEach(line => {
+      line.style.transform = isExpanded ? 'scale(0.8)' : 'scale(1)';
+    });
+  }
+
+  function displayRandomFeaturedTestimonials() {
+    if (!featuredContainer) return;
+    
+    // Shuffle array and pick first 3
+    const shuffled = [...testimonials].sort(() => 0.5 - Math.random());
+    const featured = shuffled.slice(0, 3);
+
+    featuredContainer.innerHTML = featured.map(testimonial => `
+      <div class="featured-testimonial" data-category="${testimonial.category}">
+        <div class="featured-content">${testimonial.content}</div>
+        <div class="featured-rating">${'★'.repeat(testimonial.rating)}${'☆'.repeat(5 - testimonial.rating)}</div>
+        <div class="featured-author">
+          <img src="${testimonial.avatar}" alt="${testimonial.name}" class="featured-avatar">
+          <div class="featured-author-info">
+            <h4>${testimonial.name}</h4>
+            <p>${testimonial.position}</p>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function populateAllTestimonials() {
+    if (!navContent) return;
+    
+    navContent.innerHTML = testimonials.map(testimonial => `
+      <div class="testimonial-card" data-category="${testimonial.category}" data-search="${testimonial.name.toLowerCase()} ${testimonial.position.toLowerCase()} ${testimonial.content.toLowerCase()}">
+        <div class="testimonial-content">${testimonial.content}</div>
+        <div class="testimonial-rating">${'★'.repeat(testimonial.rating)}${'☆'.repeat(5 - testimonial.rating)}</div>
+        <div class="testimonial-author">
+          <img src="${testimonial.avatar}" alt="${testimonial.name}" class="author-avatar">
+          <div class="author-info">
+            <h4>${testimonial.name}</h4>
+            <p>${testimonial.position}</p>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    // Add click events to testimonial cards
+    document.querySelectorAll('.testimonial-card').forEach(card => {
+      card.addEventListener('click', function() {
+        // Add active state and smooth scroll
+        document.querySelectorAll('.testimonial-card').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Smooth scroll to make card visible
+        this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    });
+  }
+
+  function initializeSearchSuggestions() {
+    // Create suggestions container
+    const suggestionsContainer = document.createElement('div');
+    suggestionsContainer.className = 'search-suggestions';
+    suggestionsContainer.style.cssText = `
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(15, 15, 15, 0.95);
+      border: 1px solid var(--highlight);
+      border-radius: 8px;
+      margin-top: 5px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+      backdrop-filter: blur(10px);
+    `;
+    
+    if (searchInput && searchInput.parentNode) {
+      searchInput.parentNode.style.position = 'relative';
+      searchInput.parentNode.appendChild(suggestionsContainer);
+    }
+  }
+
+  function showSearchSuggestions() {
+    const suggestionsContainer = document.querySelector('.search-suggestions');
+    if (!suggestionsContainer || !searchInput) return;
+    
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    
+    if (searchTerm === '') {
+      // Show popular search terms
+      const popularTerms = ['animation', 'web development', 'character design', 'motion graphics', '3d modeling'];
+      suggestionsContainer.innerHTML = popularTerms.map(term => `
+        <div class="search-suggestion" data-term="${term}">
+          <span class="suggestion-icon">🔍</span>
+          <span>${term}</span>
+        </div>
+      `).join('');
+      
+      // Add click events to suggestions
+      document.querySelectorAll('.search-suggestion').forEach(suggestion => {
+        suggestion.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          searchInput.value = this.getAttribute('data-term');
+          handleSearch({ target: searchInput });
+          searchInput.focus();
+        });
+      });
+    }
+    
+    suggestionsContainer.style.display = 'block';
+  }
+
+  function hideSearchSuggestions() {
+    // Small delay to allow click events to register
+    setTimeout(() => {
+      const suggestionsContainer = document.querySelector('.search-suggestions');
+      if (suggestionsContainer) {
+        suggestionsContainer.style.display = 'none';
+      }
+    }, 150);
+  }
+
+  function handleSearch(e) {
+    const searchTerm = e.target.value.toLowerCase().trim();
+    const cards = document.querySelectorAll('.testimonial-card');
+    let hasResults = false;
+
+    // Update search suggestions based on current search
+    updateSearchSuggestions(searchTerm);
+
+    cards.forEach(card => {
+      const searchData = card.getAttribute('data-search');
+      
+      if (searchTerm === '' || searchData.includes(searchTerm)) {
+        card.style.display = 'block';
+        hasResults = true;
+        
+        // Highlight matching text
+        if (searchTerm !== '') {
+          highlightText(card, searchTerm);
+        } else {
+          removeHighlights(card);
+        }
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Show no results message
+    const existingNoResults = document.querySelector('.no-results');
+    if (existingNoResults) {
+      existingNoResults.remove();
+    }
+
+    if (!hasResults && searchTerm !== '') {
+      const noResults = document.createElement('div');
+      noResults.className = 'no-results';
+      noResults.textContent = `No testimonials found for "${searchTerm}"`;
+      noResults.style.cssText = `
+        grid-column: 1 / -1;
+        text-align: center;
+        color: var(--muted);
+        padding: 2rem;
+        font-style: italic;
+      `;
+      if (navContent) {
+        navContent.appendChild(noResults);
+      }
+    }
+  }
+
+  function updateSearchSuggestions(searchTerm) {
+    const suggestionsContainer = document.querySelector('.search-suggestions');
+    if (!suggestionsContainer) return;
+
+    if (searchTerm === '') {
+      showSearchSuggestions();
+      return;
+    }
+
+    // Find matching testimonials for suggestions
+    const matchingTerms = new Set();
+    
+    testimonials.forEach(testimonial => {
+      const searchableText = `${testimonial.name} ${testimonial.position} ${testimonial.content}`.toLowerCase();
+      if (searchableText.includes(searchTerm)) {
+        // Extract relevant terms for suggestions
+        const words = searchableText.split(' ');
+        words.forEach(word => {
+          if (word.includes(searchTerm) && word.length > 2) {
+            matchingTerms.add(word);
+          }
+        });
+      }
+    });
+
+    // Also add category matches
+    testimonials.forEach(testimonial => {
+      if (testimonial.category.includes(searchTerm)) {
+        matchingTerms.add(testimonial.category);
+      }
+    });
+
+    const suggestions = Array.from(matchingTerms).slice(0, 5);
+    
+    if (suggestions.length > 0) {
+      suggestionsContainer.innerHTML = suggestions.map(term => `
+        <div class="search-suggestion" data-term="${term}">
+          <span class="suggestion-icon">💡</span>
+          <span>${term}</span>
+        </div>
+      `).join('');
+
+      // Add click events to suggestions
+      document.querySelectorAll('.search-suggestion').forEach(suggestion => {
+        suggestion.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          searchInput.value = this.getAttribute('data-term');
+          handleSearch({ target: searchInput });
+          searchInput.focus();
+        });
+        
+        // Add hover effects
+        suggestion.style.cssText = `
+          padding: 8px 12px;
+          cursor: pointer;
+          transition: background-color 0.2s ease;
+          border-bottom: 1px solid rgba(255,255,255,0.1);
+        `;
+        
+        suggestion.addEventListener('mouseenter', function() {
+          this.style.backgroundColor = 'rgba(0, 255, 255, 0.1)';
+        });
+        
+        suggestion.addEventListener('mouseleave', function() {
+          this.style.backgroundColor = 'transparent';
+        });
+      });
+      
+      suggestionsContainer.style.display = 'block';
+    } else {
+      suggestionsContainer.style.display = 'none';
+    }
+  }
+
+  function highlightText(element, searchTerm) {
+    const content = element.querySelector('.testimonial-content');
+    const text = content.textContent;
+    const regex = new RegExp(`(${searchTerm})`, 'gi');
+    const highlighted = text.replace(regex, '<span class="highlight">$1</span>');
+    content.innerHTML = highlighted;
+  }
+
+  function removeHighlights(element) {
+    const content = element.querySelector('.testimonial-content');
+    content.innerHTML = content.textContent;
+  }
+}
+
+// =================== MINIMAL TEXT CLOCK ===================
+function initializeFloatingClock() {
+  function updateFloatingClock() {
+    const now = new Date();
+    
+    // Format waktu (24 jam)
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    
+    // Format tanggal
+    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    
+    const dayName = days[now.getDay()];
+    const date = now.getDate();
+    const monthName = months[now.getMonth()];
+    
+    // Update DOM
+    document.getElementById('floating-hours').textContent = hours;
+    document.getElementById('floating-minutes').textContent = minutes;
+    document.getElementById('floating-day').textContent = dayName;
+    document.getElementById('floating-date').textContent = `${date} ${monthName}`;
+  }
+  
+  // Update immediately and every second
+  updateFloatingClock();
+  setInterval(updateFloatingClock, 1000);
+}
+
+// Panggil di DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+  initializeFloatingClock();
+});
+
+// =================== TOOLS CAROUSEL ===================
+function initializeToolsCarousel() {
+  const tools = [
+    {
+      name: "Blender",
+      icon: "🎬",
+      category: "3D Animation Suite",
+      description: "Complete 3D creation suite for modeling, animation, simulation, and rendering.",
+      features: [
+        "3D Modeling & Sculpting",
+        "Character Animation",
+        "VFX & Simulation", 
+        "Rendering & Compositing",
+        "Video Editing",
+        "Motion Tracking"
+      ],
+      proficiency: 90
+    },
+    {
+      name: "After Effects",
+      icon: "🎨",
+      category: "Motion Graphics",
+      description: "Industry-standard motion graphics and visual effects software for film and video.",
+      features: [
+        "Motion Graphics",
+        "Visual Effects",
+        "Compositing",
+        "Animation",
+        "Keying & Tracking",
+        "3D Camera Tracking"
+      ],
+      proficiency: 85
+    },
+    {
+      name: "Notepad++",
+      icon: "⚡",
+      category: "Code Editor",
+      description: "Lightweight and powerful code editor with extensive plugin support.",
+      features: [
+        "Syntax Highlighting",
+        "Multi-language Support",
+        "Plugin Ecosystem",
+        "Lightweight & Fast",
+        "Macro Recording",
+        "Multi-view Editing"
+      ],
+      proficiency: 95
+    },
+    {
+      name: "Git & GitHub",
+      icon: "🌐",
+      category: "Version Control",
+      description: "Distributed version control system and collaborative development platform.",
+      features: [
+        "Version Control",
+        "Collaboration",
+        "CI/CD Integration",
+        "Project Management",
+        "Code Review",
+        "Open Source Hosting"
+      ],
+      proficiency: 80
+    },
+    {
+      name: "Hitfilm",
+      icon: "📹",
+      category: "Video Editing",
+      description: "Professional video editing and visual effects software with advanced compositing.",
+      features: [
+        "Video Editing",
+        "Color Grading",
+        "Audio Editing",
+        "Export Optimization",
+        "3D Compositing",
+        "Particle Systems"
+      ],
+      proficiency: 75
+    },
+    {
+      name: "Photoshop",
+      icon: "🎯",
+      category: "Graphic Design",
+      description: "Industry-leading image editing and graphic design software.",
+      features: [
+        "Image Editing",
+        "Digital Painting",
+        "UI/UX Design",
+        "Photo Manipulation",
+        "Typography",
+        "Digital Art"
+      ],
+      proficiency: 70
+    },
+    {
+      name: "Visual Studio Code",
+      icon: "💻",
+      category: "Code Editor",
+      description: "Modern code editor with built-in Git support and extensive extensions.",
+      features: [
+        "IntelliSense",
+        "Debugging",
+        "Git Integration",
+        "Extensions Marketplace",
+        "Terminal Integration",
+        "Multi-language Support"
+      ],
+      proficiency: 88
+    },
+    {
+      name: "Substance Painter",
+      icon: "🎨",
+      category: "3D Texturing",
+      description: "3D painting software with advanced material creation and texturing tools.",
+      features: [
+        "PBR Texturing",
+        "Smart Materials",
+        "Real-time Viewport",
+        "Baking Tools",
+        "Export Optimization",
+        "Material Creation"
+      ],
+      proficiency: 82
+    }
+  ];
+
+  const carouselTrack = document.querySelector('.carousel-track');
+  const dotsContainer = document.querySelector('.carousel-dots');
+  const prevBtn = document.querySelector('.carousel-arrow-prev');
+  const nextBtn = document.querySelector('.carousel-arrow-next');
+
+  let currentIndex = 0;
+  let startX = 0;
+  let currentX = 0;
+  let isDragging = false;
+
+  // Generate tool cards
+  function generateTools() {
+    carouselTrack.innerHTML = tools.map((tool, index) => `
+      <div class="tool-card" data-index="${index}">
+        <div class="tool-header">
+          <div class="tool-icon">${tool.icon}</div>
+          <div>
+            <h3 class="tool-title">${tool.name}</h3>
+            <p class="tool-category">${tool.category}</p>
+          </div>
+        </div>
+        <p class="tool-description">${tool.description}</p>
+        <ul class="tool-features">
+          ${tool.features.map(feature => `<li>${feature}</li>`).join('')}
+        </ul>
+        <div class="tool-proficiency">
+          <span class="proficiency-label">Proficiency:</span>
+          <div class="proficiency-bar">
+            <div class="proficiency-fill" style="width: ${tool.proficiency}%"></div>
+          </div>
+          <span class="proficiency-percent">${tool.proficiency}%</span>
+        </div>
+      </div>
+    `).join('');
+
+    generateDots();
+    updateCarousel();
+  }
+
+  // Generate navigation dots
+  function generateDots() {
+    dotsContainer.innerHTML = tools.map((_, index) => `
+      <button class="carousel-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></button>
+    `).join('');
+  }
+
+  // Update carousel position
+  function updateCarousel() {
+    const cardWidth = document.querySelector('.tool-card').offsetWidth;
+    const gap = 32; // 2rem in pixels
+    const translateX = -(currentIndex * (cardWidth + gap));
+    
+    carouselTrack.style.transform = `translateX(${translateX}px)`;
+    
+    // Update active dot
+    document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+      dot.classList.toggle('active', index === currentIndex);
+    });
+  }
+
+  // Navigate to specific slide
+  function goToSlide(index) {
+    currentIndex = Math.max(0, Math.min(index, tools.length - 1));
+    updateCarousel();
+  }
+
+  // Next slide
+  function nextSlide() {
+    if (currentIndex < tools.length - 1) {
+      currentIndex++;
+      updateCarousel();
+    }
+  }
+
+  // Previous slide
+  function prevSlide() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      updateCarousel();
+    }
+  }
+
+  // Touch/swipe handlers
+  function handleTouchStart(e) {
+    isDragging = true;
+    startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+    currentX = startX;
+    carouselTrack.style.transition = 'none';
+  }
+
+  function handleTouchMove(e) {
+    if (!isDragging) return;
+    
+    currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+    const diff = currentX - startX;
+    
+    if (Math.abs(diff) > 10) { // Minimum drag threshold
+      carouselTrack.style.transform = `translateX(calc(-${currentIndex * 100}% + ${diff}px))`;
+    }
+  }
+
+  function handleTouchEnd(e) {
+    if (!isDragging) return;
+    
+    isDragging = false;
+    carouselTrack.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+    
+    const diff = currentX - startX;
+    const threshold = 50; // Minimum swipe distance
+    
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0) {
+        prevSlide();
+      } else {
+        nextSlide();
+      }
+    } else {
+      updateCarousel(); // Return to current position
+    }
+  }
+
+  // Event listeners
+  prevBtn.addEventListener('click', prevSlide);
+  nextBtn.addEventListener('click', nextSlide);
+
+  // Dot navigation
+  dotsContainer.addEventListener('click', (e) => {
+    if (e.target.classList.contains('carousel-dot')) {
+      const index = parseInt(e.target.getAttribute('data-index'));
+      goToSlide(index);
+    }
+  });
+
+  // Touch events
+  carouselTrack.addEventListener('mousedown', handleTouchStart);
+  carouselTrack.addEventListener('mousemove', handleTouchMove);
+  carouselTrack.addEventListener('mouseup', handleTouchEnd);
+  carouselTrack.addEventListener('mouseleave', handleTouchEnd);
+
+  carouselTrack.addEventListener('touchstart', handleTouchStart);
+  carouselTrack.addEventListener('touchmove', handleTouchMove);
+  carouselTrack.addEventListener('touchend', handleTouchEnd);
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') prevSlide();
+    if (e.key === 'ArrowRight') nextSlide();
+  });
+
+  // Initialize
+  generateTools();
+
+  // Handle window resize
+  window.addEventListener('resize', updateCarousel);
+}
+
+// Panggil di DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+  // ... kode yang sudah ada ...
+  initializeToolsCarousel();
+});
 
 // =================== WINDOW RESIZE HANDLER ===================
 window.addEventListener('resize', () => {
