@@ -18,6 +18,72 @@
 
 
 
+/* =================== AI TOGGLE STYLES =================== */
+.ai-toggle-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(15, 15, 15, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--highlight);
+  border-radius: 25px;
+  padding: 8px 15px;
+  transition: all 0.3s ease;
+}
+
+.ai-toggle-container:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.ai-toggle-label {
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ai-toggle {
+  position: relative;
+  width: 50px;
+  height: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 25px;
+  border: 1px solid var(--highlight);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ai-toggle.active {
+  background: rgba(0, 255, 255, 0.3);
+  border-color: var(--primary);
+}
+
+.ai-toggle-handle {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 21px;
+  height: 21px;
+  background: var(--muted);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+}
+
+.ai-toggle.active .ai-toggle-handle {
+  left: calc(100% - 23px);
+  background: var(--primary);
+  color: #000;
+}
+
 /* =================== ENHANCED AI POPUP STYLES =================== */
 @keyframes enhancedPopupIn {
     from {
@@ -163,6 +229,16 @@
     .enhanced-popup .ai-popup-message {
         font-size: 0.85rem;
     }
+    
+    .ai-toggle-container {
+        top: 10px;
+        right: 10px;
+        padding: 6px 12px;
+    }
+    
+    .ai-toggle-label {
+        font-size: 0.7rem;
+    }
 }
 
 /* Prevent too many popups instruction */
@@ -292,7 +368,7 @@ body {
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
-  z-index: 999999 !important; /* Pastikan z-index sangat tinggi */
+  z-index: 1000003;
   mix-blend-mode: difference;
   transition: transform 0.15s ease, width 0.25s ease, height 0.25s ease;
   visibility: visible !important;
@@ -375,7 +451,6 @@ select:hover, select:focus, select:active,
   }
 }
 
-/* Emergency override - jika semua else fails */
 html * {
   cursor: none !important;
 }
@@ -383,14 +458,13 @@ html * {
 /* =================== MINIMAL TEXT CLOCK =================== */
 .floating-clock {
   position: fixed;
-  bottom: 90px; /* Position above dock */
+  bottom: 90px; 
   left: 50%;
   transform: translateX(-50%);
   z-index: 9998;
   text-align: center;
   color: var(--text);
   font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-  /* NO BACKGROUND, NO BORDER, NO EFFECTS - JUST TEXT */
 }
 
 .clock-time {
@@ -399,7 +473,7 @@ html * {
   color: var(--primary);
   letter-spacing: 2px;
   margin-bottom: 2px;
-  font-variant-numeric: tabular-nums; /* Ensures equal width for all numbers */
+  font-variant-numeric: tabular-nums;
 }
 
 .clock-date {
@@ -449,7 +523,7 @@ html * {
   z-index: 0 !important;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* Important: allows clicks to pass through */
+  pointer-events: none; 
 }
 
 section {
@@ -5725,36 +5799,25 @@ footer {
 </div>
 
 
+<!-- AI Toggle -->
+<div class="ai-toggle-container">
+  <span class="ai-toggle-label">AI Assistant</span>
+  <div class="ai-toggle active" id="aiToggle">
+    <div class="ai-toggle-handle">🤖</div>
+  </div>
+</div>
+
+<!-- Background Particle Canvas -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- Custom Cursor -->
+<div id="circle-cursor"></div>
+
+
 
 <!-- JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-
-// =================== FINAL INITIALIZATION ===================
-document.addEventListener('DOMContentLoaded', function() {
-  // Core functionalities
-  initializeTypingEffect();
-  initializeSkillsSection();
-  initializeCursor();
-  initializeParticles();
-  initializeInteractiveProjects();
-  initializeProjectModal();
-  initializeVideoFeatures();
-  initializeDockNav();
-  
-  // Enhanced features
-  initializeEnhancedLazyLoading(); 
-  initializeSmoothScroll();
-  initializePerformanceOptimizations();
-  initializeComprehensiveAIPopupSystem();
-  // Additional sections
-  initializeToolsCarousel();
-  initializeBounceCards();
-  initializeTestimonialNav();
-  initializeAssetsSection();
-  
-  console.log('🚀 Portfolio Fully Loaded with Enhanced Lazy Loading!');
-});
 
 // =================== TYPING EFFECT ===================
 function initializeTypingEffect() {
@@ -10304,9 +10367,6 @@ document.addEventListener('DOMContentLoaded', function() {
   initializeAssetsLibrary();
 });
 
-
-
-
 // =================== FIXED AI POPUP SYSTEM - CURSOR POSITION ===================
 function initializeComprehensiveAIPopupSystem() {
     console.log('🤖 Comprehensive AI Popup System Activated!');
@@ -10354,76 +10414,6 @@ function initializeComprehensiveAIPopupSystem() {
     initializeSpecialEffectsPopups();
 }
 
-// =================== ENHANCED AI POPUP FUNCTION ===================
-function showAIPopup(element, message, duration = 3000, event = null) {
-    // Rate limiting - prevent too many popups in quick succession
-    if (window.lastPopupTime && Date.now() - window.lastPopupTime < 500) {
-        return;
-    }
-    window.lastPopupTime = Date.now();
-    
-    // Remove existing popups
-    removeExistingPopups();
-    
-    // Create popup element with enhanced styling
-    const popup = document.createElement('div');
-    popup.className = 'ai-popup-text enhanced-popup';
-    
-    // Determine popup type based on content
-    const popupType = getPopupType(message);
-    
-    popup.innerHTML = `
-        <div class="ai-popup-content ${popupType}">
-            <div class="ai-popup-header">
-                <span class="ai-avatar">${getPopupEmoji(popupType)}</span>
-                <span class="ai-name">Asri AI Assistant</span>
-                <span class="popup-type">${popupType.toUpperCase()}</span>
-            </div>
-            <div class="ai-popup-message">${message}</div>
-            <div class="popup-timer"></div>
-        </div>
-    `;
-    
-    // Set timer animation dynamically
-    const timer = popup.querySelector('.popup-timer');
-    if (timer) {
-        timer.style.animation = `timerProgress ${duration}ms linear forwards`;
-    }
-    
-    // Smart positioning - gunakan posisi kursor jika event tersedia
-    if (event) {
-        positionPopupAtCursor(popup, event);
-    } else {
-        positionPopupSmartly(popup, element);
-    }
-    
-    // Add to document
-    document.body.appendChild(popup);
-    
-    // Auto remove after duration
-    setTimeout(() => {
-        if (popup.parentNode) {
-            popup.style.animation = 'enhancedPopupOut 0.3s ease-in forwards';
-            setTimeout(() => {
-                if (popup.parentNode) {
-                    popup.parentNode.removeChild(popup);
-                }
-            }, 300);
-        }
-    }, duration);
-    
-    // Also remove on click
-    popup.addEventListener('click', () => {
-        if (popup.parentNode) {
-            popup.style.animation = 'enhancedPopupOut 0.2s ease-in forwards';
-            setTimeout(() => {
-                if (popup.parentNode) {
-                    popup.parentNode.removeChild(popup);
-                }
-            }, 200);
-        }
-    });
-}
 
 // =================== POSITION POPUP AT CURSOR ===================
 function positionPopupAtCursor(popup, event) {
@@ -10458,6 +10448,190 @@ function positionPopupAtCursor(popup, event) {
     popup.style.transform = 'none';
     popup.style.zIndex = '1000001';
 }
+
+
+
+// =================== ROBUST INITIALIZATION MANAGER ===================
+class PortfolioInitializer {
+  constructor() {
+    this.initialized = false;
+    this.initQueue = [];
+  }
+  
+  // Tambah fungsi ke queue
+  add(functionName, priority = 0) {
+    this.initQueue.push({ functionName, priority });
+    // Urutkan berdasarkan priority (yang lebih tinggi duluan)
+    this.initQueue.sort((a, b) => b.priority - a.priority);
+  }
+  
+  // Jalankan initialization
+  async initialize() {
+    if (this.initialized) return;
+    
+    console.log('🚀 Starting Portfolio Initialization...');
+    
+    for (const item of this.initQueue) {
+      const { functionName } = item;
+      await this.safeInitialize(functionName);
+    }
+    
+    this.initialized = true;
+    console.log('🎉 Portfolio Fully Initialized!');
+  }
+  
+  // Initialize dengan error handling
+  async safeInitialize(functionName) {
+    return new Promise((resolve) => {
+      try {
+        if (typeof window[functionName] === 'function') {
+          const result = window[functionName]();
+          if (result instanceof Promise) {
+            result.then(() => {
+              console.log(`✅ ${functionName}`);
+              resolve();
+            }).catch(error => {
+              console.warn(`⚠️ ${functionName} async failed:`, error);
+              resolve();
+            });
+          } else {
+            console.log(`✅ ${functionName}`);
+            resolve();
+          }
+        } else {
+          console.log(`⏭️ ${functionName} not found`);
+          resolve();
+        }
+      } catch (error) {
+        console.error(`❌ ${functionName} failed:`, error);
+        resolve();
+      }
+    });
+  }
+}
+
+// =================== RANDOM BINARY TITLE ===================
+function initializeRandomTitle() {
+  let originalTitle = document.title;
+  let isTabActive = true;
+  
+  // Fungsi untuk menghasilkan string biner acak
+  function generateBinaryString(length) {
+    let binary = '';
+    for (let i = 0; i < length; i++) {
+      binary += Math.random() > 0.5 ? '1' : '0';
+    }
+    return binary;
+  }
+  
+  // Fungsi untuk update title
+  function updateTitle() {
+    if (isTabActive) {
+      // Generate biner dengan panjang antara 8-15 karakter
+      const binaryLength = Math.floor(Math.random() * 8) + 8;
+      document.title = generateBinaryString(binaryLength);
+    }
+  }
+  
+  // Deteksi ketika tab tidak aktif (untuk menghemat performa)
+  document.addEventListener('visibilitychange', function() {
+    isTabActive = !document.hidden;
+    
+    if (isTabActive) {
+      // Tab aktif, mulai animasi
+      startTitleAnimation();
+    } else {
+      // Tab tidak aktif, kembalikan judul asli
+      document.title = originalTitle;
+    }
+  });
+  
+  // Kecepatan perubahan (dalam ms)
+  let animationSpeed = 200;
+  let animationInterval;
+  
+  function startTitleAnimation() {
+    if (animationInterval) {
+      clearInterval(animationInterval);
+    }
+    
+    animationInterval = setInterval(updateTitle, animationSpeed);
+  }
+  
+  // Mulai animasi
+  startTitleAnimation();
+  
+  // Opsional: Tambahkan efek ketika hover pada tab
+  let hoverTimeout;
+  document.addEventListener('mouseenter', function() {
+    clearTimeout(hoverTimeout);
+    document.title = originalTitle;
+  });
+  
+  document.addEventListener('mouseleave', function() {
+    hoverTimeout = setTimeout(() => {
+      if (isTabActive) {
+        updateTitle();
+      }
+    }, 1000);
+  });
+  
+  console.log('🔀 Random binary title activated!');
+}
+
+// =================== INITIALIZATION SETUP ===================
+document.addEventListener('DOMContentLoaded', function() {
+  const initializer = new PortfolioInitializer();
+  
+  // Tambahkan semua fungsi dengan priority
+  // Priority: 10 (tertinggi), 5 (medium), 1 (rendah)
+  
+  // Core UI (High Priority)
+  initializer.add('initializeAIToggle', 10);
+  initializer.add('initializeCursor', 10);
+  initializer.add('initializeRandomTitle', 8);
+  
+  // Performance & UX (High Priority)
+  initializer.add('initializeSmoothScroll', 9);
+  initializer.add('initializeEnhancedLazyLoading', 9);
+  initializer.add('initializePerformanceOptimizations', 8);
+  
+  // Visual Effects (Medium Priority)
+  initializer.add('initializeParticles', 7);
+  initializer.add('initializeTypingEffect', 6);
+  initializer.add('initializeVideoFeatures', 6);
+  
+  // Content Sections (Medium Priority)
+  initializer.add('initializeSkillsSection', 5);
+  initializer.add('initializeInteractiveProjects', 5);
+  initializer.add('initializeProjectModal', 5);
+  
+  // Navigation & Components (Medium Priority)
+  initializer.add('initializeDockNav', 5);
+  initializer.add('initializeToolsCarousel', 4);
+  initializer.add('initializeBounceCards', 4);
+  
+  // Additional Features (Low Priority)
+  initializer.add('initializeComprehensiveAIPopupSystem', 3);
+  initializer.add('initializeTestimonialNav', 2);
+  initializer.add('initializeAssetsSection', 1);
+  
+  // Jalankan initialization
+  initializer.initialize();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // =================== ENHANCED POPUP UTILITIES ===================
 function getPopupType(message) {
@@ -11163,6 +11337,229 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('🎯 Fixed AI Popup System - Now Appears at Cursor Position!');
     }, 2000);
 });
+
+
+
+// =================== AI TOGGLE FUNCTIONALITY ===================
+function initializeAIToggle() {
+  const aiToggle = document.getElementById('aiToggle');
+  
+  // Load saved state from localStorage, default to true (enabled)
+  let aiEnabled = localStorage.getItem('aiPopupEnabled');
+  if (aiEnabled === null) {
+    aiEnabled = 'true'; // Default enabled
+    localStorage.setItem('aiPopupEnabled', 'true');
+  }
+  
+  // Set initial state
+  if (aiEnabled === 'true') {
+    aiToggle.classList.add('active');
+    window.aiPopupEnabled = true;
+  } else {
+    aiToggle.classList.remove('active');
+    window.aiPopupEnabled = false;
+  }
+  
+  // Toggle functionality
+  aiToggle.addEventListener('click', function() {
+    this.classList.toggle('active');
+    window.aiPopupEnabled = this.classList.contains('active');
+    
+    // Save to localStorage
+    localStorage.setItem('aiPopupEnabled', window.aiPopupEnabled.toString());
+    
+    // Show confirmation popup (only if AI is enabled)
+    if (window.aiPopupEnabled) {
+      showAIPopup(this, "🤖 AI Assistant diaktifkan! Saya siap membantu menjelajahi portfolio.", 3000);
+    } else {
+      // Show a regular message without AI popup
+      const confirmation = document.createElement('div');
+      confirmation.className = 'ai-popup-text enhanced-popup';
+      confirmation.innerHTML = `
+        <div class="ai-popup-content info">
+          <div class="ai-popup-header">
+            <span class="ai-avatar">🔕</span>
+            <span class="ai-name">System</span>
+            <span class="popup-type">INFO</span>
+          </div>
+          <div class="ai-popup-message">AI Assistant dinonaktifkan. Klik toggle untuk mengaktifkan kembali.</div>
+          <div class="popup-timer"></div>
+        </div>
+      `;
+      
+      // Position and show
+      const rect = aiToggle.getBoundingClientRect();
+      confirmation.style.top = (rect.top + rect.height + 10) + 'px';
+      confirmation.style.left = (rect.left - 100) + 'px';
+      confirmation.style.zIndex = '1000001';
+      
+      document.body.appendChild(confirmation);
+      
+      // Set timer animation
+      const timer = confirmation.querySelector('.popup-timer');
+      if (timer) {
+        timer.style.animation = `timerProgress 3000ms linear forwards`;
+      }
+      
+      // Auto remove
+      setTimeout(() => {
+        if (confirmation.parentNode) {
+          confirmation.style.animation = 'enhancedPopupOut 0.3s ease-in forwards';
+          setTimeout(() => {
+            if (confirmation.parentNode) {
+              confirmation.parentNode.removeChild(confirmation);
+            }
+          }, 300);
+        }
+      }, 3000);
+      
+      // Also remove on click
+      confirmation.addEventListener('click', () => {
+        if (confirmation.parentNode) {
+          confirmation.parentNode.removeChild(confirmation);
+        }
+      });
+    }
+  });
+}
+
+// =================== MODIFIED AI POPUP FUNCTION ===================
+function showAIPopup(element, message, duration = 3000, event = null) {
+  // Check if AI popups are enabled
+  if (!window.aiPopupEnabled) return;
+  
+  // Rate limiting - prevent too many popups in quick succession
+  if (window.lastPopupTime && Date.now() - window.lastPopupTime < 500) {
+    return;
+  }
+  window.lastPopupTime = Date.now();
+  
+  // Remove existing popups
+  removeExistingPopups();
+  
+  // Create popup element with enhanced styling
+  const popup = document.createElement('div');
+  popup.className = 'ai-popup-text enhanced-popup';
+  
+  // Determine popup type based on content
+  const popupType = getPopupType(message);
+  
+  popup.innerHTML = `
+    <div class="ai-popup-content ${popupType}">
+      <div class="ai-popup-header">
+        <span class="ai-avatar">${getPopupEmoji(popupType)}</span>
+        <span class="ai-name">Asri AI Assistant</span>
+        <span class="popup-type">${popupType.toUpperCase()}</span>
+      </div>
+      <div class="ai-popup-message">${message}</div>
+      <div class="popup-timer"></div>
+    </div>
+  `;
+  
+  // Set timer animation dynamically
+  const timer = popup.querySelector('.popup-timer');
+  if (timer) {
+    timer.style.animation = `timerProgress ${duration}ms linear forwards`;
+  }
+  
+  // Smart positioning - gunakan posisi kursor jika event tersedia
+  if (event) {
+    positionPopupAtCursor(popup, event);
+  } else {
+    positionPopupSmartly(popup, element);
+  }
+  
+  // Add to document
+  document.body.appendChild(popup);
+  
+  // Auto remove after duration
+  setTimeout(() => {
+    if (popup.parentNode) {
+      popup.style.animation = 'enhancedPopupOut 0.3s ease-in forwards';
+      setTimeout(() => {
+        if (popup.parentNode) {
+          popup.parentNode.removeChild(popup);
+        }
+      }, 300);
+    }
+  }, duration);
+  
+  // Also remove on click
+  popup.addEventListener('click', () => {
+    if (popup.parentNode) {
+      popup.parentNode.removeChild(popup);
+    }
+  });
+}
+
+// =================== HELPER FUNCTIONS ===================
+function removeExistingPopups() {
+  const existingPopups = document.querySelectorAll('.ai-popup-text');
+  existingPopups.forEach(popup => {
+    if (popup.parentNode) {
+      popup.parentNode.removeChild(popup);
+    }
+  });
+}
+
+function getPopupType(message) {
+  if (message.includes('🤖') || message.includes('AI Assistant')) return 'info';
+  if (message.includes('fitur') || message.includes('featured')) return 'featured';
+  if (message.includes('statistik') || message.includes('stats')) return 'stats';
+  if (message.includes('tools') || message.includes('alat')) return 'tools';
+  if (message.includes('kreatif') || message.includes('creative')) return 'creative';
+  return 'info';
+}
+
+function getPopupEmoji(type) {
+  const emojis = {
+    'info': '🤖',
+    'featured': '⭐',
+    'stats': '📊',
+    'tools': '🛠️',
+    'creative': '🎨'
+  };
+  return emojis[type] || '🤖';
+}
+
+function positionPopupAtCursor(popup, event) {
+  const x = event.clientX;
+  const y = event.clientY;
+  
+  popup.style.top = (y + 15) + 'px';
+  popup.style.left = (x - 150) + 'px';
+  
+  // Ensure popup stays within viewport
+  const rect = popup.getBoundingClientRect();
+  if (rect.right > window.innerWidth) {
+    popup.style.left = (window.innerWidth - rect.width - 10) + 'px';
+  }
+  if (rect.bottom > window.innerHeight) {
+    popup.style.top = (window.innerHeight - rect.height - 10) + 'px';
+  }
+}
+
+function positionPopupSmartly(popup, element) {
+  if (element) {
+    const rect = element.getBoundingClientRect();
+    popup.style.top = (rect.top + rect.height + 10) + 'px';
+    popup.style.left = (rect.left - 150) + 'px';
+  } else {
+    // Default position
+    popup.style.top = '50%';
+    popup.style.left = '50%';
+    popup.style.transform = 'translate(-50%, -50%)';
+  }
+  
+  // Ensure popup stays within viewport
+  const popupRect = popup.getBoundingClientRect();
+  if (popupRect.right > window.innerWidth) {
+    popup.style.left = (window.innerWidth - popupRect.width - 20) + 'px';
+  }
+  if (popupRect.bottom > window.innerHeight) {
+    popup.style.top = (window.innerHeight - popupRect.height - 20) + 'px';
+  }
+}
 
 // ============== WINDOW RESIZE HANDLER ===================
 window.addEventListener('resize', () => {
