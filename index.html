@@ -14,7 +14,120 @@
   --blur: rgba(15, 15, 15, 0.6);
   --muted: #bbb;
 }
+/* Dot putih yang dinamis & ikut arah */
+.compass-dot {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 20px 4px #ffffff;
+    pointer-events: none;
+    z-index: 999999;
+    opacity: 0;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translate(-50%, -50%);
+}
 
+.compass-dot.active {
+    opacity: 0.95;
+    animation: pulse 2.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 20px 4px #ffffff; transform: translate(-50%, -50%) scale(1); }
+    50%      { box-shadow: 0 0 35px 10px #ffffff; transform: translate(-50%, -50%) scale(1.4); }
+}
+/* =================== REAL-TIME VIEWER STYLES =================== */
+.live-viewer-counter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--primary);
+    font-weight: 600;
+    animation: gentlePulse 3s infinite;
+}
+
+@keyframes gentlePulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: #00ff00;
+    border-radius: 50%;
+    position: relative;
+    animation: livePulse 1.5s infinite;
+}
+
+@keyframes livePulse {
+    0% { 
+        transform: scale(0.95); 
+        box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7); 
+    }
+    70% { 
+        transform: scale(1); 
+        box-shadow: 0 0 0 8px rgba(0, 255, 0, 0); 
+    }
+    100% { 
+        transform: scale(0.95); 
+        box-shadow: 0 0 0 0 rgba(0, 255, 0, 0); 
+    }
+}
+
+.viewer-dock-item {
+    position: relative;
+}
+
+.viewer-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--primary);
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 12px;
+    min-width: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+/* Viewer Stats Modal */
+.viewer-stats-content {
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.history-bar {
+    transition: height 0.5s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .live-viewer-counter {
+        font-size: 0.75rem;
+    }
+    
+    .hero-viewer-counter {
+        font-size: 0.75rem !important;
+        padding: 6px 12px !important;
+    }
+}
 
 
 
@@ -84,6 +197,52 @@
   color: #000;
 }
 
+/* Tambahkan di bagian CSS yang sudah ada */
+.event-notification {
+    animation: slideInRight 0.5s ease !important;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.viewer-dock-item .viewer-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--primary);
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 12px;
+    min-width: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.viewer-dock-item:hover .viewer-count {
+    background: #fff;
+    transform: scale(1.2);
+}
 /* =================== ENHANCED AI POPUP STYLES =================== */
 @keyframes enhancedPopupIn {
     from {
@@ -4737,8 +4896,7 @@ footer {
 
 <!-- Background Particle Canvas -->
 <canvas id="particle-canvas"></canvas>
-
-<!-- Custom Cursor -->
+<canvas id="calmCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:99997;"></canvas><!-- Custom Cursor -->
 <div id="circle-cursor"></div>
 
 <!-- Floating Digital Clock -->
@@ -5812,7 +5970,8 @@ footer {
 
 <!-- Custom Cursor -->
 <div id="circle-cursor"></div>
-
+<!-- Supabase Client -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
 
 <!-- JavaScript -->
@@ -10510,74 +10669,820 @@ class PortfolioInitializer {
   }
 }
 
-// =================== RANDOM BINARY TITLE ===================
-function initializeRandomTitle() {
-  let originalTitle = document.title;
-  let isTabActive = true;
-  
-  // Fungsi untuk menghasilkan string biner acak
-  function generateBinaryString(length) {
-    let binary = '';
-    for (let i = 0; i < length; i++) {
-      binary += Math.random() > 0.5 ? '1' : '0';
-    }
-    return binary;
-  }
-  
-  // Fungsi untuk update title
-  function updateTitle() {
-    if (isTabActive) {
-      // Generate biner dengan panjang antara 8-15 karakter
-      const binaryLength = Math.floor(Math.random() * 8) + 8;
-      document.title = generateBinaryString(binaryLength);
-    }
-  }
-  
-  // Deteksi ketika tab tidak aktif (untuk menghemat performa)
-  document.addEventListener('visibilitychange', function() {
-    isTabActive = !document.hidden;
+
+
+// =================== ADVANCED REAL-TIME VIEWER WITH EVENTS ===================
+function initializeAdvancedRealTimeViewerWithEvents() {
+    console.log('🎮 Initializing Enhanced Real-Time Viewer with Events...');
     
-    if (isTabActive) {
-      // Tab aktif, mulai animasi
-      startTitleAnimation();
-    } else {
-      // Tab tidak aktif, kembalikan judul asli
-      document.title = originalTitle;
-    }
-  });
-  
-  // Kecepatan perubahan (dalam ms)
-  let animationSpeed = 200;
-  let animationInterval;
-  
-  function startTitleAnimation() {
-    if (animationInterval) {
-      clearInterval(animationInterval);
+    // Variables untuk sistem event
+    let originalTitle = "Asri Portfolio";
+    let isTabActive = true;
+    let viewerCount = 35; // Start dengan base count
+    let lastUpdate = 0;
+    const UPDATE_INTERVAL = 3000; // 3 detik untuk update lebih cepat
+    
+    // State event system
+    let currentEvent = null;
+    let eventEndTime = 0;
+    let eventMultiplier = 1;
+    let eventName = "";
+    let eventDescription = "";
+    let eventHistory = [];
+    
+    // Patterns untuk trend
+    const dailyPattern = {
+        "00": 20, "01": 15, "02": 10, "03": 8, "04": 5, "05": 10,
+        "06": 25, "07": 40, "08": 60, "09": 75, "10": 80, "11": 85,
+        "12": 90, "13": 85, "14": 80, "15": 75, "16": 70, "17": 65,
+        "18": 70, "19": 75, "20": 80, "21": 85, "22": 70, "23": 50
+    };
+    
+    const weeklyPattern = {
+        0: 1.2, // Sunday - weekend boost
+        1: 0.9,  // Monday - slow start
+        2: 1.0,  // Tuesday
+        3: 1.1,  // Wednesday
+        4: 1.2,  // Thursday
+        5: 1.5,  // Friday - weekend start
+        6: 1.3   // Saturday
+    };
+    
+    // Event definitions
+    const events = [
+        {
+            name: "Viral Social Media",
+            description: "Portfolio trending di Twitter/Instagram!",
+            multiplier: 2.5,
+            duration: 300000, // 5 minutes
+            probability: 0.01,
+            icon: "🚀"
+        },
+        {
+            name: "Project Launch",
+            description: "New project released! Everyone checking it out.",
+            multiplier: 2.0,
+            duration: 240000, // 4 minutes
+            probability: 0.015,
+            icon: "🎉"
+        },
+        {
+            name: "Tech Conference",
+            description: "Featured in online tech conference stream.",
+            multiplier: 3.0,
+            duration: 180000, // 3 minutes
+            probability: 0.008,
+            icon: "🎤"
+        },
+        {
+            name: "Quiet Time",
+            description: "Slow traffic period (off-peak hours).",
+            multiplier: 0.4,
+            duration: 180000, // 3 minutes
+            probability: 0.02,
+            icon: "😴"
+        },
+        {
+            name: "Hacker News Feature",
+            description: "Featured on Hacker News frontpage!",
+            multiplier: 4.0,
+            duration: 300000, // 5 minutes
+            probability: 0.005,
+            icon: "🔥"
+        },
+        {
+            name: "YouTube Shoutout",
+            description: "Mentioned in popular YouTube video.",
+            multiplier: 2.8,
+            duration: 240000, // 4 minutes
+            probability: 0.01,
+            icon: "📺"
+        },
+        {
+            name: "Server Maintenance",
+            description: "Temporary slowdown during updates.",
+            multiplier: 0.3,
+            duration: 120000, // 2 minutes
+            probability: 0.01,
+            icon: "🔧"
+        },
+        {
+            name: "Design Award",
+            description: "Won design award! Media coverage spike.",
+            multiplier: 3.5,
+            duration: 300000, // 5 minutes
+            probability: 0.003,
+            icon: "🏆"
+        },
+        {
+            name: "Weekend Rush",
+            description: "Weekend browsing surge!",
+            multiplier: 1.8,
+            duration: 360000, // 6 minutes
+            probability: 0.025,
+            icon: "🎯"
+        },
+        {
+            name: "Early Bird Special",
+            description: "Morning productivity crowd checking in.",
+            multiplier: 1.6,
+            duration: 180000, // 3 minutes
+            probability: 0.02,
+            icon: "🌅"
+        }
+    ];
+    
+    // Initialize
+    initializeEventSystem();
+    updateViewerDisplay();
+    setInterval(updateViewerCount, UPDATE_INTERVAL);
+    
+    // Event system functions
+    function initializeEventSystem() {
+        console.log('🎪 Event system activated!');
+        
+        // Load event history from localStorage
+        const savedHistory = localStorage.getItem('viewerEventHistory');
+        if (savedHistory) {
+            eventHistory = JSON.parse(savedHistory);
+        }
+        
+        // Start checking for events
+        setInterval(checkForEvents, 10000); // Check every 10 seconds
+        
+        // Random event trigger
+        setTimeout(triggerRandomEvent, Math.random() * 30000 + 10000);
     }
     
-    animationInterval = setInterval(updateTitle, animationSpeed);
-  }
-  
-  // Mulai animasi
-  startTitleAnimation();
-  
-  // Opsional: Tambahkan efek ketika hover pada tab
-  let hoverTimeout;
-  document.addEventListener('mouseenter', function() {
-    clearTimeout(hoverTimeout);
-    document.title = originalTitle;
-  });
-  
-  document.addEventListener('mouseleave', function() {
-    hoverTimeout = setTimeout(() => {
-      if (isTabActive) {
-        updateTitle();
-      }
-    }, 1000);
-  });
-  
-  console.log('🔀 Random binary title activated!');
+    function checkForEvents() {
+        const now = Date.now();
+        
+        // Check if current event should end
+        if (currentEvent && now > eventEndTime) {
+            endCurrentEvent();
+        }
+        
+        // Small chance to trigger event
+        if (!currentEvent && Math.random() < 0.1) {
+            triggerRandomEvent();
+        }
+        
+        // Weekend special event check
+        const day = new Date().getDay();
+        const hour = new Date().getHours();
+        
+        if (day === 5 && hour >= 18 && !currentEvent) { // Friday evening
+            triggerWeekendEvent();
+        }
+        
+        if (day === 0 && hour >= 10 && hour <= 14 && !currentEvent) { // Sunday midday
+            triggerWeekendEvent();
+        }
+    }
+    
+    function triggerRandomEvent() {
+        if (currentEvent) return;
+        
+        const now = new Date();
+        const hour = now.getHours().toString().padStart(2, '0');
+        const day = now.getDay();
+        
+        // Filter events based on time and day
+        let availableEvents = events.filter(event => {
+            // Don't trigger quiet time during peak hours
+            if (event.name === "Quiet Time" && parseInt(hour) >= 9 && parseInt(hour) <= 17) {
+                return false;
+            }
+            
+            // Adjust probabilities based on time
+            let adjustedProbability = event.probability;
+            
+            // Increase certain events during specific times
+            if (event.name === "Early Bird Special" && parseInt(hour) >= 6 && parseInt(hour) <= 9) {
+                adjustedProbability *= 3;
+            }
+            
+            if (event.name === "Weekend Rush" && (day === 0 || day === 6)) {
+                adjustedProbability *= 2;
+            }
+            
+            return Math.random() < adjustedProbability;
+        });
+        
+        if (availableEvents.length > 0) {
+            const event = availableEvents[Math.floor(Math.random() * availableEvents.length)];
+            startEvent(event);
+        }
+    }
+    
+    function triggerWeekendEvent() {
+        const weekendEvents = events.filter(e => 
+            e.name === "Weekend Rush" || e.name === "Viral Social Media"
+        );
+        
+        if (weekendEvents.length > 0 && Math.random() < 0.3) {
+            const event = weekendEvents[Math.floor(Math.random() * weekendEvents.length)];
+            startEvent(event);
+        }
+    }
+    
+    function startEvent(event) {
+        currentEvent = event;
+        eventEndTime = Date.now() + event.duration;
+        eventMultiplier = event.multiplier;
+        eventName = event.name;
+        eventDescription = event.description;
+        
+        // Log event
+        eventHistory.push({
+            name: event.name,
+            timestamp: Date.now(),
+            multiplier: event.multiplier,
+            description: event.description
+        });
+        
+        // Keep only last 50 events
+        if (eventHistory.length > 50) {
+            eventHistory = eventHistory.slice(-50);
+        }
+        
+        // Save to localStorage
+        localStorage.setItem('viewerEventHistory', JSON.stringify(eventHistory));
+        
+        // Show event notification
+        showEventNotification(event);
+        
+        console.log(`🎪 Event started: ${event.name} (${event.multiplier}x)`);
+    }
+    
+    function endCurrentEvent() {
+        if (currentEvent) {
+            console.log(`🎪 Event ended: ${currentEvent.name}`);
+            
+            // Show event end notification
+            showEventEndNotification(currentEvent);
+            
+            currentEvent = null;
+            eventMultiplier = 1;
+            eventName = "";
+            eventDescription = "";
+            
+            // Schedule next event
+            setTimeout(triggerRandomEvent, Math.random() * 60000 + 30000);
+        }
+    }
+    
+    function showEventNotification(event) {
+        const notification = document.createElement('div');
+        notification.className = 'event-notification';
+        notification.style.cssText = `
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            z-index: 1000001;
+            animation: slideInRight 0.5s ease;
+            max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-left: 4px solid #00ffff;
+        `;
+        
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                <span style="font-size: 1.5rem;">${event.icon}</span>
+                <strong style="font-size: 1rem;">${event.name}</strong>
+            </div>
+            <div style="font-size: 0.85rem; opacity: 0.9;">${event.description}</div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 10px;">
+                    ⚡ ${event.multiplier}x Viewer Boost
+                </span>
+                <span style="font-size: 0.8rem; opacity: 0.8;">${formatDuration(event.duration)}</span>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Add animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.5s ease forwards';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 500);
+        }, 5000);
+        
+        // Click to dismiss
+        notification.addEventListener('click', () => {
+            notification.style.animation = 'slideOutRight 0.5s ease forwards';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 500);
+        });
+    }
+    
+    function showEventEndNotification(event) {
+        const notification = document.createElement('div');
+        notification.className = 'event-end-notification';
+        notification.style.cssText = `
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: var(--text);
+            padding: 12px 18px;
+            border-radius: 12px;
+            z-index: 1000000;
+            animation: slideInRight 0.5s ease;
+            max-width: 300px;
+            border: 1px solid var(--highlight);
+        `;
+        
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
+                <span style="font-size: 1.2rem;">📉</span>
+                <span style="font-size: 0.9rem; font-weight: 600;">${event.name} Ended</span>
+            </div>
+            <div style="font-size: 0.8rem; opacity: 0.8;">Viewers returning to normal levels</div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.5s ease forwards';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 500);
+        }, 3000);
+    }
+    
+    function updateViewerCount() {
+        const now = new Date();
+        const hour = now.getHours().toString().padStart(2, '0');
+        const day = now.getDay();
+        
+        // Base count from daily pattern
+        let newCount = dailyPattern[hour] || 25;
+        
+        // Apply weekly pattern
+        newCount *= weeklyPattern[day] || 1;
+        
+        // Apply event multiplier if active
+        if (currentEvent) {
+            newCount *= eventMultiplier;
+            
+            // Add some fluctuation during events
+            const fluctuation = (Math.random() - 0.5) * 20;
+            newCount += fluctuation;
+        }
+        
+        // Natural fluctuation (even without events)
+        const naturalFluctuation = (Math.random() - 0.5) * 15;
+        newCount += naturalFluctuation;
+        
+        // Gradual changes based on time
+        if (parseInt(hour) >= 22 || parseInt(hour) <= 5) {
+            // Night time gradual decline
+            newCount -= Math.random() * 5;
+        } else if (parseInt(hour) >= 11 && parseInt(hour) <= 13) {
+            // Lunch time boost
+            newCount += Math.random() * 10;
+        }
+        
+        // Ensure minimum and maximum
+        newCount = Math.max(5, Math.min(newCount, 150));
+        
+        // Smooth transition
+        viewerCount = Math.round(viewerCount * 0.7 + newCount * 0.3);
+        
+        updateViewerDisplay();
+        updateViewerStats();
+    }
+    
+    function updateViewerDisplay() {
+        // Update title tab
+        if (isTabActive) {
+            let titleText = `👁️ ${viewerCount} Online`;
+            if (currentEvent) {
+                titleText += ` ⚡ ${eventName}`;
+            }
+            document.title = `${titleText} | ${originalTitle}`;
+        }
+        
+        // Update viewer counters
+        updateAllViewerCounters(viewerCount);
+        
+        // Update viewer stats modal if open
+        updateViewerStatsModal();
+    }
+    
+    function updateAllViewerCounters(count) {
+        const formattedCount = count.toLocaleString();
+        
+        // Update in floating clock
+        const floatingClock = document.querySelector('.floating-clock');
+        if (floatingClock) {
+            let counter = floatingClock.querySelector('.live-viewer-counter');
+            if (!counter) {
+                counter = document.createElement('div');
+                counter.className = 'live-viewer-counter';
+                floatingClock.appendChild(counter);
+            }
+            
+            let counterHTML = `
+                <span class="live-dot"></span>
+                <strong>${formattedCount}</strong> online now`;
+            
+            if (currentEvent) {
+                counterHTML += `<br><small style="font-size:0.7rem; color:#00ffaa;">⚡ ${eventName}</small>`;
+            }
+            
+            counter.innerHTML = counterHTML;
+        }
+        
+        // Update dock counter
+        updateDockViewerCounter(count);
+    }
+    
+    function updateDockViewerCounter(count) {
+        const dockItems = document.querySelector('.dock-items');
+        if (dockItems) {
+            let viewerItem = dockItems.querySelector('.viewer-dock-item');
+            
+            if (!viewerItem) {
+                viewerItem = document.createElement('a');
+                viewerItem.className = 'dock-item viewer-dock-item';
+                viewerItem.href = '#';
+                viewerItem.innerHTML = `
+                    <span class="dock-icon" style="position: relative;">
+                        👁️
+                        <span class="live-indicator"></span>
+                    </span>
+                    <div class="viewer-count">${count}</div>
+                `;
+                
+                viewerItem.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showViewerStatsModal();
+                });
+                
+                dockItems.appendChild(viewerItem);
+            } else {
+                const countElement = viewerItem.querySelector('.viewer-count');
+                if (countElement) {
+                    countElement.textContent = count;
+                    
+                    // Add event indicator
+                    if (currentEvent) {
+                        countElement.style.background = '#ffaa00';
+                        countElement.style.color = '#000';
+                        countElement.style.animation = 'pulse 1s infinite';
+                    } else {
+                        countElement.style.background = 'var(--primary)';
+                        countElement.style.color = '#000';
+                        countElement.style.animation = 'none';
+                    }
+                }
+            }
+        }
+    }
+    
+    function updateViewerStats() {
+        const stats = {
+            current: viewerCount,
+            event: currentEvent ? eventName : 'None',
+            multiplier: eventMultiplier,
+            description: eventDescription,
+            time: new Date().toLocaleTimeString()
+        };
+        
+        localStorage.setItem('viewerStats', JSON.stringify(stats));
+    }
+    
+    function showViewerStatsModal() {
+        const modal = document.createElement('div');
+        modal.className = 'viewer-stats-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        `;
+        
+        const history = JSON.parse(localStorage.getItem('viewerEventHistory') || '[]');
+        const recentEvents = history.slice(-10).reverse();
+        
+        modal.innerHTML = `
+            <div class="viewer-stats-content" style="
+                background: var(--bg);
+                border: 2px solid var(--primary);
+                border-radius: 20px;
+                padding: 2rem;
+                max-width: 600px;
+                width: 90%;
+                position: relative;
+                box-shadow: 0 20px 60px rgba(0, 255, 255, 0.3);
+            ">
+                <button class="close-viewer-stats" style="
+                    position: absolute;
+                    top: 1rem;
+                    right: 1rem;
+                    background: none;
+                    border: none;
+                    color: var(--primary);
+                    font-size: 1.5rem;
+                    cursor: pointer;
+                ">&times;</button>
+                
+                <h3 style="color: var(--primary); margin-bottom: 1.5rem;">📊 Live Viewer Analytics</h3>
+                
+                <div class="stats-grid" style="
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 1rem;
+                    margin-bottom: 2rem;
+                ">
+                    <div class="stat-card" style="
+                        background: rgba(255, 255, 255, 0.05);
+                        border: 1px solid var(--highlight);
+                        border-radius: 12px;
+                        padding: 1rem;
+                        text-align: center;
+                    ">
+                        <div class="stat-number" style="
+                            font-size: 2rem;
+                            font-weight: bold;
+                            color: var(--primary);
+                        ">${viewerCount}</div>
+                        <div class="stat-label" style="
+                            color: var(--muted);
+                            font-size: 0.9rem;
+                        ">Current Viewers</div>
+                    </div>
+                    
+                    <div class="stat-card" style="
+                        background: rgba(255, 255, 255, 0.05);
+                        border: 1px solid var(--highlight);
+                        border-radius: 12px;
+                        padding: 1rem;
+                        text-align: center;
+                    ">
+                        <div class="stat-number" style="
+                            font-size: 2rem;
+                            font-weight: bold;
+                            color: ${currentEvent ? '#ffaa00' : '#00ffaa'};
+                        ">${currentEvent ? eventName : 'Normal'}</div>
+                        <div class="stat-label" style="
+                            color: var(--muted);
+                            font-size: 0.9rem;
+                        ">Current Status</div>
+                    </div>
+                    
+                    <div class="stat-card" style="
+                        background: rgba(255, 255, 255, 0.05);
+                        border: 1px solid var(--highlight);
+                        border-radius: 12px;
+                        padding: 1rem;
+                        text-align: center;
+                    ">
+                        <div class="stat-number" style="
+                            font-size: 2rem;
+                            font-weight: bold;
+                            color: #00ffff;
+                        ">${eventMultiplier}x</div>
+                        <div class="stat-label" style="
+                            color: var(--muted);
+                            font-size: 0.9rem;
+                        ">Event Multiplier</div>
+                    </div>
+                    
+                    <div class="stat-card" style="
+                        background: rgba(255, 255, 255, 0.05);
+                        border: 1px solid var(--highlight);
+                        border-radius: 12px;
+                        padding: 1rem;
+                        text-align: center;
+                    ">
+                        <div class="stat-number" style="
+                            font-size: 2rem;
+                            font-weight: bold;
+                            color: #ff6b6b;
+                        ">${history.length}</div>
+                        <div class="stat-label" style="
+                            color: var(--muted);
+                            font-size: 0.9rem;
+                        ">Total Events</div>
+                    </div>
+                </div>
+                
+                <div class="current-event" style="
+                    background: ${currentEvent ? 'rgba(255, 170, 0, 0.1)' : 'rgba(255, 255, 255, 0.03)'};
+                    border: 1px solid ${currentEvent ? '#ffaa00' : 'var(--highlight)'};
+                    border-radius: 12px;
+                    padding: 1rem;
+                    margin-bottom: 1.5rem;
+                ">
+                    <h4 style="color: ${currentEvent ? '#ffaa00' : 'var(--text)'}; margin-bottom: 0.5rem;">
+                        ${currentEvent ? '⚡ Active Event' : '📊 Normal Traffic'}
+                    </h4>
+                    <p style="color: var(--text); font-size: 0.9rem;">
+                        ${currentEvent ? eventDescription : 'Standard viewing traffic with natural fluctuations.'}
+                    </p>
+                    ${currentEvent ? `
+                        <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--muted);">
+                            Ends in: ${formatDuration(eventEndTime - Date.now())}
+                        </div>
+                    ` : ''}
+                </div>
+                
+                <div class="recent-events" style="
+                    background: rgba(255, 255, 255, 0.03);
+                    border-radius: 12px;
+                    padding: 1rem;
+                    max-height: 200px;
+                    overflow-y: auto;
+                ">
+                    <h4 style="color: var(--text); margin-bottom: 1rem;">📅 Recent Events</h4>
+                    ${recentEvents.length > 0 ? recentEvents.map(event => `
+                        <div style="
+                            padding: 0.5rem;
+                            border-bottom: 1px solid rgba(255,255,255,0.1);
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                        ">
+                            <div>
+                                <strong style="color: var(--primary); font-size: 0.9rem;">${event.name}</strong>
+                                <div style="font-size: 0.8rem; color: var(--muted);">${event.description}</div>
+                                <div style="font-size: 0.7rem; color: var(--muted);">
+                                    ${new Date(event.timestamp).toLocaleTimeString()}
+                                </div>
+                            </div>
+                            <span style="
+                                background: rgba(0, 255, 255, 0.1);
+                                color: var(--primary);
+                                padding: 0.2rem 0.5rem;
+                                border-radius: 10px;
+                                font-size: 0.8rem;
+                            ">${event.multiplier}x</span>
+                        </div>
+                    `).join('') : '<div style="text-align: center; color: var(--muted); padding: 1rem;">No recent events</div>'}
+                </div>
+                
+                <div style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--muted); text-align: center;">
+                    ⚡ Events trigger randomly based on time, day, and user activity patterns
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Close button
+        modal.querySelector('.close-viewer-stats').addEventListener('click', () => {
+            modal.remove();
+        });
+        
+        // Close on background click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+    }
+    
+    function updateViewerStatsModal() {
+        const modal = document.querySelector('.viewer-stats-modal');
+        if (modal) {
+            // Update current count
+            const currentCountElement = modal.querySelector('.stat-number');
+            if (currentCountElement) {
+                currentCountElement.textContent = viewerCount;
+            }
+            
+            // Update event status
+            const eventCard = modal.querySelector('.current-event');
+            if (eventCard) {
+                eventCard.style.background = currentEvent ? 'rgba(255, 170, 0, 0.1)' : 'rgba(255, 255, 255, 0.03)';
+                eventCard.style.borderColor = currentEvent ? '#ffaa00' : 'var(--highlight)';
+                
+                const eventTitle = eventCard.querySelector('h4');
+                const eventDesc = eventCard.querySelector('p');
+                const eventTimer = eventCard.querySelector('div');
+                
+                if (eventTitle) {
+                    eventTitle.textContent = currentEvent ? '⚡ Active Event' : '📊 Normal Traffic';
+                    eventTitle.style.color = currentEvent ? '#ffaa00' : 'var(--text)';
+                }
+                
+                if (eventDesc) {
+                    eventDesc.textContent = currentEvent ? eventDescription : 'Standard viewing traffic with natural fluctuations.';
+                }
+                
+                if (currentEvent && eventTimer) {
+                    eventTimer.innerHTML = `Ends in: ${formatDuration(eventEndTime - Date.now())}`;
+                }
+            }
+        }
+    }
+    
+    function formatDuration(ms) {
+        const minutes = Math.floor(ms / 60000);
+        const seconds = Math.floor((ms % 60000) / 1000);
+        return `${minutes}m ${seconds}s`;
+    }
+    
+    // Tab visibility
+    document.addEventListener('visibilitychange', function() {
+        isTabActive = !document.hidden;
+        
+        if (isTabActive) {
+            updateViewerDisplay();
+        } else {
+            document.title = originalTitle;
+        }
+    });
+    
+    // Add CSS for animations
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .viewer-dock-item:hover {
+            transform: translateY(-10px) scale(1.1);
+            background: rgba(0, 255, 255, 0.2);
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #00ff00;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .viewer-stats-content {
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    console.log('🎪 Enhanced Real-Time Viewer with Events System Activated!');
 }
+// Atau langsung panggil setelah DOMContentLoaded:
+document.addEventListener('DOMContentLoaded', function() {
+    // Ganti viewer system lama dengan yang baru
+    setTimeout(() => {
+        initializeAdvancedRealTimeViewerWithEvents();
+    }, 1000);
+});
 
 // =================== INITIALIZATION SETUP ===================
 document.addEventListener('DOMContentLoaded', function() {
@@ -10589,7 +11494,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Core UI (High Priority)
   initializer.add('initializeAIToggle', 10);
   initializer.add('initializeCursor', 10);
-  initializer.add('initializeRandomTitle', 8);
+  initializer.add('initializeAdvancedRealTimeViewerWithEvents', 9);
   
   // Performance & UX (High Priority)
   initializer.add('initializeSmoothScroll', 9);
@@ -11560,6 +12465,149 @@ function positionPopupSmartly(popup, element) {
     popup.style.top = (window.innerHeight - popupRect.height - 20) + 'px';
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// === DYNAMIC WHITE DOT COMPASS — Minimalis + Super Akurat ===
+const KEY = "asri_compass_2025";
+const ID = Date.now() + "_" + Math.random().toString(36).substr(2,9);
+
+// Broadcast posisi
+function broadcast() {
+    localStorage.setItem(KEY + "_" + ID, JSON.stringify({
+        id: ID,
+        x: window.screenX,
+        y: window.screenY,
+        w: window.outerWidth,
+        h: window.outerHeight,
+        t: Date.now()
+    }));
+}
+
+// Cari window lain
+function getOthers() {
+    const list = [];
+    const now = Date.now();
+    for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k?.startsWith(KEY + "_") && !k.includes(ID)) {
+            try {
+                const d = JSON.parse(localStorage.getItem(k));
+                if (now - d.t < 6000) list.push(d);
+            } catch(e) {}
+        }
+    }
+    return list;
+}
+
+// Update dot dinamis
+function updateCompass() {
+    // Hapus dot lama
+    document.querySelectorAll('.compass-dot').forEach(d => d.remove());
+
+    const others = getOthers();
+    if (others.length === 0) return;
+
+    // Cari yang paling dekat
+    let closest = null;
+    let minDist = Infinity;
+
+    others.forEach(o => {
+        const myCenterX = window.screenX + window.outerWidth / 2;
+        const myCenterY = window.screenY + window.outerHeight / 2;
+        const otherCenterX = o.x + o.w / 2;
+        const otherCenterY = o.y + o.h / 2;
+
+        const dx = otherCenterX - myCenterX;
+        const dy = otherCenterY - myCenterY;
+        const dist = Math.hypot(dx, dy);
+
+        if (dist < minDist) {
+            minDist = dist;
+            closest = { dx, dy, dist };
+        }
+    });
+
+    if (!closest || closest.dist > 1200) return;
+
+    // Hitung posisi dot di tepi layar (dinamis!)
+    const edgeDistance = 30; // jarak dari tepi (px)
+    let dotX, dotY;
+
+    // Normalisasi arah
+    const angle = Math.atan2(closest.dy, closest.dx);
+    const sin = Math.sin(angle);
+    const cos = Math.cos(angle);
+
+    // Tentukan posisi di tepi layar
+    if (Math.abs(cos) > Math.abs(sin)) {
+        // lebih horizontal
+        if (cos > 0) {
+            // kanan
+            dotX = window.innerWidth - edgeDistance;
+            dotY = window.innerHeight / 2 + closest.dy * (window.innerHeight / 2 - edgeDistance) / Math.abs(closest.dx || 1);
+        } else {
+            // kiri
+            dotX = edgeDistance;
+            dotY = window.innerHeight / 2 + closest.dy * (window.innerHeight / 2 - edgeDistance) / Math.abs(closest.dx || 1);
+        }
+    } else {
+        // lebih vertikal
+        if (sin > 0) {
+            // bawah
+            dotY = window.innerHeight - edgeDistance;
+            dotX = window.innerWidth / 2 + closest.dx * (window.innerWidth / 2 - edgeDistance) / Math.abs(closest.dy || 1);
+        } else {
+            // atas
+            dotY = edgeDistance;
+            dotX = window.innerWidth / 2 + closest.dx * (window.innerWidth / 2 - edgeDistance) / Math.abs(closest.dy || 1);
+        }
+    }
+
+    // Batasin biar nggak keluar layar
+    dotX = Math.max(edgeDistance, Math.min(window.innerWidth - edgeDistance, dotX));
+    dotY = Math.max(edgeDistance, Math.min(window.innerHeight - edgeDistance, dotY));
+
+    // Intensitas berdasarkan jarak
+    const intensity = Math.max(0.4, (1200 - closest.dist) / 1200);
+
+    // Buat dot
+    const dot = document.createElement('div');
+    dot.className = 'compass-dot active';
+    dot.style.left = dotX + 'px';
+    dot.style.top = dotY + 'px';
+    dot.style.transform = `translate(-50%, -50%) scale(${0.8 + intensity})`;
+    dot.style.boxShadow = `0 0 ${20 + 20*intensity}px ${4 + 8*intensity}px #ffffff`;
+
+    document.body.appendChild(dot);
+}
+
+// Update tiap 150ms (super smooth & ringan)
+setInterval(() => {
+    broadcast();
+    updateCompass();
+}, 150);
+
+window.addEventListener('load', () => {
+    broadcast();
+    updateCompass();
+});
+
+window.addEventListener('beforeunload', () => {
+    localStorage.removeItem(KEY + "_" + ID);
+});
+
+
 
 // ============== WINDOW RESIZE HANDLER ===================
 window.addEventListener('resize', () => {
