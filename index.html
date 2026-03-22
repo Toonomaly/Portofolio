@@ -628,540 +628,161 @@ section {
 }
 
 /* =================== PROJECTS SECTION =================== */
-#projects {
-  padding: 4rem 1rem;
-  background-color: rgba(255, 255, 255, 0.02);
+.masonry-container {
+  max-width: 1600px;
+  margin: 0 auto;
   position: relative;
+  padding: 0 20px;
 }
 
-.projects-container {
-  max-width: 1200px;
+.list {
+  position: relative;
+  width: 100%;
+  /* height diatur otomatis oleh JS */
   margin: 0 auto;
 }
 
-.project-filters {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 3rem;
-  flex-wrap: wrap;
-}
-
-.filter-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--highlight);
-  color: var(--text);
-  padding: 0.8rem 1.5rem;
-  border-radius: 25px;
+.item-wrapper {
+  position: absolute;
+  padding: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 600;
+  top: 0;
+  left: 0;
+  will-change: left, top, width, height, transform;
+  transition: 
+    left 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+    top 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+    width 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+    height 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+    opacity 0.8s ease-out,
+    filter 0.8s ease-out;
+  z-index: 1;
+}
+
+.item-wrapper:hover {
+  transform: scale(0.95);
+  z-index: 10;
+}
+
+.item-img {
   position: relative;
-  z-index: 10; /* Ensure buttons are clickable */
-}
-
-.filter-btn:hover,
-.filter-btn.active {
-  background: var(--primary);
-  color: #000;
-  border-color: var(--primary);
-  transform: translateY(-2px);
-}
-
-.projects-interactive-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-}
-
-.featured-project {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--highlight);
-  border-radius: 20px;
-  padding: 2rem;
-  position: relative;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.4);
   overflow: hidden;
+  transition: box-shadow 0.3s ease;
 }
 
-.featured-project::before {
+.item-wrapper:hover .item-img {
+  box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.5);
+}
+
+.item-img.blur {
+  filter: blur(12px);
+}
+
+.item-img::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--primary), transparent);
-}
-
-.project-badge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: var(--primary);
-  color: #000;
-  padding: 0.3rem 1rem;
-  border-radius: 15px;
-  font-size: 0.8rem;
-  font-weight: bold;
-}
-
-.featured-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.project-stats {
-  display: flex;
-  gap: 2rem;
-  margin: 1.5rem 0;
-}
-
-.stat {
-  text-align: center;
-}
-
-.stat-number {
-  display: block;
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: var(--primary);
-}
-
-.stat-label {
-  font-size: 0.8rem;
-  color: var(--muted);
-}
-
-.featured-preview {
-  position: relative;
-}
-
-.preview-container {
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-/* =================== VIDEO STYLING =================== */
-.preview-video {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 12px;
-  transition: transform 0.3s ease;
-}
-
-.preview-container:hover .preview-video {
-  transform: scale(1.05);
-}
-
-.video-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent 70%,
-    rgba(0, 0, 0, 0.7) 100%
-  );
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-start;
-  padding: 1rem;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.15), rgba(255, 100, 150, 0.15));
   opacity: 0;
   transition: opacity 0.3s ease;
-  border-radius: 12px;
-}
-
-.preview-container:hover .video-overlay {
-  opacity: 1;
-}
-
-.play-indicator {
-  background: rgba(0, 255, 255, 0.9);
-  color: #000;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* Fallback image styling */
-.preview-image {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.preview-container:hover .preview-image {
-  transform: scale(1.05);
-}
-
-.play-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.preview-container:hover .play-overlay {
-  opacity: 1;
-}
-
-.play-button {
-  width: 60px;
-  height: 60px;
-  background: var(--primary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  color: #000;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.play-button:hover {
-  transform: scale(1.1);
-}
-
-/* Manual play button for autoplay restrictions */
-.manual-play-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: var(--primary);
-  color: #000;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 25px;
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 5;
-  transition: all 0.3s ease;
-}
-
-.manual-play-button:hover {
-  background: #fff;
-  transform: translate(-50%, -50%) scale(1.1);
-}
-
-/* =================== PROJECT CARD HOVER EFFECTS =================== */
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.project-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--highlight);
   border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  position: relative;
-  height: 400px;
-  cursor: pointer;
+  pointer-events: none;
 }
 
-.project-card:hover {
-  transform: scale(1.02);
-  border-color: var(--primary);
-  box-shadow: 0 8px 25px rgba(0, 255, 255, 0.15);
-}
-
-.project-card:hover .project-image {
-  transform: scale(1.05);
-}
-
-/* Project image container */
-.project-image-container {
-  position: relative;
-  overflow: hidden;
-  height: 200px;
-}
-
-.project-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.project-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.project-card:hover .project-overlay {
+.item-wrapper:hover .item-img::after {
   opacity: 1;
 }
 
-.view-project-btn {
-  background: var(--primary);
-  color: #000;
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 25px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
+/* Responsive masonry */
+@media (max-width: 768px) {
+  .masonry-container {
+    padding: 0 10px;
+  }
 }
-
-.view-project-btn:hover {
-  background: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
-}
-
-.project-content {
-  padding: 1.5rem;
-}
-
-.project-title {
-  color: var(--primary);
-  font-size: 1.3rem;
-  margin-bottom: 0.8rem;
-  font-weight: bold;
-}
-
-.project-description {
-  color: var(--muted);
-  line-height: 1.6;
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
-}
-
-.project-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.project-tag {
-  background: rgba(0, 255, 255, 0.1);
-  color: var(--primary);
-  padding: 0.3rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  border: 1px solid rgba(0, 255, 255, 0.3);
-}
-
-.project-links {
-  display: flex;
-  gap: 1rem;
-}
-
-.project-link {
-  background: var(--primary);
-  color: #000;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+/* =================== FEATURED VIDEO DEMO =================== */
+.featured-project {
   position: relative;
-  z-index: 10; /* Ensure links are clickable */
-}
-
-.project-link:hover {
-  background: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
-}
-
-.project-link.secondary {
-  background: transparent;
-  color: var(--primary);
-  border: 1px solid var(--primary);
-}
-
-.project-link.secondary:hover {
-  background: rgba(0, 255, 255, 0.1);
-}
-
-.link-icon {
-  margin-left: 0.5rem;
-}
-
-/* Animation for filter */
-.project-card.hidden {
-  opacity: 0;
-  transform: scale(0.8);
-  display: none;
-}
-
-/* =================== PROJECT MODAL =================== */
-.project-modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-  z-index: 20000; /* Lower than cursor */
-  backdrop-filter: blur(10px);
-}
-
-.modal-content {
-  position: relative;
-  background: var(--bg);
-  margin: 2% auto;
-  padding: 2rem;
-  width: 90%;
-  max-width: 1000px;
-  max-height: 90vh;
+  max-width: 1600px;
+  margin: 0 auto 60px auto;
   border-radius: 20px;
-  border: 1px solid var(--primary);
-  box-shadow: 0 20px 60px rgba(0, 255, 255, 0.3);
-  overflow-y: auto;
-  z-index: 20001;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  background: #000;
 }
 
-.close-modal {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  color: var(--primary);
-  font-size: 2rem;
-  cursor: pointer;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  z-index: 20002;
-}
-
-.close-modal:hover {
-  background: rgba(0, 255, 255, 0.1);
-  transform: scale(1.1);
-}
-
-.modal-header {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  margin-bottom: 2rem;
-  align-items: start;
-}
-
-.modal-image {
+.featured-project video {
   width: 100%;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.modal-info {
-  padding: 1rem 0;
-}
-
-.modal-title {
-  color: var(--primary);
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.modal-description {
-  color: var(--text);
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-  font-size: 1.1rem;
-}
-
-.modal-stats {
-  display: flex;
-  gap: 2rem;
-  margin-bottom: 1.5rem;
-}
-
-.modal-stat {
-  text-align: center;
-}
-
-.modal-stat-number {
+  height: auto;
   display: block;
-  font-size: 1.5rem;
+  aspect-ratio: 16 / 9;
+}
+
+.featured-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(15,15,15,0.95));
+  padding: 50px 40px 40px;
+  color: white;
+  text-align: left;
+}
+
+.featured-badge {
+  display: inline-block;
+  background: var(--primary);
+  color: #000;
+  font-size: 0.85rem;
   font-weight: bold;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+.featured-overlay h3 {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
   color: var(--primary);
 }
 
-.modal-stat-label {
-  font-size: 0.8rem;
-  color: var(--muted);
+.featured-overlay p {
+  font-size: 1.05rem;
+  color: #ddd;
+  margin-bottom: 20px;
 }
 
-.modal-features {
-  margin: 2rem 0;
+.watch-full-btn {
+  background: var(--primary);
+  color: #000;
+  border: none;
+  padding: 14px 32px;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
 }
 
-.modal-features h4 {
-  color: var(--primary);
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
+.watch-full-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
 }
 
-.modal-features-list {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 0.5rem;
-}
-
-.modal-features-list li {
-  color: var(--text);
-  padding: 0.5rem;
-  border-left: 3px solid var(--primary);
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.modal-footer {
-  display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
-  flex-wrap: wrap;
+/* Responsive */
+@media (max-width: 768px) {
+  .featured-overlay {
+    padding: 30px 20px 25px;
+  }
+  .featured-overlay h3 {
+    font-size: 1.5rem;
+  }
 }
 
 /* =================== SKILLS SECTION =================== */
@@ -5096,7 +4717,8 @@ footer {
     <!-- Image Section -->
     <div class="about-image">
       <img 
-        src="https://github.com/Toonomaly/Portofolio/blob/main/Toonomaly.jpg?raw=true" 
+        src="https://github.com/Toonomaly/Portofolio/raw/main/Toonomaly.png
+" 
         alt="Asri - 3D Animator & Web Developer" 
         class="about-photo"
         onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&h=300&q=80'"
@@ -5172,210 +4794,39 @@ footer {
 
 <!-- Projects Section -->
 <section id="projects" class="lazy-section">
-  <h2 class="section-title">Featured Projects</h2>
-  <div class="projects-container">
-    
-    <!-- Project Filter -->
-    <div class="project-filters">
-      <button class="filter-btn active" data-filter="all">All Projects</button>
-      <button class="filter-btn" data-filter="animation">3D Animation</button>
-      <button class="filter-btn" data-filter="web">Web Development</button>
-      <button class="filter-btn" data-filter="motion">Motion Graphics</button>
-    </div>
+  <h2 class="section-title">My Projects</h2>
 
-    <!-- Interactive Project Grid -->
-    <div class="projects-interactive-grid">
-      
-      <!-- Main Featured Project -->
-      <div class="featured-project" data-category="animation">
-        <div class="featured-content">
-          <div class="project-badge">Featured</div>
-          <h3 class="project-title">Kumi the Turtle - Full 3D Series</h3>
-          <p class="project-description">
-            Complete 3D animated series featuring my original character Kumi. 
-            Includes character design, rigging, and episode production with
-            advanced lighting and texturing techniques.
-          </p>
-          <div class="project-stats">
-            <div class="stat">
-              <span class="stat-number">12</span>
-              <span class="stat-label">Episodes</span>
-            </div>
-            <div class="stat">
-              <span class="stat-number">6</span>
-              <span class="stat-label">Months</span>
-            </div>
-            <div class="stat">
-              <span class="stat-number">95%</span>
-              <span class="stat-label">Completion</span>
-            </div>
-          </div>
-          <div class="project-links">
-            <a href="https://www.youtube.com/@Toonomaly" class="project-link" target="_blank">
-              <span>Watch Trailer</span>
-              <span class="link-icon">▶️</span>
-            </a>
-            <a href="https://drive.google.com" class="project-link secondary" target="_blank">
-              <span>Behind Scenes</span>
-              <span class="link-icon">🎬</span>
-            </a>
-          </div>
-        </div>
-        <div class="featured-preview">
-          <div class="preview-container">
-            <video class="preview-video" autoplay loop muted playsinline>
-              <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
-            <div class="video-overlay">
-              <div class="play-indicator">🔊 Autoplay</div>
-            </div>
-          </div>
-        </div>
-      </div>
+  <!-- =================== FEATURED VIDEO DEMO (Auto Play) =================== -->
+  <div class="featured-project">
+    <video 
+      id="featured-video"
+      autoplay 
+      muted 
+      loop 
+      playsinline 
+      poster="https://picsum.photos/id/1015/1600/900">
+      <source src="https://cdn.pixabay.com/video/2016/05/22/3260-167695252_large.mp4" type="video/mp4">
+      <!-- Fallback -->
+      Your browser does not support video.
+    </video>
 
-      <!-- Project Grid -->
-      <div class="projects-grid">
-        
-        <!-- Project 1 -->
-        <div class="project-card" data-category="web" data-project="1">
-          <div class="project-image-container">
-            <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
-                 alt="Portfolio Website" class="project-image">
-            <div class="project-overlay">
-              <button class="view-project-btn">View Project</button>
-            </div>
-          </div>
-          <div class="project-content">
-            <h3 class="project-title">Interactive Portfolio</h3>
-            <p class="project-description">
-              Responsive portfolio with custom animations and particle effects
-            </p>
-            <div class="project-tags">
-              <span class="project-tag">HTML/CSS</span>
-              <span class="project-tag">JavaScript</span>
-              <span class="project-tag">UI/UX</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Project 2 -->
-        <div class="project-card" data-category="motion" data-project="2">
-          <div class="project-image-container">
-            <img src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
-                 alt="Motion Graphics" class="project-image">
-            <div class="project-overlay">
-              <button class="view-project-btn">View Project</button>
-            </div>
-          </div>
-          <div class="project-content">
-            <h3 class="project-title">Motion Graphics Showreel</h3>
-            <p class="project-description">
-              Dynamic animations and visual effects showcase
-            </p>
-            <div class="project-tags">
-              <span class="project-tag">After Effects</span>
-              <span class="project-tag">Motion Graphics</span>
-              <span class="project-tag">VFX</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Project 3 -->
-        <div class="project-card" data-category="animation" data-project="3">
-          <div class="project-image-container">
-            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
-                 alt="Character Design" class="project-image">
-            <div class="project-overlay">
-              <button class="view-project-btn">View Project</button>
-            </div>
-          </div>
-          <div class="project-content">
-            <h3 class="project-title">Character Design Pack</h3>
-            <p class="project-description">
-              Complete character design and modeling package
-            </p>
-            <div class="project-tags">
-              <span class="project-tag">Blender</span>
-              <span class="project-tag">Character Design</span>
-              <span class="project-tag">3D Modeling</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Project 4 -->
-        <div class="project-card" data-category="web" data-project="4">
-          <div class="project-image-container">
-            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
-                 alt="E-Commerce Website" class="project-image">
-            <div class="project-overlay">
-              <button class="view-project-btn">View Project</button>
-            </div>
-          </div>
-          <div class="project-content">
-            <h3 class="project-title">Modern E-Commerce Platform</h3>
-            <p class="project-description">
-              Full-stack e-commerce solution with payment integration and admin dashboard
-            </p>
-            <div class="project-tags">
-              <span class="project-tag">React</span>
-              <span class="project-tag">Node.js</span>
-              <span class="project-tag">MongoDB</span>
-              <span class="project-tag">Stripe API</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Project 5 -->
-        <div class="project-card" data-category="animation" data-project="5">
-          <div class="project-image-container">
-            <img src="https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
-                 alt="3D Environment" class="project-image">
-            <div class="project-overlay">
-              <button class="view-project-btn">View Project</button>
-            </div>
-          </div>
-          <div class="project-content">
-            <h3 class="project-title">Fantasy 3D Environment</h3>
-            <p class="project-description">
-              Immersive fantasy world with detailed landscapes and atmospheric effects
-            </p>
-            <div class="project-tags">
-              <span class="project-tag">Blender</span>
-              <span class="project-tag">Substance Painter</span>
-              <span class="project-tag">Unreal Engine</span>
-              <span class="project-tag">Environment Design</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Project 6 -->
-        <div class="project-card" data-category="motion" data-project="6">
-          <div class="project-image-container">
-            <img src="https://images.unsplash.com/photo-1611224885990-ab7363d7f2a9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80" 
-                 alt="Product Animation" class="project-image">
-            <div class="project-overlay">
-              <button class="view-project-btn">View Project</button>
-            </div>
-          </div>
-          <div class="project-content">
-            <h3 class="project-title">Product Explainer Animation</h3>
-            <p class="project-description">
-              Engaging product demonstration with 3D animation and motion graphics
-            </p>
-            <div class="project-tags">
-              <span class="project-tag">Cinema 4D</span>
-              <span class="project-tag">After Effects</span>
-              <span class="project-tag">Motion Graphics</span>
-              <span class="project-tag">Product Visualization</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
+    <!-- Overlay info -->
+    <div class="featured-overlay">
+      <div class="featured-badge">FEATURED</div>
+      <h3>Kumi the Turtle — 3D Animation Demo Reel</h3>
+      <p>Character Animation • Rigging • 2025</p>
+      <button onclick="window.open('https://www.youtube.com/@Toonomaly', '_blank')" class="watch-full-btn">
+        ▶ Watch Full Reel
+      </button>
     </div>
   </div>
+  
+  <div class="masonry-container">
+    <div id="masonry" class="list"></div>
+  </div>
 </section>
+
+
 
 <!-- Skills Section -->
 <section id="skills" class="section lazy-section">
@@ -6340,59 +5791,6 @@ footer {
   </div>
 </footer>
 
-<!-- Project Modal -->
-<div id="projectModal" class="project-modal">
-  <div class="modal-content">
-    <button class="close-modal">&times;</button>
-    
-    <div class="modal-header">
-      <div>
-        <img id="modalImage" src="" alt="" class="modal-image">
-      </div>
-      <div class="modal-info">
-        <h2 id="modalTitle" class="modal-title"></h2>
-        <p id="modalDescription" class="modal-description"></p>
-        
-        <div class="modal-stats">
-          <div class="modal-stat">
-            <span id="modalStat1" class="modal-stat-number">0</span>
-            <span class="modal-stat-label" id="modalLabel1">Projects</span>
-          </div>
-          <div class="modal-stat">
-            <span id="modalStat2" class="modal-stat-number">0</span>
-            <span class="modal-stat-label" id="modalLabel2">Months</span>
-          </div>
-          <div class="modal-stat">
-            <span id="modalStat3" class="modal-stat-number">0%</span>
-            <span class="modal-stat-label" id="modalLabel3">Completion</span>
-          </div>
-        </div>
-        
-        <div class="project-tags" id="modalTags"></div>
-      </div>
-    </div>
-    
-    <div class="modal-features">
-      <h4>Project Features</h4>
-      <ul class="modal-features-list" id="modalFeatures"></ul>
-    </div>
-    
-    <div class="modal-footer">
-      <a href="#" id="modalLiveLink" class="project-link" target="_blank">
-        <span>Live Demo</span>
-        <span class="link-icon">🌐</span>
-      </a>
-      <a href="#" id="modalGithubLink" class="project-link secondary" target="_blank">
-        <span>GitHub</span>
-        <span class="link-icon">💻</span>
-      </a>
-      <a href="#" id="modalDetailsLink" class="project-link secondary" target="_blank">
-        <span>View Details</span>
-        <span class="link-icon">📖</span>
-      </a>
-    </div>
-  </div>
-</div>
 
 <!-- Background Particle Canvas -->
 <canvas id="particle-canvas"></canvas>
@@ -6449,6 +5847,158 @@ function initializeTypingEffect() {
   // Start the typing effect
   setTimeout(type, 1000);
 }
+
+// =================== MASONRY GALLERY ===================
+const masonryItemsData = [
+  { id: "1", img: "https://picsum.photos/id/1015/800/1200", url: "https://example.com/project1", aspectRatio: 1200/800 },
+  { id: "2", img: "https://picsum.photos/id/201/900/600",  url: "https://example.com/project2", aspectRatio: 600/900 },
+  { id: "3", img: "https://picsum.photos/id/30/600/900",   url: "https://example.com/project3", aspectRatio: 900/600 },
+  { id: "4", img: "https://picsum.photos/id/1016/800/500", url: "https://example.com/project4", aspectRatio: 500/800 },
+  { id: "5", img: "https://picsum.photos/id/133/700/1000", url: "https://example.com/project5", aspectRatio: 1000/700 },
+  { id: "6", img: "https://picsum.photos/id/160/600/800",  url: "https://example.com/project6", aspectRatio: 800/600 },
+  { id: "7", img: "https://picsum.photos/id/201/1200/700", url: "https://example.com/project7", aspectRatio: 700/1200 },
+  { id: "8", img: "https://picsum.photos/id/251/500/900",  url: "https://example.com/project8", aspectRatio: 900/500 },
+  { id: "9", img: "https://picsum.photos/id/29/800/600",   url: "https://example.com/project9", aspectRatio: 600/800 },
+  { id: "10", img: "https://picsum.photos/id/318/900/1200",url: "https://example.com/project10", aspectRatio: 1200/900 },
+  { id: "11", img: "https://picsum.photos/id/342/700/500", url: "https://example.com/project11", aspectRatio: 500/700 },
+  { id: "12", img: "https://picsum.photos/id/366/600/1100",url: "https://example.com/project12", aspectRatio: 1100/600 }
+];
+
+let masonryItems = [];
+let isFirstLoadMasonry = true;
+let resizeTimeoutMasonry = null;
+
+async function preloadImagesMasonry() {
+  const promises = masonryItemsData.map(item => {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.src = item.img;
+      img.onload = img.onerror = () => resolve();
+    });
+  });
+  await Promise.all(promises);
+}
+
+function createMasonryItems() {
+  const container = document.getElementById('masonry');
+  if (!container) return;
+  
+  container.innerHTML = '';
+  masonryItems = masonryItemsData.map(data => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'item-wrapper';
+    wrapper.innerHTML = `
+      <div class="item-img" style="background-image: url('${data.img}')"></div>
+    `;
+    wrapper.onclick = () => window.open(data.url, '_blank', 'noopener,noreferrer');
+    container.appendChild(wrapper);
+    return { ...data, el: wrapper };
+  });
+}
+
+function getColumnsMasonry() {
+  const width = document.getElementById('masonry').clientWidth;
+  if (width >= 1500) return 5;
+  if (width >= 1000) return 4;
+  if (width >= 600)  return 3;
+  if (width >= 400)  return 2;
+  return 1;
+}
+
+function getInitialPositionMasonry(finalX, finalY) {
+  return { x: finalX, y: window.innerHeight + 300 };
+}
+
+function layoutMasonry() {
+  const container = document.getElementById('masonry');
+  if (!container || !container.clientWidth) return;
+
+  const columns = getColumnsMasonry();
+  const colWidth = container.clientWidth / columns;
+  const colHeights = new Array(columns).fill(0);
+  const grid = [];
+
+  masonryItems.forEach(item => {
+    const shortestCol = colHeights.indexOf(Math.min(...colHeights));
+    const x = shortestCol * colWidth;
+    const y = colHeights[shortestCol];
+    const h = item.aspectRatio * colWidth;
+
+    grid.push({ item, x, y, w: colWidth, h });
+    colHeights[shortestCol] += h;
+  });
+
+  const maxHeight = Math.max(...colHeights);
+  container.style.height = `${maxHeight}px`;
+
+  if (isFirstLoadMasonry) {
+    grid.forEach((g, index) => {
+      const el = g.item.el;
+      const init = getInitialPositionMasonry(g.x, g.y);
+      el.style.transition = 'none';
+      el.style.left = `${init.x}px`;
+      el.style.top = `${init.y}px`;
+      el.style.width = `${g.w}px`;
+      el.style.height = `${g.h}px`;
+      el.style.opacity = '0';
+      el.querySelector('.item-img').classList.add('blur');
+    });
+
+    void container.offsetHeight;
+
+    grid.forEach((g, index) => {
+      const el = g.item.el;
+      const img = el.querySelector('.item-img');
+      el.style.transition = `
+        left 0.85s cubic-bezier(0.23, 1, 0.32, 1),
+        top 0.85s cubic-bezier(0.23, 1, 0.32, 1),
+        width 0.85s cubic-bezier(0.23, 1, 0.32, 1),
+        height 0.85s cubic-bezier(0.23, 1, 0.32, 1),
+        opacity 0.85s ease-out,
+        filter 0.85s ease-out
+      `;
+      el.style.transitionDelay = `${index * 0.04}s`;
+      el.style.left = `${g.x}px`;
+      el.style.top = `${g.y}px`;
+      el.style.width = `${g.w}px`;
+      el.style.height = `${g.h}px`;
+      el.style.opacity = '1';
+      img.classList.remove('blur');
+    });
+    isFirstLoadMasonry = false;
+  } else {
+    grid.forEach(g => {
+      const el = g.item.el;
+      el.style.transitionDelay = '0s';
+      el.style.left = `${g.x}px`;
+      el.style.top = `${g.y}px`;
+      el.style.width = `${g.w}px`;
+      el.style.height = `${g.h}px`;
+    });
+  }
+}
+
+function handleResizeMasonry() {
+  clearTimeout(resizeTimeoutMasonry);
+  resizeTimeoutMasonry = setTimeout(layoutMasonry, 120);
+}
+
+async function initMasonry() {
+  await preloadImagesMasonry();
+  createMasonryItems();
+  layoutMasonry();
+  window.addEventListener('resize', handleResizeMasonry);
+  
+  console.log('%c✅ Masonry Gallery siap di Projects Section!', 'color:#00ffff; font-size:14px');
+}
+
+// Panggil Masonry setelah semua inisialisasi lain selesai
+document.addEventListener('DOMContentLoaded', function() {
+  // ... semua kode lama kamu tetap ada ...
+
+  // Panggil Masonry di akhir
+  initMasonry();
+});
 
 // =================== SKILLS SECTION ===================
 function initializeSkillsSection() {
@@ -7139,125 +6689,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initializeStepperContact();
 });
 
-// =================== INTERACTIVE PROJECTS ===================
-function initializeInteractiveProjects() {
-  initializeProjectFilters();
-  initializeProjectCards();
-}
 
-function initializeProjectFilters() {
-  const filterButtons = document.querySelectorAll('.filter-btn');
-  const projectCards = document.querySelectorAll('.project-card, .featured-project');
-
-  filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      // Remove active class from all buttons
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-      // Add active class to clicked button
-      button.classList.add('active');
-      
-      const filterValue = button.getAttribute('data-filter');
-      
-      // Filter projects
-      projectCards.forEach(card => {
-        if (filterValue === 'all') {
-          card.classList.remove('hidden');
-        } else {
-          const category = card.getAttribute('data-category');
-          if (category === filterValue) {
-            card.classList.remove('hidden');
-          } else {
-            card.classList.add('hidden');
-          }
-        }
-      });
-    });
-  });
-}
-
-function initializeProjectCards() {
-  // Add animation on scroll for project cards
-  const projectCards = document.querySelectorAll('.project-card');
-  
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-
-  projectCards.forEach(card => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(30px)';
-    observer.observe(card);
-  });
-}
-
-// =================== VIDEO HANDLING ===================
-function initializeVideoFeatures() {
-  const video = document.querySelector('.preview-video');
-  
-  if (video) {
-    // Handle video loading errors
-    video.addEventListener('error', function() {
-      console.error('Video failed to load');
-      
-      // Fallback ke gambar jika video gagal load
-      const fallbackImage = document.createElement('img');
-      fallbackImage.src = 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80';
-      fallbackImage.alt = 'Kumi 3D Animation';
-      fallbackImage.className = 'preview-image';
-      fallbackImage.style.width = '100%';
-      fallbackImage.style.height = '100%';
-      fallbackImage.style.objectFit = 'cover';
-      fallbackImage.style.borderRadius = '12px';
-      
-      // Ganti video dengan gambar
-      video.parentNode.replaceChild(fallbackImage, video);
-      
-      // Tambahkan play overlay untuk gambar
-      const playOverlay = document.createElement('div');
-      playOverlay.className = 'play-overlay';
-      playOverlay.innerHTML = '<div class="play-button">▶</div>';
-      fallbackImage.parentNode.appendChild(playOverlay);
-    });
-    
-    // Video loaded successfully
-    video.addEventListener('loadeddata', function() {
-      console.log('Video loaded successfully');
-    });
-    
-    // Attempt to play video (handles autoplay restrictions)
-    video.play().catch(function(error) {
-      console.log('Autoplay prevented:', error);
-      // Show play button if autoplay is blocked
-      showPlayButton();
-    });
-  }
-}
-
-function showPlayButton() {
-  const videoContainer = document.querySelector('.preview-container');
-  const existingPlayBtn = document.querySelector('.manual-play-button');
-  
-  if (!existingPlayBtn && videoContainer) {
-    const playButton = document.createElement('button');
-    playButton.className = 'manual-play-button';
-    playButton.innerHTML = '▶ Play Video';
-    
-    playButton.addEventListener('click', function() {
-      const video = document.querySelector('.preview-video');
-      if (video) {
-        video.play();
-        playButton.style.display = 'none';
-      }
-    });
-    
-    videoContainer.appendChild(playButton);
-  }
-}
 
 // =================== DOCK NAVBAR ===================
 function initializeDockNav() {
@@ -7289,312 +6721,7 @@ function initializeCardSwap() {
   });
 }
 
-// =================== VIDEO MANAGEMENT ===================
-function changeFeaturedVideo(newVideoUrl, fallbackImageUrl = null) {
-  const video = document.querySelector('.preview-video');
-  
-  if (!video) {
-    console.error('Video element not found');
-    return;
-  }
-  
-  const source = video.querySelector('source');
-  
-  // Simpan URL fallback
-  const fallback = fallbackImageUrl || 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80';
-  
-  // Update video source
-  source.src = newVideoUrl;
-  video.load(); // Reload video dengan source baru
-  
-  // Handle jika video baru gagal load
-  video.addEventListener('error', function onError() {
-    console.error('New video failed to load:', newVideoUrl);
-    video.removeEventListener('error', onError);
-    
-    // Fallback ke gambar
-    const fallbackImage = document.createElement('img');
-    fallbackImage.src = fallback;
-    fallbackImage.alt = 'Video preview';
-    fallbackImage.className = 'preview-image';
-    fallbackImage.style.cssText = `
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 12px;
-    `;
-    
-    video.parentNode.replaceChild(fallbackImage, video);
-  }, { once: true });
-  
-  // Coba play video baru
-  video.play().catch(function(error) {
-    console.log('Autoplay prevented for new video:', error);
-    showPlayButton();
-  });
-}
-
-// =================== PROJECT MODAL ===================
-function initializeProjectModal() {
-  const modal = document.getElementById('projectModal');
-  const closeBtn = document.querySelector('.close-modal');
-  const projectCards = document.querySelectorAll('.project-card');
-  
-  // Project data
-  const projectsData = {
-    1: {
-      title: "Interactive Portfolio",
-      image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80",
-      description: "A fully responsive portfolio website featuring custom particle animations, smooth scrolling, and interactive elements. Built with modern web technologies to showcase creative work in an engaging way.",
-      stats: [
-        { number: "1", label: "Project" },
-        { number: "2", label: "Weeks" },
-        { number: "100%", label: "Completed" }
-      ],
-      tags: ["HTML/CSS", "JavaScript", "UI/UX", "Responsive"],
-      features: [
-        "Custom particle background animations",
-        "Smooth scrolling navigation",
-        "Responsive design for all devices",
-        "Interactive project cards",
-        "Modern glass morphism design",
-        "Performance optimized"
-      ],
-      links: {
-        live: "https://toonomaly.github.io/Portofolio/",
-        github: "https://github.com/Toonomaly/Portofolio",
-        details: "https://github.com/Toonomaly/Portofolio"
-      }
-    },
-    2: {
-      title: "Motion Graphics Showreel",
-      image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80",
-      description: "A dynamic motion graphics showcase featuring 30+ animation scenes with professional sound design and color grading. Created for commercial and artistic purposes.",
-      stats: [
-        { number: "30+", label: "Scenes" },
-        { number: "3", label: "Months" },
-        { number: "100%", label: "Completed" }
-      ],
-      tags: ["After Effects", "Motion Graphics", "VFX", "4K"],
-      features: [
-        "30+ unique animation scenes",
-        "4K resolution rendering",
-        "Professional sound design",
-        "Advanced color grading",
-        "Smooth transitions",
-        "Multi-format exports"
-      ],
-      links: {
-        live: "https://youtube.com",
-        github: "https://github.com",
-        details: "https://artstation.com"
-      }
-    },
-    3: {
-      title: "Character Design Pack",
-      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80",
-      description: "Complete character design and modeling package featuring 10+ unique characters with full rigging and animation capabilities.",
-      stats: [
-        { number: "10+", label: "Characters" },
-        { number: "4", label: "Months" },
-        { number: "90%", label: "Completed" }
-      ],
-      tags: ["Blender", "Character Design", "3D Modeling", "Rigging"],
-      features: [
-        "10+ unique character models",
-        "Full skeletal rigging",
-        "Advanced texture mapping",
-        "Animation ready models",
-        "Custom shaders and materials",
-        "Optimized for real-time rendering"
-      ],
-      links: {
-        live: "https://artstation.com",
-        github: "https://github.com",
-        details: "https://drive.google.com"
-      }
-    },
-    4: {
-      title: "Modern E-Commerce Platform",
-      image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80",
-      description: "Full-stack e-commerce solution with secure payment integration, admin dashboard, and responsive design for optimal user experience.",
-      stats: [
-        { number: "1", label: "Platform" },
-        { number: "6", label: "Months" },
-        { number: "95%", label: "Completed" }
-      ],
-      tags: ["React", "Node.js", "MongoDB", "Stripe API"],
-      features: [
-        "User authentication & authorization",
-        "Payment processing with Stripe",
-        "Admin dashboard for product management",
-        "Responsive design for all devices",
-        "Order tracking system",
-        "Inventory management"
-      ],
-      links: {
-        live: "https://example-ecommerce.com",
-        github: "https://github.com/example/ecommerce",
-        details: "https://github.com/example/ecommerce"
-      }
-    },
-    5: {
-      title: "Fantasy 3D Environment",
-      image: "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80",
-      description: "Immersive fantasy world with detailed landscapes, dynamic weather systems, and atmospheric effects optimized for real-time rendering.",
-      stats: [
-        { number: "1", label: "Environment" },
-        { number: "8", label: "Months" },
-        { number: "85%", label: "Completed" }
-      ],
-      tags: ["Blender", "Substance Painter", "Unreal Engine", "Environment Design"],
-      features: [
-        "Procedural terrain generation",
-        "Dynamic weather system",
-        "Real-time global illumination",
-        "Interactive elements and NPCs",
-        "Optimized for VR compatibility",
-        "Custom particle effects"
-      ],
-      links: {
-        live: "https://artstation.com/artwork/fantasy-environment",
-        github: "https://github.com",
-        details: "https://drive.google.com/fantasy-environment"
-      }
-    },
-    6: {
-      title: "Product Explainer Animation",
-      image: "https://images.unsplash.com/photo-1611224885990-ab7363d7f2a9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400&q=80",
-      description: "Engaging product demonstration with 3D animation and motion graphics, featuring dynamic camera movements and professional sound design.",
-      stats: [
-        { number: "1", label: "Animation" },
-        { number: "3", label: "Weeks" },
-        { number: "100%", label: "Completed" }
-      ],
-      tags: ["Cinema 4D", "After Effects", "Motion Graphics", "Product Visualization"],
-      features: [
-        "3D product modeling and texturing",
-        "Dynamic camera movements",
-        "Particle effects and simulations",
-        "Sound design and voiceover",
-        "Multiple format outputs",
-        "4K resolution rendering"
-      ],
-      links: {
-        live: "https://youtube.com/product-animation",
-        github: "https://github.com",
-        details: "https://drive.google.com/product-breakdown"
-      }
-    }
-  };
-
-  // Open modal when project card is clicked
-  projectCards.forEach(card => {
-    card.addEventListener('click', (e) => {
-      // Don't open modal if clicking on links inside the card
-      if (e.target.tagName === 'A' || e.target.closest('a')) {
-        return;
-      }
-      
-      const projectId = card.getAttribute('data-project');
-      const projectData = projectsData[projectId];
-      
-      if (projectData) {
-        openModal(projectData);
-      }
-    });
-  });
-
-  // Also make view project buttons work
-  document.querySelectorAll('.view-project-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const card = btn.closest('.project-card');
-      const projectId = card.getAttribute('data-project');
-      const projectData = projectsData[projectId];
-      
-      if (projectData) {
-        openModal(projectData);
-      }
-    });
-  });
-
-  // Close modal
-  closeBtn.addEventListener('click', closeModal);
-  
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      closeModal();
-    }
-  });
-
-  // Close on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeModal();
-    }
-  });
-
-  function openModal(project) {
-    // Set modal content
-    document.getElementById('modalImage').src = project.image;
-    document.getElementById('modalImage').alt = project.title;
-    document.getElementById('modalTitle').textContent = project.title;
-    document.getElementById('modalDescription').textContent = project.description;
-    
-    // Set stats
-    const stats = project.stats;
-    document.getElementById('modalStat1').textContent = stats[0].number;
-    document.getElementById('modalLabel1').textContent = stats[0].label;
-    document.getElementById('modalStat2').textContent = stats[1].number;
-    document.getElementById('modalLabel2').textContent = stats[1].label;
-    document.getElementById('modalStat3').textContent = stats[2].number;
-    document.getElementById('modalLabel3').textContent = stats[2].label;
-    
-    // Set tags
-    const tagsContainer = document.getElementById('modalTags');
-    tagsContainer.innerHTML = '';
-    project.tags.forEach(tag => {
-      const tagElement = document.createElement('span');
-      tagElement.className = 'project-tag';
-      tagElement.textContent = tag;
-      tagsContainer.appendChild(tagElement);
-    });
-    
-    // Set features
-    const featuresContainer = document.getElementById('modalFeatures');
-    featuresContainer.innerHTML = '';
-    project.features.forEach(feature => {
-      const featureElement = document.createElement('li');
-      featureElement.textContent = feature;
-      featuresContainer.appendChild(featureElement);
-    });
-    
-    // Set links
-    document.getElementById('modalLiveLink').href = project.links.live;
-    document.getElementById('modalGithubLink').href = project.links.github;
-    document.getElementById('modalDetailsLink').href = project.links.details;
-    
-    // Show modal
-    modal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
-    
-    // Ensure cursor stays on top
-    const cursor = document.getElementById('circle-cursor');
-    cursor.style.zIndex = '100000';
-  }
-
-  function closeModal() {
-    modal.style.display = 'none';
-    document.body.style.overflow = 'auto';
-    
-    // Reset cursor z-index if needed
-    const cursor = document.getElementById('circle-cursor');
-    cursor.style.zIndex = '100000';
-  }
-}
-
-// =================== BOUNCE CARDS WORKFLOW - VANILLA JS ===================
+// =================== BOUNCE CARDS WORKFLOW ===================
 function initializeBounceCards() {
   const cards = document.querySelectorAll('.bounce-card');
   const processSteps = document.querySelectorAll('.process-step');
